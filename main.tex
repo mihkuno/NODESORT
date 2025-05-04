@@ -1,0 +1,327 @@
+\documentclass[]{interact}
+% Use Latin Modern fonts
+\usepackage{lmodern} 
+% To incorporate .eps illustrations using PDFLaTeX
+\usepackage{epstopdf}
+% Support for small, `sub' figures and tables
+\usepackage[caption=false]{subfig}
+% Citation support using natbib.sty
+\usepackage[numbers,sort&compress]{natbib}
+% Citation support using natbib.sty
+\bibpunct[, ]{[}{]}{,}{n}{,}{,}
+% Bibliography support using natbib.sty
+\renewcommand\bibfont{\fontsize{10}{12}\selectfont}
+% @ becomes a letter
+\makeatletter
+% Suppress spaces between citations using natbib.sty
+\def\NAT@def@citea{\def\@citea{\NAT@separator}}
+% @ becomes a symbol again
+\makeatother
+% Theorem-like structures provided by amsthm.sty
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+% 
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+%
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem{notation}{Notation}
+
+
+\begin{document}
+
+
+\articletype{RESEARCH ARTICLE}
+
+\title{Cost-Optimized Data Partitioning for Parallel Quicksort on Heterogeneous Clusters using Mixed Integer Programming}
+
+\author{
+\name{Joeniño Cainday and Dr. Junar Landicho}
+% TODO: thanks is on the template
+% \thanks{CONTACT Joeniño Cainday. Email: caindayjoeninyo@gmail.com}
+\affil{Department of Computer Science, University of Science and Technology of Southern Philippines, Cagayan De Oro City, Philippines}
+}
+
+\maketitle
+
+\begin{abstract}
+This research addresses the optimization of data partitioning for parallel computations in heterogeneous distributed systems, with the dual objective of minimizing financial expenditure and execution time. We develop a Mixed Integer Programming (MIP) model that incorporates critical system constraints including CPU speed, memory capacity, memory latency, network latency, and budget limitations. Our model replaces the heuristic partitioning phase of a parallel quicksort algorithm, which serves as our performance benchmark. Utilizing synthetic datasets representing both workload and node specifications, our simulations focus on pre-execution data partitioning decisions. The goal is to provide a framework for financial and time optimization within cloud computing environments, where efficient resource allocation and budget management are essential. Results demonstrate the effectiveness of our MIP-based approach in achieving improved load distribution and reduced runtime compared to traditional heuristics.
+\end{abstract}
+
+\begin{keywords}
+Data Partitioning; Mixed Integer Programming; Heterogeneous Distributed Systems; Budget Constraints; Makespan Minimization
+\end{keywords}
+
+\section{Introduction}
+
+The widespread adoption of cloud computing and serverless architectures has increased the importance of efficient resource allocation in distributed systems. This research addresses the challenge of statically partitioning data across heterogeneous computing environments, where nodes vary in processing speed, memory capacity, network latency, and monetary implications.
+
+We formulate data partitioning as an NP-hard combinatorial optimization problem aimed at minimizing execution time (makespan) while adhering to defined constraints. Our approach replaces traditional heuristic-based partitioning in parallel sorting algorithms with a novel Mixed Integer Programming (MIP) model designed to capture comprehensive system constraints for more balanced, resource-aware data distributions.
+
+\subsection{Background and Motivation}
+
+Distributed computing enables parallel processing of large-scale datasets across multiple nodes. However, in heterogeneous systems with diverse computational capabilities, simplistic data partitioning strategies often result in load imbalances and inefficient resource utilization [1]. Common approaches like uniform distribution or partitioning based solely on heuristics typically fail to consider system compositions in cloud environments.
+
+Cloud computing introduces new complexities to data partitioning. These environments offer flexibility with pay-as-you-go pricing models where computing resources are available on demand [5]. This necessitates re-evaluating traditional partitioning methodologies to explicitly consider economic factors alongside performance metrics. Effective strategies must balance high performance with budget limitations—minimizing both computational time and overall expenditure for cloud resource utilization. 
+
+While Monga and Lodhi [53] demonstrated benefits of heterogeneity-aware allocation, their model primarily considered CPU speed alone. Our work introduces a more sophisticated MIP-based model that integrates multiple system attributes to achieve globally optimized data distributions, providing a more realistic and budget-conscious approach to optimized data processing.
+
+
+\subsection{Cost Considerations in Heterogeneous Parallel Processing}
+
+This paper specifically addresses statically partitioning large datasets before executing parallel Quicksort across simulated heterogeneous environments. Our primary objective is to minimize the overall execution time (makespan) while ensuring we satisfy the defined constraints. As a secondary objective, we aim to identify the most budget-effective solution with an equivalent makespan, using a lexicographic optimization approach. 
+
+In this context, cost refers to the pricing of cloud compute nodes. While higher-priced instances often imply better performance, this is not guaranteed, as pricing and performance can vary across vendors. Each simulated node has synthetic attributes including processing speed, memory capacity, network characteristics, and pricing models inspired by real cloud offerings, reflecting typical variations in heterogeneous cloud deployments.
+
+Allocating data across heterogeneous resources inherently involves performance-cost tradeoffs [48]. As highlighted in previous research, balancing processing time with financial implications when assigning datasets to different machines is critical. Effective data partitioning can significantly reduce both runtime and monetary cost, while suboptimal partitioning leads to inflated expenses or resource limitations like memory overflows. Our controlled synthetic environment enables repeatable experiments independent of real-world cloud variability.
+
+MIP provides a powerful mathematical framework for complex optimization problems involving both discrete and continuous decision variables subject to linear constraints [8]. This capability makes MIP well-suited for modeling cost-aware data partitioning in heterogeneous systems:
+
+\begin{itemize}
+    \item Discrete variables represent partitioning decisions (assigning specific data blocks to particular nodes)
+    \item Continuous variables model resource utilization levels and associated costs
+    \item The objective function represents total financial expenditure
+    \item Constraints reflect resource limitations and system characteristics
+\end{itemize}
+
+Through this approach, MIP effectively finds optimal or near-optimal partitioning strategies that minimize expenditure while satisfying performance requirements.
+
+\subsection{Research Contributions}
+
+This paper contributes the following:
+\begin{enumerate}
+    \item A MIP formulation for initial data partitioning in parallel quicksort on heterogeneous systems;
+    \item An integration of the MIP model into an existing heterogeneous sorting framework;
+    \item A performance evaluation using synthetic datasets with extended metrics;
+    \item A reproducible experimental setup and discussion of directions for future work.
+\end{enumerate}
+
+
+\section{Related Work}
+\label{sec:related_work}
+Heterogeneous scheduling and data allocation have been studied in various contexts. [48] considered dataset allocation across geo-distributed clouds with two objectives (processing time and cost) [48]. They formulated a linear program to place data blocks on VMs to minimize weighted sum of time and cost, demonstrating Pareto trade-offs. Similarly, [49] used an integer linear program for data assignment in a hybrid heterogeneous processing environment. These works focus on resource assignment rather than within-job data partitioning, but they highlight the utility of mathematical programming for cloud costs.
+
+Classic scheduling theory demonstrates that even simple load-balancing on unrelated machines is NP-hard [50]. For instance, scheduling jobs to minimize makespan in  admits a 2-approximation algorithm but cannot be solved optimally in polynomial time beyond trivial cases [50]. This complexity motivates the treatment of cost-aware data partitioning as a combinatorial optimization problem, which is closely related to  but with additional cost considerations. This can be extended to multi-objective formulations (e.g., cost and makespan), though even the single-objective version is NP-hard, reducible to scheduling on unrelated parallel machines [50].
+
+In the domain of parallel sorting, many algorithms assume a homogeneous machine model. For instance, Parallel Sorting by Regular Sampling (PSRS) chooses pivots to create equally-sized partitions [51], and typical benchmarks use randomly-generated data with uniform or other distributions [51]. These benchmarks (e.g. uniform 32-bit integer inputs) guide our synthetic data choices. However, PSRS and related methods do not account for cost or heterogeneous speeds.
+
+In big-data systems like Spark, dynamic partitioning and scheduling algorithms have been proposed. [52], for example, developed a dynamic partitioning strategy for intermediate Spark data to mitigate skew, and a greedy scheduling method that considers node speed [52]. They find that balanced partitioning significantly lowers completion time [52]. Our work differs by focusing on static initial partitioning with explicit cost metrics, rather than in-job rebalancing. To the best of our knowledge, prior work has not explicitly applied MIP to cost-aware static data partitioning in heterogeneous cloud sort workloads.
+
+We build upon the model proposed by Monga and Lodhi [53], which partitions datasets across heterogeneous nodes proportionally to CPU speed to achieve near-optimal load balance in parallel sorting. However, their approach does not account for cost or network latency, both of which are critical in modern cloud and serverless computing. We generalize this problem and propose a Mixed Integer Programming (MIP) formulation that jointly optimizes cost and performance under multiple realistic constraints. We also compare against their CPU-speed-based heuristic and other baseline methods to evaluate trade-offs.
+
+
+
+
+\section{Proposed Methodology}
+\label{sec:methodology}
+
+This section presents our approach combining Mixed Integer Programming (MIP) for optimal data partitioning with the parallel Quicksort algorithm proposed by Monga and Lodhi [53].
+
+\subsection{Problem Formulation}
+
+We now formalize the partitioning problem based on the system characteristics introduced in Section 1.3. To ensure full control over system parameters and facilitate reproducibility, we operate within a synthetic environment. Each node is defined by parameters such as processing speed, memory capacity, network latency, bandwidth, and cost, inspired by real-world cloud configurations (e.g., AWS, GCP). This abstraction enables rigorous evaluation of partitioning strategies without relying on live infrastructure.
+
+\subsubsection{System Model}
+
+We partition the dataset into contiguous blocks of size $d$, assigning each block to a unique node. Consider a heterogeneous cluster with $N$ nodes, where each node $i$ is characterized by the following parameters:
+
+\begin{itemize}
+    \item $d_i$: Assigned data volume (in units of $d$)
+    \item $r_i$: Processing rate (in $d/t$ — data units per time unit)
+    \item $m_i$: Available memory capacity (in units of $m$)
+    \item $\ell_i$: Network latency (in time units $t$)
+    \item $b_i$: Network bandwidth (in $d/t$ — data units per time unit)
+    \item $u_i$: Usage billing rate (in $c/t$ — cost units per time unit)
+\end{itemize}
+
+The units provided above are illustrative and can be adjusted depending on the application context. For example, processing speed may be expressed in records per millisecond, memory in MB, or cost in USD/hour. In this work, we use normalized or synthetic units to model relative performance and cost differences between nodes, without binding the system to a specific infrastructure or currency.
+
+\subsubsection{Derived Parameters}
+
+We derive additional parameters from the node characteristics to facilitate the MIP formulation:
+
+\paragraph{Processing Time}
+\begin{equation}
+    x_i = \frac{d_i}{r_i}
+\end{equation}
+where $x_i$ is the time required by node $i$ to process its assigned data volume $d_i$.
+
+\paragraph{Transfer Time}
+\begin{equation}
+    y_i = \ell_i + \frac{d_i}{b_i}
+\end{equation}
+where $y_i$ is the communication overhead for node $i$, computed from latency $\ell_i$ and bandwidth $b_i$.
+
+\paragraph{Total Cost}
+\begin{equation}
+    w = \sum_{i=1}^N u_i \cdot x_i
+\end{equation}
+where $w$ denotes the cumulative cost of utilizing all selected nodes.
+
+\subsubsection{Optimization Objectives}
+
+The primary objective of our MIP model is to minimize the total execution time (makespan) of the parallel sorting process. This ensures that the overall completion time is minimized, taking into account both computation and communication overheads. Formally, the primary objective is defined as:
+
+\begin{equation}
+    \min z = \max_{i=1}^N (x_i + y_i)
+\end{equation}
+where $z$ represents the maximum time taken by any node $i$ to complete its assigned data processing and communication tasks. This formulation captures the makespan of the entire parallel sorting operation, ensuring that the slowest node determines the overall completion time.
+
+In addition to minimizing makespan, we aim to choose the most cost-effective solution among equivalent combinations. To achieve this, we introduce a secondary objective that minimizes the total financial expenditure. This is incorporated into the model using a lexicographic optimization approach:
+
+\begin{equation}
+    \min \ z + \varepsilon \cdot w
+\end{equation}
+
+In this formulation, $w$ represents the cumulative cost of utilizing the selected nodes, and $\varepsilon$ is set to a negligible value (e.g., $10^{-6}$) to prioritize makespan minimization while breaking ties in favor of cost efficiency. This approach ensures that among solutions with equivalent makespan, the one with the lowest cost is selected.
+
+\subsubsection{Constraint Definitions}
+
+The proposed MIP model is subject to several constraints that reflect system limitations and ensure a feasible allocation of data across nodes. These constraints incorporate resource boundaries (e.g., memory and budget), performance considerations (e.g., makespan), and completeness of the partitioning scheme.
+
+\paragraph{Makespan Constraint}
+\begin{equation}
+    z \geq \frac{d_i}{r_i} + \ell_i + \frac{d_i}{b_i} \quad \forall i \in \{1, \ldots, N\}
+\end{equation}
+This constraint ensures that the total execution time, represented by the variable $z$, is at least as large as the time taken by any individual node $i$ to both process its assigned data and transfer it to the next stage. It combines computation time $\frac{d_i}{r_i}$ with communication latency $\ell_i$ and data transfer time $\frac{d_i}{b_i}$.
+
+\paragraph{Memory Constraint}
+\begin{equation}
+    d_i \leq m_i \quad \forall i \in \{1, \ldots, N\}
+\end{equation}
+Each node has a limited memory capacity $m_i$, and this constraint ensures that the volume of data $d_i$ assigned to node $i$ does not exceed its available memory.
+
+\paragraph{Coverage Constraint}
+\begin{equation}
+    \sum_{i=1}^{N} d_i = D
+\end{equation}
+This constraint enforces full data allocation: the entire dataset of size $D$ must be partitioned and distributed among the $N$ available nodes without omission or duplication.
+
+\paragraph{Non-negativity Constraint}
+\begin{equation}
+    d_i \geq 0 \quad \forall i \in \{1, \ldots, N\}
+\end{equation}
+This standard constraint ensures that each node receives a non-negative volume of data, reflecting the physical impossibility of assigning negative quantities.
+
+
+\paragraph{Budget Constraint (Optional)}
+\begin{equation}
+    0 \leq \sum_{i=1}^{N} u_i \cdot d_i \leq B
+\end{equation}
+
+In addition to node-specific parameters, we optionally define a user-defined input $B$, representing the maximum allowable expenditure. This parameter must be a non-negative number, with a default value of $0$. Including this constraint models scenarios where financial limitations must be respected.
+
+
+
+% \subsection{Baseline Parallel Quicksort Algorithm}
+% We will provide a concise description of the parallel quicksort algorithm that serves as the foundation for our work. This will include the key steps of the algorithm, such as pivot selection, data partitioning (using the original heuristic), and recursive sorting of sub-arrays across multiple processors.
+
+% \subsection{MIP Model for Budget-Aware Data Partitioning}
+% This subsection will present the core contribution of our research: the detailed formulation of the MIP model.
+% % \begin{itemize}
+% %     \item \textbf{Decision Variables:} We will clearly define the integer and continuous decision variables used in the model to represent the assignment of data partitions to computing nodes and related resource utilization.
+% %     \item \textbf{Objective Function:** We will specify the objective function that aims to minimize the total financial expenditure and the overall makespan, potentially as a weighted combination of these two objectives or with one as a primary objective and the other as a constraint.
+% %     \item \textbf{Constraints:} We will detail the linear constraints that capture the various limitations and characteristics of the heterogeneous distributed system, including:
+% %     \begin{itemize}
+% %         \item CPU speed and its impact on processing time.
+% %         \item Memory capacity of each node and the size of the data partitions assigned to it.
+% %         \item Memory latency and its effect on the overall execution time.
+% %         \item Network latency and bandwidth limitations affecting data transfer times between nodes.
+% %         \item Budget model for each node (e.g., cost per unit of time, data processed).
+% %         \item Constraints to ensure that all data is partitioned and assigned to exactly one node.
+% %         \item Constraints to maintain load balance across the nodes within acceptable limits.
+% %     \end{itemize}
+% % \end{itemize}
+
+% \subsection{Integration of MIP into the Parallel Quicksort Workflow}
+% We will describe how the solution obtained from the MIP model (the optimal data partition) is integrated into the initial phase of the parallel quicksort algorithm. This will clarify how the static data partitioning determined by the MIP solver influences the subsequent parallel sorting process.
+
+% \section{Experimental Setup}
+% \label{sec:experimental_setup}
+% This section will provide a detailed description of the experimental setup used to evaluate the performance of our proposed MIP-based data partitioning approach.
+
+% \subsection{Synthetic Dataset Generation}
+% We will explain the process of generating the synthetic datasets used in our simulations. This will include the size and distribution of the data, as well as how we simulate different workload characteristics.
+
+% \subsection{Heterogeneous System Configuration}
+% We will describe how we simulate a heterogeneous distributed system. This will involve specifying the number of nodes, and for each node, defining the synthetic values for:
+% \begin{itemize}
+%     \item CPU speed
+%     \item Memory capacity
+%     \item Memory latency
+%     \item Network latency and bandwidth
+%     \item Budget model (e.g., cost per second, cost per GB of data processed)
+% \end{itemize}
+% We will also discuss the rationale behind the chosen ranges and distributions of these parameters to reflect realistic cloud environments.
+
+% \subsection{Evaluation Metrics}
+% We will clearly define the metrics used to evaluate the performance of our data partitioning approach, including:
+% % \begin{itemize}
+% %     \item \textbf{Makespan (Total Execution Time):} The total time taken to complete the parallel quicksort process.
+% %     \item \textbf{Total Financial Expenditure:** The total financial budget utilized for the computing resources.
+% %     \item \textbf{Communication Overhead:** The total time spent on inter-node communication during the sorting process.
+% %     \item \textbf{Load Balance:** A measure of how evenly the workload is distributed across the computing nodes.
+% %     \item \textbf{Partitioning Time:** The time taken to solve the MIP model and determine the data partition.
+% % \end{itemize}
+
+% \subsection{Benchmarking and Comparison}
+% We will describe the baseline against which our MIP-based approach is compared (the original parallel quicksort with its heuristic partitioning strategy). We will also outline the experimental procedure, including the number of runs and the variations in dataset size and system heterogeneity considered.
+
+% \subsection{Implementation Details}
+% We will provide relevant implementation details, such as the MIP solver used and the programming environment for the simulations.
+
+% \section{Results and Discussion}
+% \label{sec:results_discussion}
+% This section will present the results of our experiments and provide a detailed discussion of the findings. We will use tables and figures to illustrate the performance of the MIP-based data partitioning approach compared to the baseline heuristic across the defined evaluation metrics.
+
+% \subsection{Impact on Makespan}
+% We will analyze and discuss the effect of the MIP-based partitioning on the total execution time (makespan) under different heterogeneous configurations and dataset sizes.
+
+% \subsection{Financial Expenditure Analysis}
+% We will present and analyze the total financial expenditure incurred by both the MIP-based and the heuristic approaches, highlighting the budget savings achieved by our proposed method.
+
+% \subsection{Communication Overhead Evaluation}
+% We will compare the communication overhead in both approaches, discussing how the MIP model influences data transfer between nodes.
+
+% \subsection{Load Balancing Effectiveness}
+% We will present quantitative measures of load balance achieved by both partitioning strategies and discuss the implications for overall performance.
+
+% \subsection{Analysis of Partitioning Time}
+% We will analyze the time taken to solve the MIP model and discuss the trade-off between the optimization time and the resulting performance improvements.
+
+% \subsection{Discussion of Trade-offs and Limitations}
+% We will discuss the trade-offs inherent in our approach, such as the complexity of solving the MIP model, and potential limitations of the synthetic environment.
+
+% \section{Conclusion and Future Work}
+% \label{sec:conclusion_future_work}
+% In this section, we will summarize the key findings of our research and reiterate the contributions made. We will also discuss potential avenues for future work, including:
+% % \begin{itemize}
+% %     \item Exploring more sophisticated budget models that better reflect real-world cloud pricing schemes.
+% %     \item Investigating dynamic data partitioning strategies for scenarios where workload characteristics change during execution.
+% %     \item Developing more efficient heuristic algorithms that can approximate the performance of the MIP model with lower computational overhead.
+% %     \item Applying the proposed MIP-based partitioning framework to other parallel algorithms and distributed computing paradigms.
+% %     \item Evaluating the model in real-world cloud environments.
+% % \end{itemize}
+
+% \section*{Acknowledgements}
+% This section can acknowledge any individuals or institutions that provided support for the research.
+
+% \section*{Disclosure Statement}
+% This section can include any relevant disclosure statements.
+
+% \section*{Funding}
+% This section can acknowledge any funding sources that supported the research.
+
+% \bibliographystyle{tfnlm}
+% \bibliography{interactnlmsample}
+
+% \appendix
+% \section{Appendix}
+% This section can include supplementary material such as detailed mathematical derivations or additional experimental results.
+
+\end{document}
