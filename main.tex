@@ -1,6 +1,9 @@
 \documentclass[]{interact}
 % Use Latin Modern fonts
-\usepackage{lmodern} 
+\usepackage{lmodern}
+\usepackage{float} 
+% Include algorithm2e for algorithm environment
+\usepackage[ruled,vlined]{algorithm2e}
 % To incorporate .eps illustrations using PDFLaTeX
 \usepackage{epstopdf}
 % Support for small, `sub' figures and tables
@@ -117,53 +120,51 @@ We build upon the model proposed by Monga and Lodhi [53], which partitions datas
 
 
 
-\section{Proposed Methodology}
-\label{sec:methodology}
+% This section presents our approach combining Mixed Integer Programming (MIP) for optimal data partitioning with the parallel Quicksort algorithm proposed by Monga and Lodhi [53].
 
-This section presents our approach combining Mixed Integer Programming (MIP) for optimal data partitioning with the parallel Quicksort algorithm proposed by Monga and Lodhi [53].
-
-\subsection{Problem Formulation}
+\section{Problem Formulation}
 
 We now formalize the partitioning problem based on the system characteristics introduced in Section 1.3. To ensure full control over system parameters and facilitate reproducibility, we operate within a synthetic environment. Each node is defined by parameters such as processing speed, memory capacity, network latency, bandwidth, and cost, inspired by real-world cloud configurations (e.g., AWS, GCP). This abstraction enables rigorous evaluation of partitioning strategies without relying on live infrastructure.
 
-\subsubsection{System Model}
+\subsection{System Model}
 
 We partition the dataset into contiguous blocks of size $d$, assigning each block to a unique node. Consider a heterogeneous cluster with $N$ nodes, where each node $i$ is characterized by the following parameters:
 
 \begin{itemize}
     \item $d_i$: Assigned data volume (in units of $d$)
     \item $r_i$: Processing rate (in $d/t$ — data units per time unit)
-    \item $m_i$: Available memory capacity (in units of $m$)
+    \item $m_i$: Maximum data volume the node can handle at once (in units of $d$)
     \item $\ell_i$: Network latency (in time units $t$)
     \item $b_i$: Network bandwidth (in $d/t$ — data units per time unit)
     \item $u_i$: Usage billing rate (in $c/t$ — cost units per time unit)
 \end{itemize}
 
-The units provided above are illustrative and can be adjusted depending on the application context. For example, processing speed may be expressed in records per millisecond, memory in MB, or cost in USD/hour. In this work, we use normalized or synthetic units to model relative performance and cost differences between nodes, without binding the system to a specific infrastructure or currency.
+The units above are illustrative and can be adapted depending on context. For instance, processing speed $r$ may be measured in records/ms, memory $m$ in megabytes (MB), and cost $u$ in USD/hour. In this work, we use normalized or synthetic units to model relative performance and cost differences between nodes, without binding the system to a specific infrastructure or currency.
 
-\subsubsection{Derived Parameters}
+
+\subsection{Derived Parameters}
 
 We derive additional parameters from the node characteristics to facilitate the MIP formulation:
 
-\paragraph{Processing Time}
+\subsubsection{Processing Time}
 \begin{equation}
     x_i = \frac{d_i}{r_i}
 \end{equation}
 where $x_i$ is the time required by node $i$ to process its assigned data volume $d_i$.
 
-\paragraph{Transfer Time}
+\subsubsection{Transfer Time}
 \begin{equation}
     y_i = \ell_i + \frac{d_i}{b_i}
 \end{equation}
 where $y_i$ is the communication overhead for node $i$, computed from latency $\ell_i$ and bandwidth $b_i$.
 
-\paragraph{Total Cost}
+\subsubsection{Total Cost}
 \begin{equation}
     w = \sum_{i=1}^N u_i \cdot x_i
 \end{equation}
 where $w$ denotes the cumulative cost of utilizing all selected nodes.
 
-\subsubsection{Optimization Objectives}
+\subsection{Optimization Objectives}
 
 The primary objective of our MIP model is to minimize the total execution time (makespan) of the parallel sorting process. This ensures that the overall completion time is minimized, taking into account both computation and communication overheads. Formally, the primary objective is defined as:
 
@@ -180,41 +181,649 @@ In addition to minimizing makespan, we aim to choose the most cost-effective sol
 
 In this formulation, $w$ represents the cumulative cost of utilizing the selected nodes, and $\varepsilon$ is set to a negligible value (e.g., $10^{-6}$) to prioritize makespan minimization while breaking ties in favor of cost efficiency. This approach ensures that among solutions with equivalent makespan, the one with the lowest cost is selected.
 
-\subsubsection{Constraint Definitions}
+\subsection{Constraint Definitions}
 
 The proposed MIP model is subject to several constraints that reflect system limitations and ensure a feasible allocation of data across nodes. These constraints incorporate resource boundaries (e.g., memory and budget), performance considerations (e.g., makespan), and completeness of the partitioning scheme.
 
-\paragraph{Makespan Constraint}
+\subsubsection{Makespan Constraint}
 \begin{equation}
     z \geq \frac{d_i}{r_i} + \ell_i + \frac{d_i}{b_i} \quad \forall i \in \{1, \ldots, N\}
 \end{equation}
 This constraint ensures that the total execution time, represented by the variable $z$, is at least as large as the time taken by any individual node $i$ to both process its assigned data and transfer it to the next stage. It combines computation time $\frac{d_i}{r_i}$ with communication latency $\ell_i$ and data transfer time $\frac{d_i}{b_i}$.
 
-\paragraph{Memory Constraint}
+\subsubsection{Memory Constraint}
 \begin{equation}
     d_i \leq m_i \quad \forall i \in \{1, \ldots, N\}
 \end{equation}
 Each node has a limited memory capacity $m_i$, and this constraint ensures that the volume of data $d_i$ assigned to node $i$ does not exceed its available memory.
 
-\paragraph{Coverage Constraint}
+\subsubsection{Coverage Constraint}
 \begin{equation}
     \sum_{i=1}^{N} d_i = D
 \end{equation}
 This constraint enforces full data allocation: the entire dataset of size $D$ must be partitioned and distributed among the $N$ available nodes without omission or duplication.
 
-\paragraph{Non-negativity Constraint}
+\subsubsection{Non-negativity Constraint}
 \begin{equation}
     d_i \geq 0 \quad \forall i \in \{1, \ldots, N\}
 \end{equation}
 This standard constraint ensures that each node receives a non-negative volume of data, reflecting the physical impossibility of assigning negative quantities.
 
 
-\paragraph{Budget Constraint (Optional)}
+\subsubsection{Budget Constraint (Optional)}
 \begin{equation}
     0 \leq \sum_{i=1}^{N} u_i \cdot d_i \leq B
 \end{equation}
 
 In addition to node-specific parameters, we optionally define a user-defined input $B$, representing the maximum allowable expenditure. This parameter must be a non-negative number, with a default value of $0$. Including this constraint models scenarios where financial limitations must be respected.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Proposed Algorithm and Optimization Framework}
+
+This is the model of Monga and Lodhi [53] which we will use as a baseline. The algorithm is designed to sort a list of items using multiple workers, each with different speeds. The main steps of the algorithm are as follows:
+
+\begin{algorithm}[H]
+\caption{Original Heterogeneous PSRS Algorithm}
+\SetKwInput{KwInput}{Inputs}
+\KwInput{
+    $n$: Total number of data items \\
+    $p$: Number of processors \\
+    $perf[0 \dots p-1]$: Relative performance of each processor
+}
+\SetKwInput{KwOutput}{Output}
+\KwOutput{Sorted data}
+
+\vspace{0.5em}
+\textbf{Phase 1: Local Sorting and Sampling} \\
+\For{each processor $i$}{
+    $size_i = \frac{n \cdot perf[i]}{\sum perf}$ \\
+    Assign $size_i$ items to processor $i$ \\
+    Processor $i$ performs sequential quicksort on its local data \\
+    Select $L = (p - 1) \cdot perf[i]$ samples from local sorted data \\
+    Send samples to the designated coordinator
+}
+
+\vspace{0.5em}
+\textbf{Phase 2: Pivot Selection} \\
+Designated coordinator gathers and sorts all samples \\
+Selects $p - 1$ global pivots and broadcasts them to all processors
+
+\vspace{0.5em}
+\textbf{Phase 3: Data Redistribution} \\
+\For{each processor}{
+    Partition local data using global pivots \\
+    Send partitioned data to corresponding processors \\
+    Retain the portion corresponding to its final range
+}
+
+\vspace{0.5em}
+\textbf{Phase 4: Final Sorting and Merge} \\
+Each processor sorts its final local data \\
+Coordinator concatenates all sorted segments for final output
+\end{algorithm}
+
+\vspace{1em}
+
+\subsection{Improved Algorithm: MIP-Based Range Partitioning}
+
+We propose a modified algorithm that replaces the sampling and redistribution stages with a Mixed Integer Programming (MIP) formulation that statically partitions the global key range across nodes.
+
+\subsubsection{MIP-Guided Bucket Assignment}
+
+Given the total dataset size $D$ and a heterogeneous set of $N$ nodes with parameters $(r_i, m_i, \ell_i, b_i, u_i)$, we solve the MIP formulation (Section~\ref{sec:methodology}) to compute optimal partition sizes $d_i$ such that:
+
+\begin{itemize}
+    \item Processing time is balanced according to each node's capability
+    \item Communication and processing costs are minimized
+    \item Constraints on memory, load, and budget are respected
+\end{itemize}
+
+Once $d_i$ values are determined, each node is assigned a fixed key range. For example (illustrative only):
+
+\begin{center}
+\begin{tabular}{l|c|c}
+\textbf{Worker} & \textbf{Percentage of Total Data} & \textbf{Assigned Range} \\
+\hline
+A (4x speed) & 40\% & [0, 39] \\
+B (3x speed) & 30\% & [40, 69] \\
+C (2x speed) & 20\% & [70, 89] \\
+D (1x speed) & 10\% & [90, 100] \\
+\end{tabular}
+\end{center}
+
+\subsubsection{MIP-Guided Parallel Range-Sort Algorithm}
+
+\begin{algorithm}[H]
+\caption{MIP-Guided Parallel Range-Sort Algorithm}
+
+\SetKwInput{KwInput}{Inputs}
+\vspace{0.5em}
+\KwInput{
+    \begin{itemize}
+        \item $D$: Total dataset
+        \item $N$: Number of nodes
+        \item $r_i$: Processing rate of node $i$
+        \item $m_i$: Memory capacity of node $i$
+        \item $b_i$: Network bandwidth of node $i$
+        \item $\ell_i$: Network latency of node $i$
+        \item $u_i$: Usage cost rate of node $i$
+    \end{itemize}
+}
+
+\SetKwInput{KwOutput}{Output}
+\KwOutput{
+    \begin{itemize}
+        \item Sorted data
+    \end{itemize}
+}
+
+\vspace{0.5em}
+\textbf{Phase 1: Static Partitioning via MIP} \\
+Solve MIP to determine partition sizes $d_i$ for each node \\
+Assign key ranges to nodes based on $d_i$ and global key distribution
+
+\vspace{0.5em}
+\textbf{Phase 2: Data Distribution} \\
+\For{each item $x$ in $D$}{
+    Route $x$ to processor $i$ such that $x$ lies in $i$'s assigned key range
+}
+
+\vspace{0.5em}
+\textbf{Phase 3: Local Sorting} \\
+\For{each processor $i$}{
+    Sort received data using sequential quicksort
+}
+
+\vspace{0.5em}
+\textbf{Phase 4: Final Merge (Optional)} \\
+Concatenate sorted outputs from all nodes
+
+\vspace{0.5em}
+\end{algorithm}
+
+\subsubsection{Data Distribution Strategies}
+
+\paragraph{Option A: Centralized Bucketing (Low Latency, High Memory)}
+\begin{itemize}
+    \item A single coordinator receives all input data and routes items to target nodes
+    \item Requires $2 \times$ dataset size in memory
+    \item Low latency and simple coordination, but limited scalability
+\end{itemize}
+
+\paragraph{Option B: Asynchronous Routing (Low Memory, High Latency)}
+\begin{itemize}
+    \item Each item is routed asynchronously to its responsible node
+    \item Lower memory footprint, suited for streaming or distributed sources
+    \item May incur higher latency due to decentralized routing
+    \item Increases billing costs due to more frequent node usage
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+\section{Algorithm Complexity Analysis}
+
+A rigorous complexity analysis highlights the theoretical advantages of our MIP-guided approach over the baseline PSRS algorithm, particularly in heterogeneous environments.
+
+\subsection{Time Complexity}
+
+\subsubsection{PSRS (Baseline)}
+
+The original Heterogeneous PSRS algorithm involves four distinct phases, each contributing to the overall time complexity:
+
+\begin{itemize}
+    \item \textbf{Phase 1: Local Sorting and Sampling:} Each of the $p$ processors sorts its local data of size $O(n/p)$ on average, taking $O\left(\frac{n}{p} \log \frac{n}{p}\right)$ time using quicksort. Sampling takes $O(p)$ time per processor. The communication of samples to the coordinator takes $O(p^2)$ in the worst case if all processors send their $O(p)$ samples sequentially. Thus, this phase has an average time complexity of $O\left(\frac{n}{p} \log \frac{n}{p} + p^2\right)$.
+    \item \textbf{Phase 2: Pivot Selection:} The coordinator sorts $O(p^2)$ samples, which takes $O(p^2 \log p^2) = O(p^2 \log p)$ time. Broadcasting the $p - 1$ pivots to all $p$ processors takes $O(p)$ time in parallel or $O(p^2)$ sequentially.
+    \item \textbf{Phase 3: Data Redistribution:} Each processor partitions its $O(n/p)$ local data using $p - 1$ pivots, which takes $O(n/p \cdot p) = O(n)$ in the worst case if the pivots are poorly chosen. The redistribution of data among processors can take up to $O(n)$ in the worst-case scenario where one processor receives almost all the data.
+    \item \textbf{Phase 4: Final Sorting and Merge:} Each processor sorts its received data, which can be up to $O(n)$ in the worst case, leading to $O(n \log n)$ for a single processor if load balancing is poor. The coordinator then merges the $p$ sorted segments, which takes $O(n)$ time.
+\end{itemize}
+
+
+
+Combining these phases, the average-case time complexity of the original PSRS algorithm is dominated by the local sorting and pivot selection, yielding $O\left(\frac{n}{p} \log \frac{n}{p} + p^2 \log p + n\right)$. Under ideal load balancing, this simplifies to $O\left(\frac{n \log n}{p} + p^2 \log p\right)$. The worst-case time complexity, particularly due to potential imbalances in data redistribution, can reach $O(n \log n)$ if one processor ends up with most of the data, or even $O(n^2/p)$ if local sorting on an imbalanced partition degrades to quadratic time.
+
+\subsubsection{MIP-Guided Algorithm}
+
+Our proposed MIP-guided algorithm significantly streamlines the process:
+
+\begin{itemize}
+    \item \textbf{Phase 1: Static Partitioning via MIP:} The MIP formulation is solved once as a precomputation step. The complexity of solving a general MIP is NP-hard. However, for a fixed number of nodes $N$, the complexity can be bounded by a polynomial function of the input size, which in our case relates to the number of nodes and the complexity of the constraints. Assuming an efficient solver, and considering the number of variables (proportional to $N$) and constraints (also proportional to $N$), a loose upper bound can be considered around $O(N^k)$ for some constant $k$, potentially up to $O(N^3)$ for simpler formulations or higher for more complex ones. This is a one-time overhead.
+    
+    \item \textbf{Phase 2: Data Distribution:}
+    \begin{itemize}
+        \item \textbf{Option A (Centralized Bucketing):} The coordinator processes each of the $n$ items once to route it, taking $O(n)$ time.
+        \item \textbf{Option B (Asynchronous Routing):} Each of the $n$ items is routed directly to a processor. Assuming the routing decision is constant time, this phase takes $O(n)$ time in total, potentially distributed across the network.
+    \end{itemize}
+
+    \item \textbf{Phase 3: Local Sorting:} Each of the $N$ processors sorts its assigned data of size $d_i$. Since the MIP aims to balance the load based on processing rates, we expect $d_i \approx O(n/N)$. Thus, the local sorting on each processor takes approximately $O\left(\frac{n}{N} \log \frac{n}{N}\right)$. Executed in parallel, the time for this phase is $O\left(\frac{n}{N} \log \frac{n}{N}\right)$.
+
+    \item \textbf{Phase 4: Final Merge (Optional):} If a final merged output is required, the coordinator concatenates the $N$ sorted segments, taking $O(n)$ time. This step can be avoided if the output is acceptable as a set of distributed sorted partitions.
+\end{itemize}
+
+Therefore, the overall time complexity of the MIP-guided algorithm, after the initial MIP solving, is dominated by the data distribution and local sorting phases, resulting in an average and worst-case time complexity of $O(N^k + n + \frac{n}{N} \log \frac{n}{N})$. If $N$ is significantly smaller than $n$, this simplifies to $O(n + \frac{n}{N} \log \frac{n}{N})$. The one-time MIP solving overhead $O(N^k)$ becomes negligible for large datasets processed multiple times.
+
+\subsection{Space Complexity}
+
+\subsubsection{PSRS (Baseline)}
+
+\begin{itemize}
+    \item \textbf{Local Storage:} Each processor needs to store its assigned data, which is $O(n/p)$ on average.
+    \item \textbf{Sampling:} Each processor generates $O(p)$ samples, and the coordinator stores $O(p^2)$ samples.
+    \item \textbf{Redistribution Buffers:} During data redistribution, processors might need temporary buffers to hold data being sent or received, potentially up to $O(n/p)$ in size per processor.
+    \item \textbf{Final Sorted Segments:} Each processor holds a sorted segment of approximately $O(n/p)$.
+\end{itemize}
+
+The total space complexity of the PSRS algorithm is $O(n)$ as the total data is partitioned and stored across the processors. The coordinator requires additional space for the samples, $O(p^2)$.
+
+\subsubsection{MIP-Guided Algorithm}
+
+\begin{itemize}
+    \item \textbf{Partition Storage:} Each of the $N$ nodes stores its assigned partition of size $d_i$, with $\sum d_i = n$. Thus, the total storage for the data is $O(n)$.
+    \item \textbf{Data Distribution:}
+    \begin{itemize}
+        \item \textbf{Option A (Centralized Bucketing):} The coordinator temporarily holds the entire dataset for routing, requiring $O(n)$ additional space, leading to a total of $O(2n)$ peak memory usage at the coordinator.
+        \item \textbf{Option B (Asynchronous Routing):} Each item is routed individually, minimizing the need for a central buffer. The memory footprint remains $O(n)$ distributed across the nodes.
+    \end{itemize}
+    \item \textbf{Local Sorting:} Each processor sorts its local partition $d_i$ in-place or requires $O(d_i)$ auxiliary space, which is within the $O(n)$ total.
+\end{itemize}
+
+The space complexity of the MIP-guided algorithm is $O(n)$ in the distributed asynchronous routing scenario (Option B). The centralized bucketing strategy (Option A) incurs a temporary $O(2n)$ space requirement at the coordinator. The space required for storing the MIP model and its solution is dependent on the solver and the complexity of the formulation but is typically much smaller than the dataset size $n$, especially for a fixed number of nodes $N$.
+
+
+
+
+\subsection{Complexity Comparison}
+
+
+In this section, we formally analyze and compare the time complexity of the baseline PSRS algorithm and the proposed MIP-guided algorithm. The analysis emphasizes both average-case behavior and worst-case scenarios under heterogeneous processing environments.
+
+\subsubsection{Baseline PSRS Algorithm}
+
+The PSRS algorithm executes in four distinct phases: local sorting and sampling, pivot selection, data redistribution, and final sorting or merging. The overall time complexity is characterized as follows:
+
+\begin{equation}
+    \mathcal{O}\left(\frac{n}{p} \log \frac{n}{p} + p^2 \log p + n\right)
+\end{equation}
+
+Under ideal load balancing and efficient communication, this simplifies to:
+
+\begin{equation}
+    \mathcal{O}\left(\frac{n \log n}{p} + p^2 \log p\right)
+\end{equation}
+
+However, due to dynamic pivot selection and possible load imbalance, the worst-case time complexity may degrade to:
+
+\begin{equation}
+    \mathcal{O}(n \log n)
+\end{equation}
+
+This degradation arises when a significant portion of data is allocated to a single processor due to poor pivot selection.
+
+\subsubsection{Proposed MIP-Guided Algorithm}
+
+The MIP-guided algorithm separates the partitioning step as a one-time optimization via a Mixed Integer Programming formulation. After solving the MIP, the data is distributed based on a precomputed partitioning strategy that accounts for processor heterogeneity. The total time complexity is expressed as:
+
+\begin{equation}
+    \mathcal{O}\left(N^k + n + \frac{n}{N} \log \frac{n}{N}\right)
+\end{equation}
+
+Here, $N$ is the number of processors and $k$ is a constant that depends on the complexity of the MIP formulation. This overhead is incurred once and amortized over multiple executions. The dominant runtime costs after MIP solving are data distribution and local sorting.
+
+\subsubsection{Summary}
+
+\begin{table}[H]
+\centering
+\caption{Asymptotic Time Complexity Comparison}
+\begin{tabular}{l|l|l}
+\toprule
+\textbf{Metric} & \textbf{PSRS (Baseline)} & \textbf{MIP-Guided Algorithm} \\
+\midrule
+Average Time & $\mathcal{O}\left(\frac{n \log n}{p} + p^2 \log p\right)$ & $\mathcal{O}\left(N^k + n + \frac{n}{N} \log \frac{n}{N}\right)$ \\
+Worst-Case Time & $\mathcal{O}(n \log n)$ & $\mathcal{O}\left(N^k + n + \frac{n}{N} \log \frac{n}{N}\right)$ \\
+Preprocessing Overhead & None & $\mathcal{O}(N^k)$ (amortized) \\
+Load Balancing & Data-dependent (dynamic) & Optimized (static) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+The MIP-guided algorithm offers theoretical advantages in both average and worst-case runtime. By removing the need for sampling and pivot-based partitioning at runtime, it eliminates a primary source of imbalance and communication overhead. In contrast, the PSRS algorithm is more susceptible to skewed load distributions and requires additional synchronization steps, which may limit scalability on heterogeneous hardware.
+
+Although solving the MIP model incurs an initial computational cost, this cost becomes negligible in scenarios involving repeated sorting tasks or large datasets. As such, the MIP-guided approach is especially advantageous in environments where preprocessing is feasible and performance consistency is critical.
+
+The MIP-guided algorithm demonstrates superior asymptotic performance under realistic workload and platform assumptions, particularly when amortizing the MIP overhead across repeated executions or in systems with significant processor heterogeneity.
+
+
+
+
+
+
+% \subsection{Complexity Comparison}
+
+% \begin{table}[H]
+% \centering
+% \caption{Time and Space Complexity Comparison}
+% \begin{tabular}{l|l|l}
+% \toprule
+% \textbf{Metric} & \textbf{PSRS (Baseline)} & \textbf{MIP-Guided Algorithm} \\
+% \midrule
+% Average Time & $O\left(\frac{n \log n}{p} + p \log p\right)$ & $O\left(\frac{n \log n}{p}\right)$ \\
+% Worst-case Time & $O\left(\frac{n^2}{p}\right)$ & $O\left(\frac{n \log n}{p}\right)$ \\
+% MIP Overhead & --- & $O(N^3)$ (one-time precomputation) \\
+% \midrule
+% Space (total) & $O(n)$ & 
+% \begin{tabular}{@{}l@{}}
+% $O(2n)$ (Option A) \\
+% $O(n)$ (Option B)
+% \end{tabular} \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+% Our proposed MIP-guided algorithm eliminates the need for sampling, pivot selection, and intermediate redistribution by performing a one-time optimal static partitioning. It offers reduced communication overhead, improved load balancing and better scalability in heterogeneous environments. Depending on the chosen distribution strategy (centralized or asynchronous), trade-offs exist between latency and memory usage.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \subsection{Algorithm Overview}
+
+% This is the model of Monga and Lodhi [53] for parallel quicksort, which we will use as a baseline. The algorithm is designed to sort a list of items using multiple workers, each with different speeds. The main steps of the algorithm are as follows:
+
+
+% \begin{algorithm}[H]
+% \caption{Original Heterogeneous PSRS Algorithm}
+
+
+% \vspace{0.5em}
+
+% \SetKwInput{KwInput}{Inputs}
+% \KwInput{
+%     \\ 
+%     $n$: Input data size, \\
+%     $p$: Number of processors, \\
+%     $perf[0..p-1]$: Speed of each processor
+% }
+
+
+% \vspace{0.5em}
+
+% \SetKwInput{KwOutput}{Output}
+% \KwOutput{
+%     \\
+%     Sorted data
+% }
+
+% \vspace{0.5em}
+
+% \textbf{Phase 1: Local Sorting and Sampling} \\
+% \For{each processor $i$}{
+%     $size_i = \frac{n \cdot perf[i]}{\sum perf}$ \\
+%     Assign $size_i$ data items to processor $i$ \\
+%     Processor $i$ sorts its local data using sequential quicksort \\
+%     Pick $L = (p - 1) \cdot perf[i]$ regular samples from sorted data \\
+%     Send samples to a designated processor
+% }
+
+% \vspace{0.5em}
+
+% \textbf{Phase 2: Selecting Final Pivots} \\
+% The designated processor collects and sorts all samples \\
+% The designated processor selects $p - 1$ final pivots from the sorted samples \\
+% The pivots are broadcasted to all processors
+
+% \vspace{0.5em}
+
+% \textbf{Phase 3: Redistributing the Data} \\
+% \For{each processor}{
+%     Processor receives $p - 1$ final pivots from the designated processor \\
+%     Processor sends its local data to other processors \\
+%     Each processor $i$ keeps data in the range between the $(i-1)$th and $i$th pivot, and discards the rest
+% }
+
+% \vspace{0.5em}
+
+% \textbf{Phase 4: Final Merge} \\
+% Each processor sorts its final data chunk \\
+% The designated processor collects all the sorted data from each processor \\
+% The final sorted data is the concatenation of all the sorted chunks
+
+% \vspace{0.5em}
+
+% \end{algorithm}
+
+
+% \vspace{1em}
+
+
+
+
+
+
+
+
+
+% \subsection{Improved Algorithm: MIP-Based Range Partitioning}
+
+% To address the limitations of the original PSRS algorithm, we propose a modification where data ranges are pre-assigned to nodes based on their processing capabilities. Instead of relying on local sampling and redistribution, our approach computes these partitions in advance using a Mixed Integer Programming (MIP) formulation, described in Section~\ref{sec:methodology}.
+
+% This strategy avoids the expensive intermediate redistribution phase and reduces the final merge complexity, as data is sorted directly into its final position by each node.
+
+% \subsubsection{MIP-Guided Bucket Assignment}
+
+% Given the total dataset size $D$ and a heterogeneous set of $N$ nodes with parameters $(r_i, m_i, \ell_i, b_i, u_i)$, we solve the MIP problem defined earlier to compute optimal partition sizes $d_i$ for each node such that:
+
+% \begin{itemize}
+%     \item Each node processes data proportional to its capability.
+%     \item Communication and processing costs are minimized.
+%     \item Memory and budget constraints are respected.
+%     \item The combined partitions cover the entire data range.
+% \end{itemize}
+
+% Once $d_i$ values are determined, we assign fixed key ranges to each node. For example, for a dataset in the range $[0, 100]$ and processing speeds $[4, 3, 2, 1]$, MIP may determine the optimal key space division as:
+
+% \begin{center}
+% \begin{tabular}{l|c|c}
+% \textbf{Worker} & \textbf{Percentage of Total Data} & \textbf{Assigned Range} \\
+% \hline
+% A (4x speed) & 40\% & [0, 39] \\
+% B (3x speed) & 30\% & [40, 69] \\
+% C (2x speed) & 20\% & [70, 89] \\
+% D (1x speed) & 10\% & [90, 100] \\
+% \end{tabular}
+% \end{center}
+
+% The MIP output thus guides the static partitioning of the global value space.
+
+% \subsubsection{Proposed MIP-Guided Algorithm}
+
+% We now present pseudocode for the improved algorithm:
+
+% \begin{algorithm}[H]
+% \caption{MIP-Guided Parallel Range-Sort Algorithm}
+
+% \vspace{0.5em}
+% \SetKwInput{KwInput}{Inputs}
+% \KwInput{
+%     \\ 
+%     $D$: Total dataset \\
+%     $N$: Number of processors \\
+%     $r[1..N]$: Processor speeds \\
+%     Node characteristics: $m_i$, $b_i$, $\ell_i$, $u_i$ \\
+%     (All inputs for the MIP model)
+% }
+
+% \SetKwInput{KwOutput}{Output}
+% \KwOutput{Sorted data}
+
+% \vspace{0.5em}
+% \textbf{Phase 1: Optimal Partitioning using MIP} \\
+% Solve the MIP model to determine $d_i$ for each processor $i$ \\
+% Assign non-overlapping key ranges to each node based on $d_i$ and the global key range
+
+% \vspace{0.5em}
+% \textbf{Phase 2: Data Distribution} \\
+% \For{each item $x$ in $D$}{
+%     Identify target node $i$ where $x$ falls in $i$'s assigned range \\
+%     Send $x$ to node $i$
+% }
+
+% \vspace{0.5em}
+% \textbf{Phase 3: Local Sorting} \\
+% \For{each processor $i$}{
+%     Sort received data using sequential quicksort
+% }
+
+% \vspace{0.5em}
+% \textbf{Phase 4: Final Concatenation (optional)} \\
+% Gather sorted ranges from each node to produce full sorted output
+
+% \end{algorithm}
+
+% \subsubsection{Trade-offs and Design Choices}
+
+% We consider two strategies for data distribution:
+
+% \paragraph{Option A: Centralized Bucketing (Low Latency, High Memory)}
+
+% \begin{itemize}
+%     \item The coordinator node receives all input data.
+%     \item Data is bucketed and forwarded to nodes based on range.
+%     \item Requires $2 \times$ data memory at the coordinator.
+%     \item Faster and more deterministic, but less scalable.
+% \end{itemize}
+
+% \paragraph{Option B: Asynchronous Routing (Low Memory, High Latency)}
+
+% \begin{itemize}
+%     \item Each item is routed independently to the appropriate node.
+%     \item Nodes accumulate their assigned data over time.
+%     \item Minimal memory usage, better for streaming input.
+%     \item Slightly longer completion time due to distributed coordination.
+% \end{itemize}
+
+% \subsubsection{Complexity Analysis}
+
+% \paragraph{Original PSRS Algorithm (Monga and Lodhi)}
+% \begin{itemize}
+%     \item \textbf{Time (average)}: $O(n \log n / p + p \log p)$ — local sort, pivot sort, and final merge.
+%     \item \textbf{Time (worst-case)}: $O(n^2 / p)$ — if quicksort degenerates.
+%     \item \textbf{Space}: $O(n)$ total; includes buffers for redistribution and samples.
+% \end{itemize}
+
+% \paragraph{Proposed MIP-Guided Algorithm}
+% \begin{itemize}
+%     \item \textbf{Time (average)}: $O(n \log n / p)$ — no redistribution or pivot sorting needed.
+%     \item \textbf{Time (worst-case)}: $O(n \log n / p)$ — avoids quicksort degeneracy via presorted inputs.
+%     \item \textbf{MIP Solving Overhead}: $O(k^3)$ (where $k = N$, number of variables); one-time cost.
+%     \item \textbf{Space}: 
+%     \begin{itemize}
+%         \item \textbf{Centralized (A)}: $O(2n)$
+%         \item \textbf{Asynchronous (B)}: $O(n)$
+%     \end{itemize}
+% \end{itemize}
+
+% \subsubsection{Summary}
+
+% Our approach eliminates the need for sample selection, pivot sorting, and redistribution, replacing them with a one-time MIP-based partitioning phase. This leads to better scalability, especially in environments with highly heterogeneous nodes. The trade-off is in memory (Option A) or latency (Option B), both of which are tunable.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% The first phase calculates the heuristic partitioning of the dataset, which is then used to determine the data distribution across the workers. This is where we will replace the heuristic with our MIP model. 
+
+
+% in the original algorithm what is the Big O average and worst case for time and space. it looks like its using a combination of quicksort and bucketsort. i think its major flaw is local sorting first then choosing pivots to assign ranges, redistribute and sort again. 
+
+% what if i alter their algo to determine ranges for each node first to sort and merge once
+
+% Say our total sorted range is 0–100. If worker speeds are [4, 3, 2, 1]:
+
+% Worker A: gets 40% → responsible for values 0–39
+
+% Worker B: 30% → 40–69
+
+% Worker C: 20% → 70–89
+
+% Worker D: 10% → 90–100
+
+
+% i will alter their algo to determine ranges for each node first to sort and merge once.
+
+% there are two approaches one is to set the buckets ranges in the main node before distributing to the nodes to reduce communication overhead but requires double the memory, the second approach is to iterate and asynchronously send the data to the nodes regardless of the order as long as the data is on the corredt node partition range but takes longer low memory usage.
+
+% \subsection*{Time Complexity Analysis}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
