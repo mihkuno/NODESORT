@@ -1,7 +1,8 @@
 \documentclass[]{interact}
 % Use Latin Modern fonts
 \usepackage{lmodern}
-\usepackage{float} 
+\usepackage{float}
+\usepackage{graphicx}
 % Include algorithm2e for algorithm environment
 \usepackage[ruled,vlined]{algorithm2e}
 % To incorporate .eps illustrations using PDFLaTeX
@@ -218,12 +219,12 @@ In addition to node-specific parameters, we optionally define a user-defined inp
 
 
 
-\section{Heterogeneous PSRS Baseline Algorithm}
+\section{Heterogeneous PSRS (Baseline Algorithm)}
 
 This is the model of Monga and Lodhi [53] which we will use as a baseline. The algorithm is designed to sort a list of items using multiple workers, each with different speeds. The main steps of the algorithm are as follows:
 
 \begin{algorithm}[H]
-\caption{Heterogeneous PSRS Baseline Algorithm}
+\caption{Heterogeneous PSRS (Baseline Algorithm)}
 \SetKwInput{KwInput}{Inputs}
 \KwInput{
     \begin{itemize}
@@ -265,7 +266,7 @@ Each processor sorts its final local data \\
 Coordinator concatenates all sorted segments for final output
 \end{algorithm}
 
-\subsection{Limitations of the Baseline Algorithm}
+\subsection{Limitations}
 
 While the Heterogeneous PSRS algorithm by Monga and Lodhi~\cite{monga2020heterogeneous} offers an effective strategy for distributing sorting tasks across processors of varying speeds, it introduces several inefficiencies. The algorithm performs local sorting before establishing the global data partitions, which can result in skewed data distributions during the redistribution phase. This may lead to certain processors receiving significantly larger portions of data, causing load imbalance and increased memory consumption. Furthermore, the algorithm does not account for communication cost or network latency, which are vital considerations in distributed and cloud-based environments. These shortcomings motivate the need for a more adaptive approach that considers both performance and cost constraints when assigning data ranges.
 
@@ -274,9 +275,9 @@ While the Heterogeneous PSRS algorithm by Monga and Lodhi~\cite{monga2020heterog
 
 
 
-\section{MIP-Guided Sorting Algorithm for Heterogeneous Distributed Systems}
+\section{MIP-Guided Sorting (Proposed Algorithm)}
 
-We propose a modified algorithm that replaces the sampling and redistribution stages with a Mixed Integer Programming (MIP) formulation that statically partitions the global key range across nodes.
+We propose a modified algorithm that replaces the sampling and redistribution stages with a Mixed Integer Programming (MIP) formulation that statically partitions the global key range across heterogeneous distributed nodes.
 
 \subsection{Bucket Assignment}
 
@@ -291,19 +292,23 @@ Given the total dataset size $D$ and a heterogeneous set of $N$ nodes with param
 Once $d_i$ values are determined, each node is assigned a fixed key range. For example (illustrative only):
 
 \begin{center}
-\begin{tabular}{l|c|c}
+\begin{tabular}{|p{4cm}|p{5cm}|p{4cm}|}
+\hline
 \textbf{Worker} & \textbf{Percentage of Total Data} & \textbf{Assigned Range} \\
 \hline
 A (4x speed) & 50\% & [0, 49] \\
+\hline
 B (3x speed) & 30\% & [50, 79] \\
+\hline
 C (2x speed) & 20\% & [80, 100] \\
+\hline
 \end{tabular}
 \end{center}
 
 \subsection{Proposed Algorithm}
 
 \begin{algorithm}[H]
-\caption{Hybrid Bucket-Quicksort}
+\caption{MIP-Guided Bucket-Quicksort Hybrid (Proposed Algorithm)}
 
 \SetKwInput{KwInput}{Inputs}
 \KwInput{
@@ -367,74 +372,54 @@ Concatenate sorted outputs from all nodes
 
 
 
+
 \section{Theoretical Complexity Analysis}
 
-A rigorous complexity analysis highlights the theoretical advantages of our MIP-guided approach over the baseline PSRS algorithm, particularly in heterogeneous environments.
+A rigorous complexity analysis highlights the theoretical advantages of our MIP-guided approach over the baseline PSRS algorithm, particularly in heterogeneous distributed nodes.
 
-\subsection{Time Complexity}
+\subsection{Baseline Algorithm}
 
-\subsubsection{PSRS (Baseline)}
-
+\subsubsection{Time Complexity}
 The original Heterogeneous PSRS algorithm involves four distinct phases, each contributing to the overall time complexity:
 
-\begin{itemize}
-    \item \textbf{Phase 1: Local Sorting and Sampling:} Each of the $p$ processors sorts its local data of size $O(n/p)$ on average, taking $O\left(\frac{n}{p} \log \frac{n}{p}\right)$ time using quicksort. Sampling takes $O(p)$ time per processor. The communication of samples to the coordinator takes $O(p^2)$ in the worst case if all processors send their $O(p)$ samples sequentially. Thus, this phase has an average time complexity of $O\left(\frac{n}{p} \log \frac{n}{p} + p^2\right)$.
-    \item \textbf{Phase 2: Pivot Selection:} The coordinator sorts $O(p^2)$ samples, which takes $O(p^2 \log p^2) = O(p^2 \log p)$ time. Broadcasting the $p - 1$ pivots to all $p$ processors takes $O(p)$ time in parallel or $O(p^2)$ sequentially.
-    \item \textbf{Phase 3: Data Redistribution:} Each processor partitions its $O(n/p)$ local data using $p - 1$ pivots, which takes $O(n/p \cdot p) = O(n)$ in the worst case if the pivots are poorly chosen. The redistribution of data among processors can take up to $O(n)$ in the worst-case scenario where one processor receives almost all the data.
-    \item \textbf{Phase 4: Final Sorting and Merge:} Each processor sorts its received data, which can be up to $O(n)$ in the worst case, leading to $O(n \log n)$ for a single processor if load balancing is poor. The coordinator then merges the $p$ sorted segments, which takes $O(n)$ time.
-\end{itemize}
+\paragraph{Phase 1: Local Sorting and Sampling} 
+Each of the $p$ processors sorts its local data of size $O(n/p)$ on average, taking $O\left(\frac{n}{p} \log \frac{n}{p}\right)$ time using quicksort. Sampling takes $O(p)$ time per processor. The communication of samples to the coordinator takes $O(p^2)$ in the worst case if all processors send their $O(p)$ samples sequentially. Thus, this phase has an average time complexity of $O\left(\frac{n}{p} \log \frac{n}{p} + p^2\right)$.
+
+\paragraph{Phase 2: Pivot Selection. }
+The coordinator sorts $O(p^2)$ samples, which takes $O(p^2 \log p^2) = O(p^2 \log p)$ time. Broadcasting the $p - 1$ pivots to all $p$ processors takes $O(p)$ time in parallel or $O(p^2)$ sequentially.
+
+\paragraph{Phase 3: Data Redistribution} Each processor partitions its $O(n/p)$ local data using $p - 1$ pivots, which takes $O(n/p \cdot p) = O(n)$ in the worst case if the pivots are poorly chosen. The redistribution of data among processors can take up to $O(n)$ in the worst-case scenario where one processor receives almost all the data.
+
+\paragraph{Phase 4: Final Sorting and Merge} Each processor sorts its received data, which can be up to $O(n)$ in the worst case, leading to $O(n \log n)$ for a single processor if load balancing is poor. The coordinator then merges the $p$ sorted segments, which takes $O(n)$ time.
+
+\paragraph{Overall Complexity} Combining these phases, the average-case time complexity of the original PSRS algorithm is dominated by the local sorting and pivot selection, yielding $O\left(\frac{n}{p} \log \frac{n}{p} + p^2 \log p + n\right)$. Under ideal load balancing, this simplifies to $O\left(\frac{n \log n}{p} + p^2 \log p\right)$. The worst-case time complexity, particularly due to potential imbalances in data redistribution, can reach $O(n \log n)$ if one processor ends up with most of the data, or even $O(n^2/p)$ if local sorting on an imbalanced partition degrades to quadratic time.
 
 
+\subsubsection{Space Complexity}
+For space complexity, the PSRS algorithm requires local storage for each processor to store its assigned data, which is $O(n/p)$ on average. Sampling generates $O(p)$ samples per processor, and the coordinator stores $O(p^2)$ samples. During data redistribution, processors might need temporary buffers to hold data being sent or received, potentially up to $O(n/p)$ in size per processor. Each processor holds a sorted segment of approximately $O(n/p)$. The total space complexity of the PSRS algorithm is $O(n)$ as the total data is partitioned and stored across the processors. The coordinator requires additional space for the samples, $O(p^2)$.
 
-Combining these phases, the average-case time complexity of the original PSRS algorithm is dominated by the local sorting and pivot selection, yielding $O\left(\frac{n}{p} \log \frac{n}{p} + p^2 \log p + n\right)$. Under ideal load balancing, this simplifies to $O\left(\frac{n \log n}{p} + p^2 \log p\right)$. The worst-case time complexity, particularly due to potential imbalances in data redistribution, can reach $O(n \log n)$ if one processor ends up with most of the data, or even $O(n^2/p)$ if local sorting on an imbalanced partition degrades to quadratic time.
+\subsection{Proposed Algorithm}
+For the MIP-guided algorithm, the process is significantly streamlined. 
 
-\subsubsection{MIP-Guided Algorithm}
+\subsubsection{Time Complexity}
+\paragraph{Phase 1: Static partitioning via MIP}
+This is solved once as a precomputation step. The complexity of solving a general MIP is NP-hard. However, for a fixed number of nodes $N$, the complexity can be bounded by a polynomial function of the input size, which in our case relates to the number of nodes and the complexity of the constraints. Assuming an efficient solver, and considering the number of variables (proportional to $N$) and constraints (also proportional to $N$), a loose upper bound can be considered around $O(N^k)$ for some constant $k$, potentially up to $O(N^3)$ for simpler formulations or higher for more complex ones. This is a one-time overhead.
 
-Our proposed MIP-guided algorithm significantly streamlines the process:
+\paragraph{Phase 2: Data Distribution} For Option A (Centralized Bucketing), the coordinator processes each of the $n$ items once to route it, taking $O(n)$ time. For Option B (Asynchronous Routing), each of the $n$ items is routed directly to a processor. Assuming the routing decision is constant time, this phase takes $O(n)$ time in total, potentially distributed across the network.
 
-\begin{itemize}
-    \item \textbf{Phase 1: Static Partitioning via MIP:} The MIP formulation is solved once as a precomputation step. The complexity of solving a general MIP is NP-hard. However, for a fixed number of nodes $N$, the complexity can be bounded by a polynomial function of the input size, which in our case relates to the number of nodes and the complexity of the constraints. Assuming an efficient solver, and considering the number of variables (proportional to $N$) and constraints (also proportional to $N$), a loose upper bound can be considered around $O(N^k)$ for some constant $k$, potentially up to $O(N^3)$ for simpler formulations or higher for more complex ones. This is a one-time overhead.
-    
-    \item \textbf{Phase 2: Data Distribution:}
-    \begin{itemize}
-        \item \textbf{Option A (Centralized Bucketing):} The coordinator processes each of the $n$ items once to route it, taking $O(n)$ time.
-        \item \textbf{Option B (Asynchronous Routing):} Each of the $n$ items is routed directly to a processor. Assuming the routing decision is constant time, this phase takes $O(n)$ time in total, potentially distributed across the network.
-    \end{itemize}
+\paragraph{Phase 3: Local Sorting} Each of the $N$ processors sorts its assigned data of size $d_i$. Since the MIP aims to balance the load based on processing rates, we expect $d_i \approx O(n/N)$. Thus, the local sorting on each processor takes approximately $O\left(\frac{n}{N} \log \frac{n}{N}\right)$. Executed in parallel, the time for this phase is $O\left(\frac{n}{N} \log \frac{n}{N}\right)$.
 
-    \item \textbf{Phase 3: Local Sorting:} Each of the $N$ processors sorts its assigned data of size $d_i$. Since the MIP aims to balance the load based on processing rates, we expect $d_i \approx O(n/N)$. Thus, the local sorting on each processor takes approximately $O\left(\frac{n}{N} \log \frac{n}{N}\right)$. Executed in parallel, the time for this phase is $O\left(\frac{n}{N} \log \frac{n}{N}\right)$.
+\paragraph{Phase 4: Final Merge (optional)}. If a final merged output is required, the coordinator concatenates the $N$ sorted segments, taking $O(n)$ time. This step can be avoided if the output is acceptable as a set of distributed sorted partitions.
 
-    \item \textbf{Phase 4: Final Merge (Optional):} If a final merged output is required, the coordinator concatenates the $N$ sorted segments, taking $O(n)$ time. This step can be avoided if the output is acceptable as a set of distributed sorted partitions.
-\end{itemize}
+\paragraph{Overall Complexity} Therefore, the overall time complexity of the MIP-guided algorithm, after the initial MIP solving, is dominated by the data distribution and local sorting phases, resulting in an average and worst-case time complexity of $O(N^k + n + \frac{n}{N} \log \frac{n}{N})$. If $N$ is significantly smaller than $n$, this simplifies to $O(n + \frac{n}{N} \log \frac{n}{N})$. The one-time MIP solving overhead $O(N^k)$ becomes negligible for large datasets processed multiple times.
 
-Therefore, the overall time complexity of the MIP-guided algorithm, after the initial MIP solving, is dominated by the data distribution and local sorting phases, resulting in an average and worst-case time complexity of $O(N^k + n + \frac{n}{N} \log \frac{n}{N})$. If $N$ is significantly smaller than $n$, this simplifies to $O(n + \frac{n}{N} \log \frac{n}{N})$. The one-time MIP solving overhead $O(N^k)$ becomes negligible for large datasets processed multiple times.
+\subsubsection{Space Complexity}
 
-\subsection{Space Complexity}
+For the MIP-guided algorithm, partition storage requires each of the $N$ nodes to store its assigned partition of size $d_i$, with $\sum d_i = n$. Thus, the total storage for the data is $O(n)$. For data distribution, 
 
-\subsubsection{PSRS (Baseline)}
+\paragraph{Option A: (Centralized Bucketing)} Temporarily holds the entire dataset for routing, requiring $O(n)$ additional space, leading to a total of $O(2n)$ peak memory usage at the coordinator. 
 
-\begin{itemize}
-    \item \textbf{Local Storage:} Each processor needs to store its assigned data, which is $O(n/p)$ on average.
-    \item \textbf{Sampling:} Each processor generates $O(p)$ samples, and the coordinator stores $O(p^2)$ samples.
-    \item \textbf{Redistribution Buffers:} During data redistribution, processors might need temporary buffers to hold data being sent or received, potentially up to $O(n/p)$ in size per processor.
-    \item \textbf{Final Sorted Segments:} Each processor holds a sorted segment of approximately $O(n/p)$.
-\end{itemize}
-
-The total space complexity of the PSRS algorithm is $O(n)$ as the total data is partitioned and stored across the processors. The coordinator requires additional space for the samples, $O(p^2)$.
-
-\subsubsection{MIP-Guided Algorithm}
-
-\begin{itemize}
-    \item \textbf{Partition Storage:} Each of the $N$ nodes stores its assigned partition of size $d_i$, with $\sum d_i = n$. Thus, the total storage for the data is $O(n)$.
-    \item \textbf{Data Distribution:}
-    \begin{itemize}
-        \item \textbf{Option A (Centralized Bucketing):} The coordinator temporarily holds the entire dataset for routing, requiring $O(n)$ additional space, leading to a total of $O(2n)$ peak memory usage at the coordinator.
-        \item \textbf{Option B (Asynchronous Routing):} Each item is routed individually, minimizing the need for a central buffer. The memory footprint remains $O(n)$ distributed across the nodes.
-    \end{itemize}
-    \item \textbf{Local Sorting:} Each processor sorts its local partition $d_i$ in-place or requires $O(d_i)$ auxiliary space, which is within the $O(n)$ total.
-\end{itemize}
-
-The space complexity of the MIP-guided algorithm is $O(n)$ in the distributed asynchronous routing scenario (Option B). The centralized bucketing strategy (Option A) incurs a temporary $O(2n)$ space requirement at the coordinator. The space required for storing the MIP model and its solution is dependent on the solver and the complexity of the formulation but is typically much smaller than the dataset size $n$, especially for a fixed number of nodes $N$.
-
+\paragraph{Option B: (Asynchronous Routing)} Routes each item individually, minimizing the need for a central buffer. The memory footprint remains $O(n)$ distributed across the nodes. Local sorting requires each processor to sort its local partition $d_i$ in-place or requires $O(d_i)$ auxiliary space, which is within the $O(n)$ total. The space required for storing the MIP model and its solution is dependent on the solver and the complexity of the formulation but is typically much smaller than the dataset size $n$, especially for a fixed number of nodes $N$.
 
 
 
@@ -443,7 +428,7 @@ The space complexity of the MIP-guided algorithm is $O(n)$ in the distributed as
 
 In this section, we formally analyze and compare the time complexity of the baseline PSRS algorithm and the proposed MIP-guided algorithm. The analysis emphasizes both average-case behavior and worst-case scenarios under heterogeneous processing environments.
 
-\subsubsection{Baseline PSRS Algorithm}
+\subsubsection{Baseline Algorithm}
 
 The PSRS algorithm executes in four distinct phases: local sorting and sampling, pivot selection, data redistribution, and final sorting or merging. The overall time complexity is characterized as follows:
 
@@ -465,7 +450,7 @@ However, due to dynamic pivot selection and possible load imbalance, the worst-c
 
 This degradation arises when a significant portion of data is allocated to a single processor due to poor pivot selection.
 
-\subsubsection{Proposed MIP-Guided Algorithm}
+\subsubsection{Proposed Algorithm}
 
 The MIP-guided algorithm separates the partitioning step as a one-time optimization via a Mixed Integer Programming formulation. After solving the MIP, the data is distributed based on a precomputed partitioning strategy that accounts for processor heterogeneity. The total time complexity is expressed as:
 
@@ -475,25 +460,116 @@ The MIP-guided algorithm separates the partitioning step as a one-time optimizat
 
 Here, $N$ is the number of processors and $k$ is a constant that depends on the complexity of the MIP formulation. This overhead is incurred once and amortized over multiple executions. The dominant runtime costs after MIP solving are data distribution and local sorting.
 
-\subsubsection{Summary}
 
-\begin{table}[H]
+
+\subsubsection{Formal Complexity Comparison}
+
+\begin{table}[H]\
 \centering
-\caption{Asymptotic Time Complexity Comparison}
-\begin{tabular}{l|l|l}
-\toprule
-\textbf{Metric} & \textbf{PSRS (Baseline)} & \textbf{MIP-Guided Algorithm} \\
-\midrule
-Average Time & $\mathcal{O}\left(\frac{n \log n}{p} + p^2 \log p\right)$ & $\mathcal{O}\left(N^k + n + \frac{n}{N} \log \frac{n}{N}\right)$ \\
-Worst-Case Time & $\mathcal{O}(n \log n)$ & $\mathcal{O}\left(N^k + n + \frac{n}{N} \log \frac{n}{N}\right)$ \\
-Preprocessing Overhead & None & $\mathcal{O}(N^k)$ (amortized) \\
-Load Balancing & Data-dependent (dynamic) & Optimized (static) \\
-\bottomrule
+\begin{tabular}{|p{6.6cm}|p{6.6cm}|}
+\hline
+\textbf{Algorithm} & \textbf{Time Complexity} \\
+\hline
+PSRS (Best/Average) & $O\left(\dfrac{n \log n}{p} + p^2 \log p\right)$ \\
+\hline
+PSRS (Worst-case) & $O(n \log n)$ \\
+\hline
+MIP-Guided & $O\left(N^k + n + \dfrac{n}{N} \log \dfrac{n}{N}\right)$ \\
+\hline
 \end{tabular}
 \end{table}
 
 
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{6.6cm}|p{6.6cm}|}
+\hline
+\textbf{Algorithm} & \textbf{Space Complexity} \\
+\hline
+PSRS (Baseline) & $O(n)$ total; includes buffers for redistribution and samples. \\
+\hline
+MIP-Guided (Centralized Bucketing) & $O(2n)$; requires double memory at the coordinator for routing. \\
+\hline
+MIP-Guided (Asynchronous Routing) & $O(n)$; distributed memory usage with minimal central buffer. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[h] % 'h' means 'here'
+    \centering
+    \includegraphics[width=1\textwidth]{graph-complexity.png}
+    \label{fig:example}
+\end{figure}
+
+
+\subsubsection{Performance Factors Comparison}
+
+\begin{table}[H]
+\begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Aspect} & \textbf{PSRS} & \textbf{MIP-Guided} \\
+\hline
+Load Balancing & Data-dependent and dynamic, prone to imbalance & Statistically balanced using processor profiles \\
+\hline
+Synchronization & Multiple barriers: sampling, pivoting, merging & Minimal, only at merge (if needed) \\
+\hline
+Communication Overhead & $O(p^2)$ (samples), $O(n)$ (data) & $O(n)$ (initial only) \\
+\hline
+Preprocessing & None & One-time $O(N^k)$ for MIP \\
+\hline
+Worst-case & $O(n \log n)$ & Consistently balanced, better in heterogeneity \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\subsubsection{Qualitative Comparison}
+
+\begin{table}[H]
+\begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Aspect} & \textbf{PSRS} & \textbf{MIP-Guided} \\
+\hline
+Advantages &
+\begin{itemize}
+    \item No MIP overhead
+    \item Adaptive to data changes
+    \item Well-established algorithm
+\end{itemize}
+&
+\begin{itemize}
+    \item Balanced load across heterogeneous nodes
+    \item Fewer synchronizations
+    \item Lower communication overhead
+    \item Predictable performance
+    \item Reusable partitioning strategy
+\end{itemize} \\
+\hline
+Disadvantages &
+\begin{itemize}
+    \item Load imbalance possible
+    \item High sync and communication cost
+    \item Poor performance on heterogeneous systems
+\end{itemize}
+&
+\begin{itemize}
+    \item MIP overhead (once)
+    \item Less adaptive to data variance per run
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\subsubsection{Summary}
+
 The MIP-guided algorithm offers theoretical advantages in both average and worst-case runtime. By removing the need for sampling and pivot-based partitioning at runtime, it eliminates a primary source of imbalance and communication overhead. In contrast, the PSRS algorithm is more susceptible to skewed load distributions and requires additional synchronization steps, which may limit scalability on heterogeneous hardware. Although solving the MIP model incurs an initial computational cost, this cost becomes negligible in scenarios involving repeated sorting tasks or large datasets. As such, the MIP-guided approach is especially advantageous in environments where preprocessing is feasible and performance consistency is critical. The MIP-guided algorithm demonstrates superior asymptotic performance under realistic workload and platform assumptions, particularly when amortizing the MIP overhead across repeated executions or in systems with significant processor heterogeneity.
+
+
+
+
+
+
 
 
 
