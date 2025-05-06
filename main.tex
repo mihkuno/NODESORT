@@ -304,26 +304,7 @@ C (2x speed) & 20\% \\
 \end{tabular}
 \end{center}
 
-
-\subsubsection{Distribution Strategies}
-\begin{table}[H]
-\centering
-\renewcommand{\arraystretch}{1.5} % Adjust the row height
-\footnotesize
-\begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
-\hline
-\textbf{Aspect} & \textbf{Option A: Centralized Bucketing} & \textbf{Option B: Asynchronous Routing} \\ \hline
-Memory Usage & Requires $2 \times$ dataset size in memory & Lower memory footprint, suited for streaming or distributed sources \\ \hline
-Latency & Low latency and simple coordination & May incur higher latency due to decentralized routing \\ \hline
-Scalability & Limited scalability due to centralized coordination & Better scalability with distributed routing \\ \hline
-Coordination Complexity & Simple, centralized coordination & Decentralized routing increases complexity \\ \hline
-Billing Costs & Lower due to fewer node interactions & Higher due to more frequent node usage \\ \hline
-\end{tabular}
-\caption{Comparison of Centralized Bucketing and Asynchronous Routing}
-\end{table}
-
-
-\subsubsection{Merge Strategies}
+\subsection{Merge Strategies}
 
 \begin{table}[H]
 \centering
@@ -342,10 +323,10 @@ Coordination Overhead & Minimal; relies on pre-sorted blocks & Higher coordinati
 \end{table}
 
 
-\subsection{Proposed Algorithm}
+\subsection{Pseudocode}
 
 \begin{algorithm}[H]
-\caption{LP-Guided Bucket-Quicksort Hybrid (Proposed Algorithm)}
+\caption{LP-Guided Hybrid (Proposed Algorithm)}
 
 \SetKwInput{KwInput}{Inputs}
 \KwInput{
@@ -363,29 +344,21 @@ Coordination Overhead & Minimal; relies on pre-sorted blocks & Higher coordinati
 \SetKwInput{KwOutput}{Output}
 \KwOutput{
     \begin{itemize}
-        \item Sorted data
+        \item Sorted dataset
     \end{itemize}
 }
 
-\textbf{Phase 1: Static Partitioning via LP} \\
+\textbf{Phase 1: Static Partitioning} \\
 Solve LP to determine proportion $p_i$ of data that node $i$ should process, where $\sum p_i = 1$ \\
 Compute data volume per node: $d_i = p_i \cdot |D|$
 
-\textbf{Phase 2: Data Distribution} \\
-\textbf{Option A: Centralized Bucketing (Low Latency, High Memory)} \\
-Initialize $N$ local buckets $B_1, B_2, \ldots, B_N$ \\
-\For{each item $x$ in $D$}{
-    Assign $x$ to a bucket $B_i$ such that the current size of $B_i$ is less than $d_i$
-}
-\ForEach{bucket $B_i$}{
-    Send $B_i$ to node $i$ for sorting
+\textbf{Phase 2: Block Distribution} \\
+For each node $i$, calculate how many items it should receive by multiplying its proportion $p_i$ with the total number of items $|D|$, then rounding down: $\text{floor}(p_i \cdot |D|)$ \\
+Set starting index $c_0 = 0$ and compute cut points $c_i$ by adding up the sizes \\
+\For{each node $i$ from $1$ to $N$}{
+    Distribute subarray $D[c_{i-1} : c_i]$ to node $i$
 }
 
-\textbf{Option B: Asynchronous Routing (Low Memory, High Latency)} \\
-Initialize counters $c_i \leftarrow 0$ for all nodes \\
-\For{each item $x$ in $D$}{
-    Route $x$ to node $i$ such that $c_i < d_i$ and increment $c_i$
-}
 
 \textbf{Phase 3: Local Sorting} \\
 \For{each node $i$}{
@@ -394,7 +367,7 @@ Initialize counters $c_i \leftarrow 0$ for all nodes \\
 
 \textbf{Phase 4: Final Merge} \\
 
-\textbf{Option A: Block Merge (Centralized Bucketing)} \\
+\textbf{Option A: Centralized Block} \\
 Let $S_1, S_2, \ldots, S_N$ be the sorted blocks received from each node \\
 Initialize a double-ended queue: $\texttt{merged\_sorted} \leftarrow$ empty deque \\
 
@@ -407,7 +380,7 @@ Initialize a double-ended queue: $\texttt{merged\_sorted} \leftarrow$ empty dequ
 
 \vspace{2mm}
 
-\textbf{Option B: Coordinated Min-Max Pop (Asynchronous Routing)} \\
+\textbf{Option B: Coordinated Min-Max Pop} \\
 Initialize a double-ended queue: $\texttt{merged\_sorted} \leftarrow$ empty deque \\
 Let each node expose head and tail of its local sorted buffer on request \\
 
@@ -445,40 +418,59 @@ The original Heterogeneous PSRS algorithm involves four distinct phases, each co
 
 % Paragraph for Phase 1: Local Sorting and Sampling
 \paragraph{Phase 1: Local Sorting and Sampling} 
-Each of the $p$ processors sorts its local data of size $O(n/p)$ on average, taking $O\left(\frac{n}{p} \log \frac{n}{p}\right)$ time using quicksort. Sampling takes $O(p)$ time per processor. The communication of samples to the coordinator takes $O(p^2)$ in the worst case if all processors send their $O(p)$ samples sequentially. Thus, this phase has an average time complexity of $O\left(\frac{n}{p} \log \frac{n}{p} + p^2\right)$.
+Each of the $N$ nodes sorts its local data of size $O(n/N)$ on average, taking $O\left(\frac{n}{N} \log \frac{n}{N}\right)$ time using quicksort. Sampling takes $O(N)$ time per node. The communication of samples to the coordinator takes $O(N^2)$ in the worst case if all nodes send their $O(N)$ samples sequentially. Thus, this phase has an average time complexity of $O\left(\frac{n}{N} \log \frac{n}{N} + N^2\right)$.
 
 % Paragraph for Phase 2: Pivot Selection
 \paragraph{Phase 2: Pivot Selection}
-The coordinator sorts $O(p^2)$ samples, which takes $O(p^2 \log p^2) = O(p^2 \log p)$ time. Broadcasting the $p - 1$ pivots to all $p$ processors takes $O(p)$ time in parallel or $O(p^2)$ sequentially.
+The coordinator sorts $O(N^2)$ samples, which takes $O(N^2 \log N^2) = O(N^2 \log N)$ time. Broadcasting the $N - 1$ pivots to all $N$ nodes takes $O(N)$ time in parallel or $O(N^2)$ sequentially.
 
 % Paragraph for Phase 3: Data Redistribution
-\paragraph{Phase 3: Data Redistribution} Each processor partitions its $O(n/p)$ local data using $p - 1$ pivots, which takes $O(n/p \cdot p) = O(n)$ in the worst case if the pivots are poorly chosen. The redistribution of data among processors can take up to $O(n)$ in the worst-case scenario where one processor receives almost all the data.
+\paragraph{Phase 3: Data Redistribution} Each node partitions its $O(n/N)$ local data using $N - 1$ pivots, which takes $O(n/N \cdot N) = O(n)$ in the worst case if the pivots are poorly chosen. The redistribution of data among nodes can take up to $O(n)$ in the worst-case scenario where one node receives almost all the data.
 
 % Paragraph for Phase 4: Final Sorting and Merge
-\paragraph{Phase 4: Final Sorting and Merge} Each processor sorts its received data, which can be up to $O(n)$ in the worst case, leading to $O(n \log n)$ for a single processor if load balancing is poor. The coordinator then merges the $p$ sorted segments, which takes $O(n)$ time.
+\paragraph{Phase 4: Final Sorting and Merge} Each node sorts its received data, which can be up to $O(n)$ in the worst case, leading to $O(n \log n)$ for a single node if load balancing is poor. The coordinator then merges the $N$ sorted segments, which takes $O(n)$ time.
 
 % Paragraph for overall complexity
-\paragraph{Overall Complexity} Combining these phases, the average-case time complexity of the original PSRS algorithm is dominated by the local sorting and pivot selection, yielding $O\left(\frac{n}{p} \log \frac{n}{p} + p^2 \log p + n\right)$. Under ideal load balancing, this simplifies to $O\left(\frac{n \log n}{p} + p^2 \log p\right)$. The worst-case time complexity, particularly due to potential imbalances in data redistribution, can reach $O(n \log n)$ if one processor ends up with most of the data, or even $O(n^2/p)$ if local sorting on an imbalanced partition degrades to quadratic time.
+\paragraph{Overall Complexity} 
+The PSRS algorithm executes in four distinct phases: local sorting and sampling, pivot selection, data redistribution, and final sorting or merging. Combining these phases, the average-case time complexity of the original PSRS algorithm is dominated by the local sorting and pivot selection, yielding
+
+\begin{equation}
+    \mathcal{O}\left( \underbrace{\frac{n}{N} \log \frac{n}{N}}_{\text{local sorting}} + \underbrace{N^2 \log N}_{\text{pivot selection}} + \underbrace{n}_{\text{redistribution}} \right)
+\end{equation}
+Under ideal load balancing and when \(N \ll n\), this simplifies to:
+\begin{equation}
+    \mathcal{O}\left( \underbrace{\frac{n \log n}{N}}_{\text{local sorting}} + \underbrace{N^2 \log N}_{\text{pivot selection}} \right) \quad \text{(since \(\log \frac{n}{N} \approx \log n\) for \(N \ll n\))}
+\end{equation}
+However, due to dynamic pivot selection and load imbalance:
+\begin{itemize}
+     \item If one node is assigned a disproportionately large portion of the data, the worst-case time complexity becomes:
+        \begin{equation}
+            \mathcal{O}\left( \underbrace{n \log n}_{\text{sorting dominated by the largest partition}} \right)
+        \end{equation}
+        \item If the local sorting algorithm performs poorly on specific input patterns (e.g., quicksort with highly unbalanced partitions):
+        \begin{equation}
+            \mathcal{O}\left( \underbrace{n^2}_{\text{quadratic worst-case sorting due to poor partitioning}} \right)
+        \end{equation}
+\end{itemize}
 
 % Subsubsection for space complexity
 \subsubsection{Space Complexity}
-For space complexity, the PSRS algorithm requires local storage for each processor to store its assigned data, which is $O(n/p)$ on average. Sampling generates $O(p)$ samples per processor, and the coordinator stores $O(p^2)$ samples. During data redistribution, processors might need temporary buffers to hold data being sent or received, potentially up to $O(n/p)$ in size per processor. Each processor holds a sorted segment of approximately $O(n/p)$. The total space complexity of the PSRS algorithm is $O(n)$ as the total data is partitioned and stored across the processors. The coordinator requires additional space for the samples, $O(p^2)$.
+For space complexity, the PSRS algorithm requires local storage for each node to store its assigned data, which is $O(n/N)$ on average. 
 
+\paragraph{Phase 1: Local Sorting and Sampling} 
+During the local sorting and sampling phase, each node stores its assigned data locally, requiring $O(n/N)$ space. Additionally, each node generates $O(N)$ samples, which are sent to the coordinator. The coordinator stores $O(N^2)$ samples in total, as it collects $O(N)$ samples from each of the $N$ nodes.
 
-\subsubsection{Complexity Analysis}
-The PSRS algorithm executes in four distinct phases: local sorting and sampling, pivot selection, data redistribution, and final sorting or merging. The overall time complexity is characterized as follows:
-\begin{equation}
-    \mathcal{O}\left( \underbrace{\frac{n}{p} \log \frac{n}{p}}_{\text{local sorting and sampling}} + \underbrace{p^2 \log p}_{\text{pivot selection}} + \underbrace{n}_{\text{redistribution}} \right)
-\end{equation}
-Under ideal load balancing and efficient communication, this simplifies to:
-\begin{equation}
-    \mathcal{O}\left( \underbrace{\frac{n \log n}{p}}_{\text{local sorting and sampling}} + \underbrace{p^2 \log p}_{\text{pivot selection}} \right)
-\end{equation}
-However, due to dynamic pivot selection and possible load imbalance, the worst-case time complexity may degrade to:
-\begin{equation}
-    \mathcal{O}\left( \underbrace{n \log n}_{\text{worst-case due to load imbalance}} \right)
-\end{equation}
-This degradation arises when a significant portion of data is allocated to a single processor due to poor pivot selection.
+\paragraph{Phase 2: Pivot Selection} 
+In the pivot selection phase, the coordinator sorts the collected $O(N^2)$ samples. This requires $O(N^2)$ space for storing and processing the samples. The pivots themselves, $N - 1$ in number, require negligible additional space.
+
+\paragraph{Phase 3: Data Redistribution} 
+During data redistribution, nodes may need temporary buffers to hold data being sent or received. These buffers can be up to $O(n/N)$ in size per node, depending on the volume of data being exchanged.
+
+\paragraph{Phase 4: Final Sorting and Merge} 
+In the final sorting and merge phase, each node holds a sorted segment of approximately $O(n/N)$. The coordinator may require additional space to merge the sorted segments, but this is typically $O(n)$ as it processes the entire dataset.
+
+\paragraph{Overall Space Complexity} 
+The total space complexity of the PSRS algorithm is $O(n)$, as the total data is partitioned and stored across the nodes. The coordinator requires additional space for the samples, $O(N^2)$, which is negligible compared to the total data size for large $n$.
 
 % Subsection for the proposed algorithm
 \subsection{Proposed Algorithm}
@@ -487,13 +479,13 @@ For the LP-guided algorithm, the process is significantly streamlined.
 % Subsubsection for time complexity
 \subsubsection{Time Complexity}
 
-\paragraph{Phase 1: Static Partitioning via LP}
+\paragraph{Phase 1: Static Partitioning}
 This is solved once as a precomputation step. The complexity of solving a Linear Programming problem is polynomial, typically handled by efficient algorithms like the interior-point method or simplex method. For practical LP solvers, the complexity is often approximated as $O(N^3)$, where $N$ is the number of nodes, based on the number of variables (proportional to $N$) and constraints (also proportional to $N$). 
 
-Although the constraint matrix of a linear program has \(O(N^2)\) entries, solving the LP involves more than just accessing these entries. Matrix operations such as factorization or inversion generally take \(O(N^3)\) time. While sparsity can reduce this in practice, we conservatively estimate the complexity as $O(N^3)$. This is a one-time overhead, and for a fixed number of nodes $N$, it becomes negligible over repeated runs.
+Although the constraint matrix of a linear program has \(O(N^2)\) entries, solving the LP involves more than just accessing these entries. Matrix operations such as factorization or inversion generally take \(O(N^3)\) time [57]. While sparsity can reduce this in practice, we conservatively estimate the complexity as $O(N^3)$. This is a one-time overhead, and for a fixed number of nodes $N$, it becomes negligible over repeated runs.
 
 \paragraph{Phase 2: Data Distribution}
-For Option A (Centralized Bucketing), data items are first collected and assigned to $N$ local buckets at the coordinator before being sent to the nodes. This incurs a time complexity of $O(n + N)$. Option B (Asynchronous Routing), on the other hand, routes each data item directly to its target node using the LP-generated partition map, avoiding central bucketing. This results in a slightly simpler time complexity of $O(n)$. In both cases, the time is linear in the dataset size.
+Since the assignment is static and precomputed, each node directly receives its designated data block without coordination overhead or routing logic. The data is assumed to be globally addressable or pre-divided based on offsets, so the coordinator does not mediate or relay data. This results in a linear time complexity for distribution $O(n)$ as each of the $n$ items is sent directly to its assigned node.
 
 \paragraph{Phase 3: Local Sorting}
 Each of the $N$ nodes sorts its assigned partition of size $d_i$. Since the LP aims to balance the workload, we expect $d_i \approx O(n/N)$. The sorting time per node is $O\left(\frac{n}{N} \log \frac{n}{N}\right)$. With parallel execution, the overall sorting time remains $O\left(\frac{n}{N} \log \frac{n}{N}\right)$.
@@ -502,56 +494,49 @@ Each of the $N$ nodes sorts its assigned partition of size $d_i$. Since the LP a
 Both options use a coordinated merge phase where the coordinator retrieves the global minimum and maximum elements in each round. This requires scanning $N$ candidates per iteration, with $n/2$ iterations in total (since two items are merged per round), yielding a worst-case time complexity of $O(nN)$ for the merge. This step is optional if a distributed sorted output is acceptable.
 
 \paragraph{Overall Complexity}
-The total time complexity for both options is thus:
+With the updated distribution phase, the total time complexity becomes:
 
-\begin{itemize}
-    \item \textbf{Option A (Centralized Bucketing)}: $O(N^3 + n + N + \frac{n}{N} \log \frac{n}{N} + nN)$
-    \item \textbf{Option B (Asynchronous Routing)}: $O(N^3 + n + \frac{n}{N} \log \frac{n}{N} + nN)$
-\end{itemize}
+\begin{equation}
+    O\left( 
+        \underbrace{N^3}_{\text{LP solve}} 
+        + \underbrace{n}_{\text{distribution}} 
+        + \underbrace{\frac{n}{N} \log \frac{n}{N}}_{\text{local sort}} 
+        + \underbrace{nN}_{\text{merge}}
+    \right)
+\end{equation}
 
-When $N \ll n$, both simplify to $O(nN + \frac{n}{N} \log \frac{n}{N})$ (ignoring constants and lower-order terms). The $O(N^3)$ LP precomputation cost becomes negligible when amortized over repeated sorting tasks with fixed $N$.
+This streamlined model avoids the intermediate routing layer and central buffers entirely, improving both runtime and memory efficiency. When $N \ll n$, this simplifies to:
 
-% Subsubsection for space complexity
+\begin{equation}
+    O\left( 
+        \underbrace{nN}_{\text{merge}} 
+        + \underbrace{\frac{n}{N} \log \frac{n}{N}}_{\text{local sort}} 
+    \right)
+\end{equation}
+
+amortizing the $O(N^3)$ LP cost over repeated executions.
+
 \subsubsection{Space Complexity}
-Each node stores only its local partition of size $d_i$, where $\sum d_i = n$, giving a total data storage of $O(n)$. The differences arise in the temporary memory usage during distribution and merging.
+Each node stores only its assigned partition of size $d_i$, where $\sum d_i = n$, resulting in a total distributed memory usage of $O(n)$.
 
-\paragraph{Option A (Centralized Bucketing)}
-The coordinator temporarily holds all $n$ items in memory for bucketing and routing, resulting in a peak memory usage of $O(2n)$ at the coordinator. In addition, the LP solver uses $O(N^2)$ space for the constraint matrix and working buffers. Final merging may also require temporarily storing all $N$ sorted segments at the coordinator, although this can be streamed in practice.
+\paragraph{Phase 1: Static Partitioning}
+The LP solver still consumes $O(N^2)$ space for storing the constraint matrix and internal buffers. This space is allocated once during initialization and reused across multiple executions.
 
-\paragraph{Option B (Asynchronous Routing)}
-This avoids central bucketing. Each item is routed immediately to its target node, minimizing the coordinator’s memory usage. The total memory remains $O(n)$ but is fully distributed. The LP solver still uses $O(N^2)$ memory once. The coordinator only needs to retain $O(N)$ pointers (e.g., current head/tail) for the merge phase, making it more space-efficient than Option A.
+\paragraph{Phase 2: Data Distribution}
+With direct data assignment, no intermediate data structures are needed at the coordinator. Each item is sent directly to its destination node without temporary storage. Thus, the coordinator’s memory usage is reduced to only managing lightweight metadata (e.g., offsets or boundaries), which requires $O(N)$ space.
 
-\subsubsection{Complexity Analysis}
-The LP-guided algorithm cleanly separates the static partitioning step (a one-time cost) from the dynamic sorting pipeline. After solving the LP, sorting is guided by a cost-aware, precomputed partitioning strategy. The two variants differ primarily in memory footprint and routing complexity:
+\paragraph{Phase 3: Local Sorting}
+Each node performs an in-place sort on its local partition. Since no additional structures are required beyond the input array and constant auxiliary space for the sorting algorithm (e.g., quicksort or heapsort), the space complexity remains $O\left(\frac{n}{N}\right)$ per node. The total space across all nodes is still $O(n)$.
 
-\paragraph{Option A: Centralized Bucketing}
-This option routes through the coordinator and temporarily buffers all $n$ items before dispatching. The final merge involves scanning $N$ node outputs per round, leading to a total time complexity of:
+\paragraph{Phase 4: Final Merge}
+The coordinated merge step requires the coordinator to keep track of one active element (or pointer) per node, resulting in $O(N)$ memory overhead. Optionally, if streaming is not used, the coordinator may need to buffer the entire merged result, requiring an additional $O(n)$ space.
 
-\begin{equation}
-    O\left( 
-        \underbrace{N^3}_{\text{LP solve}} 
-        + \underbrace{n}_{\text{distribution}} 
-        + \underbrace{N}_{\text{routing overhead}} 
-        + \underbrace{\frac{n}{N} \log \frac{n}{N}}_{\text{local sort}} 
-        + \underbrace{nN}_{\text{merge}}
-    \right)
-\end{equation}
-
-Peak space usage is $O(2n)$ at the coordinator due to centralized routing.
-
-\paragraph{Option B: Asynchronous Routing}
-This option avoids centralized buffers by routing items directly to the nodes. It requires minimal space at the coordinator and achieves the same computational complexity (except the $O(N)$ routing overhead is avoided):
-
-\begin{equation}
-    O\left( 
-        \underbrace{N^3}_{\text{LP solve}} 
-        + \underbrace{n}_{\text{distribution}} 
-        + \underbrace{\frac{n}{N} \log \frac{n}{N}}_{\text{local sort}} 
-        + \underbrace{nN}_{\text{merge}}
-    \right)
-\end{equation}
-
-Peak space usage is $O(n)$, distributed evenly across the nodes, with only $O(N)$ overhead at the coordinator for merge coordination.
+\paragraph{Overall Space Usage}
+\begin{itemize}
+    \item LP solver and metadata: $O(N^2)$ at initialization.
+    \item Total data storage: $O(n)$, distributed across $N$ nodes.
+    \item Merge coordination: $O(N)$ for pointers; optionally $O(n)$ for buffering.
+\end{itemize}
 
 
 
@@ -561,23 +546,7 @@ Peak space usage is $O(n)$, distributed evenly across the nodes, with only $O(N)
 In this section, we formally analyze and compare the time complexity of the baseline PSRS algorithm and the proposed LP-guided algorithm, incorporating both Option A and Option B for data distribution. The analysis emphasizes both average-case behavior and worst-case scenarios under heterogeneous processing environments.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \footnotesize
 \renewcommand{\arraystretch}{1.5} % Adjust the row height
@@ -585,8 +554,7 @@ In this section, we formally analyze and compare the time complexity of the base
 \hline
 \textbf{Algorithm} & \textbf{Average Case} & \textbf{Worst Case} \\ \hline
 PSRS & $O\left(\frac{n \log n}{p} + p^2 \log p\right)$ & $O(n \log n)$ \\ \hline
-LP-guided (Option A) & $O(n + N + \frac{n}{N} \log \frac{n}{N} + nN)$ & $O(N^3 + n + N + \frac{n}{N} \log \frac{n}{N} + nN)$ \\ \hline
-LP-guided (Option B) & $O(n + \frac{n}{N} \log \frac{n}{N} + nN)$ & $O(N^3 + n + \frac{n}{N} \log \frac{n}{N} + nN)$ \\ \hline
+LP-guided & $O(n + \frac{n}{N} \log \frac{n}{N} + nN)$ & $O(N^3 + n + \frac{n}{N} \log \frac{n}{N} + nN)$ \\ \hline
 \end{tabular}
 \caption{Time Complexity Comparison (Average vs Worst Case)}
 \end{table}
@@ -609,19 +577,16 @@ LP-guided (Option B) & $O(n)$ & $O(n + N^2)$ \\
 \caption{Space Complexity Comparison (Average vs Worst Case)}
 \end{table}
 
-    
-% Note: Excluding the figure as per guidelines to avoid external image dependencies
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=1\textwidth]{graph-complexity.png}
-%     \caption{Complexity Comparison Graph}
-%     \label{fig:example}
-% \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{graph-complexity.png}
+    \caption{Complexity Comparison Graph}
+    \label{fig:example}
+\end{figure}
 
     
-
-
-\begin{table}[h]
+\begin{table}[H]
 \footnotesize
 \renewcommand{\arraystretch}{1.5} % Adjust the row height
 \begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
@@ -636,15 +601,29 @@ Communication Overhead & $O(p^2)$ (samples), $O(n)$ (data) & $O(n)$ (initial onl
 \hline
 Preprocessing & None & One-time $O(N^3)$ for LP \\
 \hline
+Memory Usage & Prone to imbalance due to uneven partition sizes & Evenly balanced partitions based on LP solution \\
+\hline
 Worst-case & $O(n \log n)$ & Consistently balanced, better in heterogeneity \\
 \hline
 \end{tabular}
 \caption{Performance Factors Comparison}
 \end{table}
 
+The LP-guided algorithm offers clear advantages over PSRS in terms of scalability, memory balance, and load distribution. By eliminating runtime sampling and pivot-based partitioning, LP-guided minimizes both load and memory imbalance as well as communication overhead, making it particularly suitable for heterogeneous systems.
 
+\textbf{Time complexity:}
+\begin{itemize}
+    \item PSRS relies on dynamic sampling and pivot selection, which can lead to inefficiencies on large systems with many nodes.
+    \item LP-guided approaches require preprocessing but offer more consistent performance, especially in repeated or large-scale sorting tasks.
+\end{itemize}
 
-The LP-guided algorithm offers theoretical advantages in both average and worst-case runtime. By removing the need for sampling and pivot-based partitioning at runtime, it eliminates a primary source of imbalance and communication overhead. In contrast, the PSRS algorithm is more susceptible to skewed load distributions and requires additional synchronization steps, which may limit scalability on heterogeneous hardware. Although solving the LP model incurs an initial computational cost of $O(N^3)$, this cost becomes negligible in scenarios involving repeated sorting tasks or large datasets. As such, the LP-guided approach is especially advantageous in environments where preprocessing is feasible and performance consistency is critical. The LP-guided algorithm demonstrates superior asymptotic performance under realistic workload and platform assumptions, particularly when amortizing the LP overhead across repeated executions or in systems with significant node heterogeneity.
+\textbf{Space complexity:}
+\begin{itemize}
+    \item PSRS is memory-efficient on average but may suffer from \textit{memory imbalance} if partition sizes vary significantly due to skewed data.
+    \item LP-guided approaches incur preprocessing overhead but provide \textit{deterministic partitioning}, leading to better memory balance and overall scalability.
+\end{itemize}
+
+Overall, LP-guided algorithms are better suited for scenarios requiring repeated sorts or large datasets on heterogeneous constraints. PSRS remains viable for simpler, homogeneous setups with fewer nodes and lower memory pressure.
 
 
 
