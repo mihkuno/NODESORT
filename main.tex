@@ -630,22 +630,164 @@ Overall, LP-guided algorithms are better suited for scenarios requiring repeated
 
 To evaluate the proposed LP-Guided Hybrid Sorting algorithm, we developed a simulation environment in Python that emulates a distributed system comprising heterogeneous artificial nodes. Each node is modeled with distinct computational and network characteristics to reflect real-world cloud or edge environments. Our setup draws inspiration from prior work, such as Monga and Lodhi’s evaluation on a heterogeneous cluster of UltraSPARC processors, while extending the model with scalable simulation and optimization capabilities.
 
-\subsection{Node Model}
-Each artificial node is defined by the following parameters:
-\begin{itemize}
-\item \textbf{CPU speed} $r_i$ (operations per second): determines how quickly the node performs sorting computations.
-\item \textbf{Memory capacity} $m_i$: the maximum number of elements a node can hold during processing.
-\item \textbf{Bandwidth} $b_i$ and \textbf{latency} $\ell_i$: simulate data transfer times during partitioning and merging stages.
-\item \textbf{Usage cost} $u_i$: an optional cost metric to simulate real-world pricing of compute resources.
-\end{itemize}
+
+For each experiment, we perform an initial warm-up run to allow the LP solver and runtime components to initialize. The LP component is implemented using Google's OR-Tools, which introduces a slight startup cost during the first invocation. We then execute three measured runs and report the average execution time. This ensures that reported results reflect the algorithm's steady-state performance, excluding one-time overhead.
+
 
 Nodes execute local sorts on subarrays and participate in global merges, coordinated either centrally or collaboratively. Resource constraints are enforced strictly throughout the simulation.
 
 \subsection{Dataset}
 We generated synthetic datasets $D$ of uniformly distributed integers with sizes ranging from $10^3$ to $10^6$ elements. Each dataset is randomly shuffled before processing. Additionally, to simulate skewed distributions akin to Monga and Lodhi’s setup, we tested with datasets containing concentrated ranges of values interspersed with random values.
 
-\subsection{Partitioning Strategy}
-Data is initially partitioned across nodes by solving a linear program (LP) that minimizes overall resource cost while accounting for node speeds $r_i$ and memory limits $m_i$. The resulting LP solution yields optimal distribution proportions $p_i$ for each node. Unlike static distribution in traditional models, this dynamic strategy promotes both performance and load balance under resource constraints.
+
+
+
+\subsection{Environment}
+
+We evaluate scalability and heterogeneity by simulating clusters of three sizes: $N=3$, $6$, and $12$ nodes. Each node $i$ has its own:
+
+Below are explicit heterogeneous configurations used in each experiment. Timings include data partitioning, local sort, and final merge.
+
+\medskip
+\textbf{3-Node Cluster Variations}
+
+\begin{table}[H]
+  \centering
+  \caption{3-Node Cluster - Low Heterogeneity}
+  \label{tab:env3low}
+  \begin{tabular}{c|ccccc}
+    \toprule
+    Node & $r_i$ & $m_i$ & $b_i$ & $\ell_i$ & $u_i$ \\
+         & (ops/sec) & (elements) & (MB/s) & (ms) & (cost/unit) \\
+    \midrule
+    1 & 180 & 5\,000 & 5 & 15 & 0.05 \\
+    2 & 175 & 5\,100 & 5 & 16 & 0.05 \\
+    3 & 185 & 5\,050 & 5 & 15 & 0.05 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{3-Node Cluster - High Heterogeneity}
+  \label{tab:env3high}
+  \begin{tabular}{c|ccccc}
+    \toprule
+    Node & $r_i$ & $m_i$ & $b_i$ & $\ell_i$ & $u_i$ \\
+         & (ops/sec) & (elements) & (MB/s) & (ms) & (cost/unit) \\
+    \midrule
+    1 & 250 & 8\,000 & 8 & 10 & 0.10 \\
+    2 & 150 & 4\,000 & 5 & 20 & 0.05 \\
+    3 & 70  & 1\,500 & 2 & 40 & 0.02 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\medskip
+\textbf{6-Node Cluster Variations}
+
+\begin{table}[H]
+  \centering
+  \caption{6-Node Cluster - Low Heterogeneity}
+  \label{tab:env6low}
+  \begin{tabular}{c|ccccc}
+    \toprule
+    Node & $r_i$ & $m_i$ & $b_i$ & $\ell_i$ & $u_i$ \\
+         & (ops/sec) & (elements) & (MB/s) & (ms) & (cost/unit) \\
+    \midrule
+    1 & 160 & 5\,000 & 5 & 18 & 0.06 \\
+    2 & 165 & 5\,200 & 5 & 19 & 0.06 \\
+    3 & 158 & 4\,900 & 5 & 18 & 0.06 \\
+    4 & 162 & 5\,100 & 5 & 17 & 0.06 \\
+    5 & 159 & 5\,050 & 5 & 18 & 0.06 \\
+    6 & 161 & 5\,000 & 5 & 19 & 0.06 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{6-Node Cluster - High Heterogeneity}
+  \label{tab:env6high}
+  \begin{tabular}{c|ccccc}
+    \toprule
+    Node & $r_i$ & $m_i$ & $b_i$ & $\ell_i$ & $u_i$ \\
+         & (ops/sec) & (elements) & (MB/s) & (ms) & (cost/unit) \\
+    \midrule
+    1 & 200 & 6\,000 & 7 & 18 & 0.08 \\
+    2 & 180 & 5\,500 & 6 & 20 & 0.07 \\
+    3 & 160 & 5\,000 & 5 & 22 & 0.06 \\
+    4 & 140 & 4\,500 & 4 & 24 & 0.05 \\
+    5 & 120 & 4\,000 & 3 & 26 & 0.04 \\
+    6 & 220 & 3\,000 & 8 & 28 & 0.09 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\medskip
+\textbf{12-Node Cluster Variations}
+
+\begin{table}[H]
+  \centering
+  \caption{12-Node Cluster - Low Heterogeneity}
+  \label{tab:env12low}
+  \begin{tabular}{c|ccccc}
+    \toprule
+    Node & $r_i$ & $m_i$ & $b_i$ & $\ell_i$ & $u_i$ \\
+         & (ops/sec) & (elements) & (MB/s) & (ms) & (cost/unit) \\
+    \midrule
+     1 & 150 & 5\,500 & 5.5 & 20 & 0.04 \\
+     2 & 152 & 5\,600 & 5.4 & 21 & 0.04 \\
+     3 & 148 & 5\,400 & 5.6 & 20 & 0.04 \\
+     4 & 151 & 5\,500 & 5.5 & 20 & 0.04 \\
+     5 & 149 & 5\,450 & 5.5 & 21 & 0.04 \\
+     6 & 150 & 5\,480 & 5.5 & 19 & 0.04 \\
+     7 & 153 & 5\,600 & 5.6 & 22 & 0.04 \\
+     8 & 147 & 5\,350 & 5.4 & 20 & 0.04 \\
+     9 & 150 & 5\,400 & 5.5 & 21 & 0.04 \\
+    10 & 151 & 5\,500 & 5.5 & 20 & 0.04 \\
+    11 & 149 & 5\,450 & 5.4 & 21 & 0.04 \\
+    12 & 152 & 5\,600 & 5.6 & 19 & 0.04 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{12-Node Cluster - High Heterogeneity}
+  \label{tab:env12high}
+  \begin{tabular}{c|ccccc}
+    \toprule
+    Node & $r_i$ & $m_i$ & $b_i$ & $\ell_i$ & $u_i$ \\
+         & (ops/sec) & (elements) & (MB/s) & (ms) & (cost/unit) \\
+    \midrule
+     1 & 130 & 5\,000 & 4.5 & 15 & 0.06 \\
+     2 & 135 & 5\,100 & 4.2 & 16 & 0.055 \\
+     3 & 140 & 5\,200 & 4.8 & 17 & 0.05 \\
+     4 & 145 & 5\,300 & 5.0 & 18 & 0.045 \\
+     5 & 150 & 5\,400 & 5.2 & 19 & 0.04 \\
+     6 & 155 & 5\,500 & 5.4 & 20 & 0.035 \\
+     7 & 160 & 5\,600 & 5.6 & 21 & 0.03 \\
+     8 & 165 & 5\,700 & 5.8 & 22 & 0.025 \\
+     9 & 170 & 5\,800 & 6.0 & 23 & 0.02 \\
+    10 & 175 & 5\,900 & 6.2 & 24 & 0.015 \\
+    11 & 180 & 6\,000 & 6.4 & 25 & 0.01 \\
+    12 & 185 & 6\,100 & 6.6 & 26 & 0.005 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+\subsection{Cluster Configuration Rationale}
+
+The node parameters were selected to represent a wide range of synthetic cluster conditions, rather than specific real-world hardware. Although the simulations are implemented on experimental nodes using Python and thread-based execution, the configurations are designed to reflect logically consistent and practically motivated scenarios.
+
+In the low heterogeneity setups (Tables~\ref{tab:env3low}, \ref{tab:env6low}, \ref{tab:env12low}), parameter values are tightly grouped to emulate homogeneous systems, which serve as a baseline for performance evaluation. This models environments such as cloud-managed data centers or dedicated server farms, where hardware is typically uniform.
+
+In contrast, the high heterogeneity configurations (Tables~\ref{tab:env3high}, \ref{tab:env6high}, \ref{tab:env12high}) span wider parameter ranges to simulate imbalanced environments. These scenarios conceptually represent a mixture of resource-constrained and high-performance nodes, such as edge devices interacting with cloud infrastructure. While not based on empirical measurements, these configurations follow a principled variation of computing, memory, bandwidth, and cost characteristics to explore algorithmic behavior under diverse conditions.
+
+This abstraction enables systematic testing of the algorithm's adaptability to different degrees of heterogeneity, which is essential for guiding deployment decisions in heterogeneous distributed systems.
+
 
 \subsection{Evaluation Metrics}
 To benchmark performance, we evaluate the system using the following metrics:
@@ -658,17 +800,9 @@ To benchmark performance, we evaluate the system using the following metrics:
 
 These metrics align with those used in prior work, such as execution time comparisons under random and skewed inputs, and deviation analysis to assess load balancing.
 
-\subsection{Environment}
-All experiments were conducted on a simulated cluster using Python’s threading and time modules. Each node runs in an independent thread, with synthetic delays introduced to simulate CPU computation time and network transfer latency.
 
-Experiments were conducted with clusters of $N = 3, 5, 10$ nodes, where node parameters were randomly sampled as follows:
-\begin{itemize}
-\item $r_i \in [50, 300]$ operations/sec,
-\item $m_i \in [100, 10{,}000]$ elements,
-\item $b_i \in [1, 10]$ MB/s.
-\end{itemize}
+\section{Results and Discussion}
 
-In contrast to the physical hardware constraints of the UltraSPARC-based cluster used by Monga and Lodhi, our virtualized testbed allows fine-grained control over system variability and scalability. Furthermore, our timing measurements include all stages of execution, from data distribution to final collection of sorted output, mirroring their holistic performance evaluation methodology.
 
 
 \end{document}
