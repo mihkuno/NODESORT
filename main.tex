@@ -578,12 +578,12 @@ LP-guided (Option B) & $O(n)$ & $O(n + N^2)$ \\
 \end{table}
 
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=1\textwidth]{graph-complexity.png}
-    \caption{Complexity Comparison Graph}
-    \label{fig:example}
-\end{figure}
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=1\textwidth]{graph-complexity.png}
+%     \caption{Complexity Comparison Graph}
+%     \label{fig:example}
+% \end{figure}
 
     
 \begin{table}[H]
@@ -626,5 +626,50 @@ The LP-guided algorithm offers clear advantages over PSRS in terms of scalabilit
 Overall, LP-guided algorithms are better suited for scenarios requiring repeated sorts or large datasets on heterogeneous constraints. PSRS remains viable for simpler, homogeneous setups with fewer nodes and lower memory pressure.
 
 
+\section{Experimental Setup}
+
+To evaluate the proposed LP-Guided Hybrid Sorting algorithm, we developed a simulation environment in Python that emulates a distributed system comprising heterogeneous artificial nodes. Each node is modeled with distinct computational and network characteristics to reflect real-world cloud or edge environments. Our setup draws inspiration from prior work, such as Monga and Lodhi’s evaluation on a heterogeneous cluster of UltraSPARC processors, while extending the model with scalable simulation and optimization capabilities.
+
+\subsection{Node Model}
+Each artificial node is defined by the following parameters:
+\begin{itemize}
+\item \textbf{CPU speed} $r_i$ (operations per second): determines how quickly the node performs sorting computations.
+\item \textbf{Memory capacity} $m_i$: the maximum number of elements a node can hold during processing.
+\item \textbf{Bandwidth} $b_i$ and \textbf{latency} $\ell_i$: simulate data transfer times during partitioning and merging stages.
+\item \textbf{Usage cost} $u_i$: an optional cost metric to simulate real-world pricing of compute resources.
+\end{itemize}
+
+Nodes execute local sorts on subarrays and participate in global merges, coordinated either centrally or collaboratively. Resource constraints are enforced strictly throughout the simulation.
+
+\subsection{Dataset}
+We generated synthetic datasets $D$ of uniformly distributed integers with sizes ranging from $10^3$ to $10^6$ elements. Each dataset is randomly shuffled before processing. Additionally, to simulate skewed distributions akin to Monga and Lodhi’s setup, we tested with datasets containing concentrated ranges of values interspersed with random values.
+
+\subsection{Partitioning Strategy}
+Data is initially partitioned across nodes by solving a linear program (LP) that minimizes overall resource cost while accounting for node speeds $r_i$ and memory limits $m_i$. The resulting LP solution yields optimal distribution proportions $p_i$ for each node. Unlike static distribution in traditional models, this dynamic strategy promotes both performance and load balance under resource constraints.
+
+\subsection{Evaluation Metrics}
+To benchmark performance, we evaluate the system using the following metrics:
+\begin{itemize}
+\item \textbf{Total Execution Time}: Measured from initial data partitioning to completion of global merge.
+\item \textbf{Load Balance}: Assessed through deviation in per-node workload based on the assigned data.
+\item \textbf{Node Utilization}: Captures the effective usage of each node’s memory and CPU.
+\item \textbf{Cost Efficiency}: Evaluated as $\sum u_i \cdot d_i$, where $d_i$ is the data processed by node $i$.
+\end{itemize}
+
+These metrics align with those used in prior work, such as execution time comparisons under random and skewed inputs, and deviation analysis to assess load balancing.
+
+\subsection{Environment}
+All experiments were conducted on a simulated cluster using Python’s threading and time modules. Each node runs in an independent thread, with synthetic delays introduced to simulate CPU computation time and network transfer latency.
+
+Experiments were conducted with clusters of $N = 3, 5, 10$ nodes, where node parameters were randomly sampled as follows:
+\begin{itemize}
+\item $r_i \in [50, 300]$ operations/sec,
+\item $m_i \in [100, 10{,}000]$ elements,
+\item $b_i \in [1, 10]$ MB/s.
+\end{itemize}
+
+In contrast to the physical hardware constraints of the UltraSPARC-based cluster used by Monga and Lodhi, our virtualized testbed allows fine-grained control over system variability and scalability. Furthermore, our timing measurements include all stages of execution, from data distribution to final collection of sorted output, mirroring their holistic performance evaluation methodology.
+
 
 \end{document}
+
