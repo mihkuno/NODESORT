@@ -11,7 +11,6 @@ def _simulate_sorting(chunk, throughput, multiplier=1000):
     actual_time = time_end - time_start
     delay = actual_time * (1 / throughput)
     delay *= multiplier
-    time.sleep(delay)
     return round(delay * 1000, 3)
 
 def lcm(a, b):
@@ -20,10 +19,14 @@ def lcm(a, b):
 def lcm_list(numbers):
     return reduce(lcm, numbers, 1)
 
-def node_psrs(id, perf, chunk, queues, num_nodes):
+# Added total_data_size as an argument to node_psrs
+def node_psrs(id, perf, chunk, queues, num_nodes, total_data_size):
+    
     # ---------------------------- Phase 1: Local sort --------------------------- #
     delay = _simulate_sorting(chunk, perf)
-    print(f"Node {id} ({perf}x): Initial {len(chunk)} in {delay}ms")
+    # Calculate percentage relative to the global total_data_size
+    percent_initial = (len(chunk) / total_data_size) * 100
+    print(f"Node {id} ({perf}x): Initial {len(chunk)} ({percent_initial:.2f}% of total) in {delay}ms | first10={chunk[:10]} last10={chunk[-10:]}")
     
     # ------------------------ Phase 2: Sample collection ------------------------ #
     L_i = (num_nodes - 1) * perf  # Number of samples desired per node (from paper)
@@ -51,7 +54,7 @@ def node_psrs(id, perf, chunk, queues, num_nodes):
             all_samples.extend(msg['payload'])
         
         delay = _simulate_sorting(all_samples, perf)
-        print(f"\nCoordinator samples: {len(all_samples)} in {delay}ms\n")
+        print(f"\nCoordinator samples: {len(all_samples)} in {delay}ms | first10={all_samples[:10]} last10={all_samples[-10:]}\n")
         
         # Select p-1 global pivots
         pivots = []
@@ -97,10 +100,8 @@ def node_psrs(id, perf, chunk, queues, num_nodes):
             pivots = msg['payload']
             pivots_received = True
         else:
-            # If an unexpected message (e.g., a partition from another node) is received,
-            # put it back on the queue and try again.
             queues[id].put(msg)
-            time.sleep(0.001) # Small delay to prevent busy-waiting
+            time.sleep(0.001)
 
     # Partition local data using pivots
     partitions = [[] for _ in range(num_nodes)]
@@ -109,8 +110,6 @@ def node_psrs(id, perf, chunk, queues, num_nodes):
         while nid < len(pivots) and num > pivots[nid]:
             nid += 1
         
-        # nid will always be in [0, num_nodes-1] if pivots are correctly formed (num_nodes-1 pivots)
-        # and num_nodes > 0. Defensive clamp, though theoretically not needed if pivots are always correct.
         nid = min(nid, num_nodes - 1)
         
         partitions[nid].append(num)
@@ -123,7 +122,6 @@ def node_psrs(id, perf, chunk, queues, num_nodes):
     # Receive partitions from other nodes
     chunk = partitions[id] # Keep local partition
     
-    # Wait for and collect all expected partition messages
     received_partition_count = 0
     while received_partition_count < (num_nodes - 1):
         msg = queues[id].get()
@@ -131,14 +129,15 @@ def node_psrs(id, perf, chunk, queues, num_nodes):
             chunk.extend(msg['payload'])
             received_partition_count += 1
         else:
-            # If an unexpected message (e.g., a sample or another pivot message) is received,
-            # put it back on the queue and try again.
             queues[id].put(msg)
-            time.sleep(0.001) # Small delay to prevent busy-waiting
+            time.sleep(0.001)
 
     # ---------------------------- Phase 4: Final sort --------------------------- #
     delay = _simulate_sorting(chunk, perf)
-    print(f"Node {id} ({perf}x): Final {len(chunk)} in {delay}ms")
+    # Calculate percentage relative to the global total_data_size
+    percent_final = (len(chunk) / total_data_size) * 100
+    print(f"Node {id} ({perf}x): Final {len(chunk)} ({percent_final:.2f}% of total) in {delay}ms | first10={chunk[:10]} last10={chunk[-10:]}")
+
     
     # Send final sorted chunk to coordinator
     if id != 0:
@@ -146,7 +145,6 @@ def node_psrs(id, perf, chunk, queues, num_nodes):
     else:
         results_by_id = {0: chunk} # Coordinator's own sorted chunk
         
-        # Coordinator collects final sorted chunks from other nodes
         collected_final_count = 0
         while collected_final_count < (num_nodes - 1):
             msg = queues[0].get()
@@ -154,19 +152,15 @@ def node_psrs(id, perf, chunk, queues, num_nodes):
                 results_by_id[msg['from']] = msg['payload']
                 collected_final_count += 1
             else:
-                # If an unexpected message is received, put it back on the queue.
                 queues[0].put(msg)
-                time.sleep(0.001) # Small delay to prevent busy-waiting
+                time.sleep(0.001)
         
         final_result = []
-        # Merge results in order of node ID to get the final sorted array
         for nid in range(num_nodes):
             final_result.extend(results_by_id[nid])
         
-        print("\nTotal length:", len(final_result))
-        print("(first 20):", final_result[:20])
-        print("(last 20):", final_result[-20:])
-        print()
+        print(f"\nTotal length: {len(final_result)} | first10={final_result[:10]} last10={final_result[-10:]}\n")
+
 
 if __name__ == '__main__':
     num_nodes = 4
@@ -174,11 +168,13 @@ if __name__ == '__main__':
     
     # Calculate optimal data size (from paper's Eq.1)
     lcm_val = lcm_list(perf)
-    k = 1  # Simplest case, can be adjusted
-    n = k * sum(p * lcm_val for p in perf)
+    k = 5  # Simplest case, can be adjusted
+    n = k * sum(p * lcm_val for p in perf) # This is the total data size
     
     data = [random.randint(0, 10000) for _ in range(n)]
     queues = [Queue() for _ in range(num_nodes)]
+    
+    print(f"Total data size: {n} | Data sample: {data[:10]} ... {data[-10:]}\n")
     
     # Data distribution proportional to performance
     total_perf = sum(perf)
@@ -190,12 +186,15 @@ if __name__ == '__main__':
         last_idx += partition_size
         partitions_main.append(partition)
     
+    time_start = time.perf_counter()
+    
     # Start processes
     processes = []
     for i in range(num_nodes):
         p = Process(
             target=node_psrs,
-            args=(i, perf[i], partitions_main[i], queues, num_nodes)
+            # Pass the global total_data_size (n) to each node
+            args=(i, perf[i], partitions_main[i], queues, num_nodes, n)
         )
         processes.append(p)
         p.start()
@@ -203,3 +202,7 @@ if __name__ == '__main__':
     # Wait for completion
     for p in processes:
         p.join()
+        
+    time_end = time.perf_counter()
+    total_time = time_end - time_start
+    print(f"Total execution time: {total_time*1000:.3f}ms\n")
