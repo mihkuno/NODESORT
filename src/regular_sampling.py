@@ -1,35 +1,41 @@
 import time
 import random
 from multiprocessing import Queue, Process
-from math import gcd
-from functools import reduce
+from cluster_specs import generate_cluster_config
 
-def _simulate_sorting(chunk, throughput, multiplier=1000):
+def _simulate_sorting(chunk, throughput, billing, multiplier=1000):
     time_start = time.perf_counter()
     chunk.sort()
     time_end = time.perf_counter()
     actual_time = time_end - time_start
-    delay = actual_time * (1 / throughput)
-    delay *= multiplier
-    return round(delay * 1000, 3)
+    
+    # Calculate delay based on throughput
+    throughput = actual_time * (1 / throughput)
+    throughput *= multiplier # Scale to milliseconds
+    throughput *= 1000 # Convert to milliseconds
+    throughput = round(throughput, 3) # Round to 3 decimal places
+    
+    # Calculate billing cost (e.g., actual_time * billing rate per unit of time)
+    # Assuming 'billing' is a rate per unit of time (e.g., per second)
+    billing *= throughput
+    billing = round(billing, 3) # Round to 3 decimal places
+    
+    return throughput, billing
 
-def lcm(a, b):
-    return a * b // gcd(a, b)
 
-def lcm_list(numbers):
-    return reduce(lcm, numbers, 1)
-
-# Added total_data_size as an argument to node_psrs
-def node_psrs(id, perf, chunk, queues, num_nodes, total_data_size):
+def node_psrs(id, throughput, memory, billing, chunk, queues, num_nodes, total_data_size):
     
     # ---------------------------- Phase 1: Local sort --------------------------- #
-    delay = _simulate_sorting(chunk, perf)
-    # Calculate percentage relative to the global total_data_size
+    delay, cost = _simulate_sorting(chunk, throughput, billing)
     percent_initial = (len(chunk) / total_data_size) * 100
-    print(f"Node {id} ({perf}x): Initial {len(chunk)} ({percent_initial:.2f}% of total) in {delay}ms | first10={chunk[:10]} last10={chunk[-10:]}")
+    percent_in_memory_initial = (len(chunk) / memory) * 100 if memory > 0 else 0
+    
+    print(f"Node {id:<2} ({throughput:>2}x): Phase 1 - Initial Data: {len(chunk):<8} elements | "
+          f"{percent_initial:.2f}% of dataset | {percent_in_memory_initial:.2f}% of memory | "
+          f"Time: {delay:>7.3f}ms | Cost: ${cost:>9.6f} | Sample: {str(chunk[:5])[:-1]}...{str(chunk[-5:])[1:]}")
     
     # ------------------------ Phase 2: Sample collection ------------------------ #
-    L_i = (num_nodes - 1) * perf  # Number of samples desired per node (from paper)
+    L_i = (num_nodes - 1) * throughput
     samples = []
     
     if num_nodes > 1 and len(chunk) > 0:
@@ -53,8 +59,9 @@ def node_psrs(id, perf, chunk, queues, num_nodes, total_data_size):
             msg = queues[0].get()
             all_samples.extend(msg['payload'])
         
-        delay = _simulate_sorting(all_samples, perf)
-        print(f"\nCoordinator samples: {len(all_samples)} in {delay}ms | first10={all_samples[:10]} last10={all_samples[-10:]}\n")
+        delay, cost = _simulate_sorting(all_samples, throughput, billing) # Coordinator uses its own billing rate
+        print(f"\n{'':<10}Coordinator: Collected {len(all_samples):<8} samples | Time: {delay:>7.3f}ms | "
+              f"Cost: ${cost:>9.6f} | Sample: {str(all_samples[:5])[:-1]}...{str(all_samples[-5:])[1:]}\n")
         
         # Select p-1 global pivots
         pivots = []
@@ -86,12 +93,13 @@ def node_psrs(id, perf, chunk, queues, num_nodes, total_data_size):
                             else:
                                 break
         
+        print(f"{'':<10}Coordinator: Selected {len(pivots):<8} pivots | Pivots: {pivots}\n")
+        
         # Broadcast pivots to all nodes
         for node_id in range(num_nodes):
             queues[node_id].put({'from': 0, 'type': 'pivots', 'payload': pivots})
     
     # ------------------------ Phase 3: Redistribute data ------------------------ #
-    # Each node waits for its pivot message
     pivots_received = False
     pivots = []
     while not pivots_received:
@@ -103,7 +111,6 @@ def node_psrs(id, perf, chunk, queues, num_nodes, total_data_size):
             queues[id].put(msg)
             time.sleep(0.001)
 
-    # Partition local data using pivots
     partitions = [[] for _ in range(num_nodes)]
     for num in chunk:
         nid = 0
@@ -114,13 +121,11 @@ def node_psrs(id, perf, chunk, queues, num_nodes, total_data_size):
         
         partitions[nid].append(num)
     
-    # Send partitions to other nodes
     for nid in range(num_nodes):
         if nid != id:
             queues[nid].put({'from': id, 'type': 'partition', 'payload': partitions[nid]})
     
-    # Receive partitions from other nodes
-    chunk = partitions[id] # Keep local partition
+    chunk = partitions[id]
     
     received_partition_count = 0
     while received_partition_count < (num_nodes - 1):
@@ -133,17 +138,18 @@ def node_psrs(id, perf, chunk, queues, num_nodes, total_data_size):
             time.sleep(0.001)
 
     # ---------------------------- Phase 4: Final sort --------------------------- #
-    delay = _simulate_sorting(chunk, perf)
-    # Calculate percentage relative to the global total_data_size
+    delay, cost = _simulate_sorting(chunk, throughput, billing)
     percent_final = (len(chunk) / total_data_size) * 100
-    print(f"Node {id} ({perf}x): Final {len(chunk)} ({percent_final:.2f}% of total) in {delay}ms | first10={chunk[:10]} last10={chunk[-10:]}")
-
+    percent_in_memory_final = (len(chunk) / memory) * 100 if memory > 0 else 0
     
-    # Send final sorted chunk to coordinator
+    print(f"Node {id:<2} ({throughput:>2}x): Phase 4 - Final Data:   {len(chunk):<8} elements | "
+          f"{percent_final:.2f}% of dataset | {percent_in_memory_final:.2f}% of memory | "
+          f"Time: {delay:>7.3f}ms | Cost: ${cost:>9.6f} | Sample: {str(chunk[:5])[:-1]}...{str(chunk[-5:])[1:]}")
+
     if id != 0:
         queues[0].put({'from': id, 'type': 'final', 'payload': chunk})
     else:
-        results_by_id = {0: chunk} # Coordinator's own sorted chunk
+        results_by_id = {0: chunk}
         
         collected_final_count = 0
         while collected_final_count < (num_nodes - 1):
@@ -159,50 +165,68 @@ def node_psrs(id, perf, chunk, queues, num_nodes, total_data_size):
         for nid in range(num_nodes):
             final_result.extend(results_by_id[nid])
         
-        print(f"\nTotal length: {len(final_result)} | first10={final_result[:10]} last10={final_result[-10:]}\n")
+        print(f"\n{'':<10}Coordinator: All nodes merged. Total sorted elements: {len(final_result):<8} | "
+              f"Sample: {str(final_result[:5])[:-1]}...{str(final_result[-5:])[1:]}\n")
 
+
+# -------- Main function to set up the environment and start processes ------- #
 
 if __name__ == '__main__':
     num_nodes = 4
-    perf = [8, 5, 3, 1]  # Relative performance factors from paper example
+    throughput = [] 
+    memory = []
+    billing = []
     
-    # Calculate optimal data size (from paper's Eq.1)
-    lcm_val = lcm_list(perf)
-    k = 5  # Simplest case, can be adjusted
-    n = k * sum(p * lcm_val for p in perf) # This is the total data size
+    data_size, cluster = generate_cluster_config(
+        data_scale=5, 
+        num_nodes=num_nodes,
+        seed=4
+    )
     
-    data = [random.randint(0, 10000) for _ in range(n)]
+    for key, node in cluster.items():
+        memory.append(node['memory'])
+        billing.append(node['billing'])
+        throughput.append(node['throughput'])
+    
+    data = [random.randint(0, 10000) for _ in range(data_size)]
     queues = [Queue() for _ in range(num_nodes)]
     
-    print(f"Total data size: {n} | Data sample: {data[:10]} ... {data[-10:]}\n")
+    print(f"--- Cluster Configuration ---")
+    print(f"Number of Nodes: {num_nodes}")
+    print(f"Total Data Size: {data_size} elements")
+    print(f"Data Sample: {data[:5]}...{data[-5:]}\n")
     
-    # Data distribution proportional to performance
-    total_perf = sum(perf)
-    partitions_main = []
+    print(f"--- Initial Data Distribution ---")
+    total_throughput = sum(throughput)
+    chunks = []
     last_idx = 0
     for i in range(num_nodes):
-        partition_size = (n * perf[i]) // total_perf
+        partition_size = (data_size * throughput[i]) // total_throughput
         partition = data[last_idx:last_idx + partition_size]
         last_idx += partition_size
-        partitions_main.append(partition)
-    
+        chunks.append(partition)
+        print(f"Node {i:<2}: Throughput {throughput[i]:>2}x | Memory {memory[i]:<5} elements | Billing Rate: ${billing[i]:<7.4f} | Initial Chunk Size: {len(partition):<8}")
+    print("-" * 30 + "\n")
+
     time_start = time.perf_counter()
     
-    # Start processes
+    # ------------------------------ Start processes ----------------------------- #
     processes = []
     for i in range(num_nodes):
         p = Process(
             target=node_psrs,
-            # Pass the global total_data_size (n) to each node
-            args=(i, perf[i], partitions_main[i], queues, num_nodes, n)
+            args=(i, throughput[i], memory[i], billing[i], chunks[i], queues, num_nodes, data_size)
         )
         processes.append(p)
         p.start()
     
-    # Wait for completion
+    # ---------------------------- Wait for completion --------------------------- #
+    
     for p in processes:
         p.join()
         
     time_end = time.perf_counter()
     total_time = time_end - time_start
-    print(f"Total execution time: {total_time*1000:.3f}ms\n")
+    print(f"--- Simulation Summary ---")
+    print(f"Total execution time: {total_time*1000:.3f}ms")
+    print("-" * 30)
