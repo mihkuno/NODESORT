@@ -4,7 +4,7 @@ def generate_cluster_config(
     dataset_size,
     num_nodes=3,
     memory_overprovision_factor=1.5, 
-    throughput_range=(0.5, 5.0),
+    throughput_range=(1, 10),
     billing_range=(0.005, 0.02),
     seed=None
 ):
@@ -59,12 +59,12 @@ def generate_cluster_config(
 
 
 # === Example usage ===
-dataset = list(range(100_000))
+dataset = list(range(10_200))
 dataset_size = len(dataset)
 
 config = generate_cluster_config(
     dataset_size, 
     num_nodes=5, 
-    memory_overprovision_factor=1.3,
+    memory_overprovision_factor=1.5,
     seed=10
 )
