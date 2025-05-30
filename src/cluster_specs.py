@@ -28,7 +28,7 @@ def generate_cluster_config(
 
     # Step 2: Calculate total dataset size using LCM trick
     lcm_val = lcm_list(throughput)
-    dataset_size = data_scale * sum(p * lcm_val for p in throughput)
+    data_size = data_scale * sum(p * lcm_val for p in throughput)
 
     # Step 3: Random fractions that sum to 1 for memory assignment
     raw = [random.random() for _ in range(num_nodes)]
@@ -36,7 +36,7 @@ def generate_cluster_config(
     memory_fractions = [r / total for r in raw]
 
     # Step 4: Calculate overprovisioned total memory
-    total_memory = int(dataset_size * memory_overprovision_factor)
+    total_memory = int(data_size * memory_overprovision_factor)
 
     # Step 5: Assign memory per node
     cluster_config = {}
@@ -57,14 +57,14 @@ def generate_cluster_config(
         }
 
     # Optional: Print summary
-    print(f"Total memory of cluster = {total_memory} (should be >= {dataset_size})\n")
+    print(f"Total memory of cluster = {total_memory} (should be >= {data_size})\n")
 
     total_pct_dataset = 0
     total_pct_cluster = 0
 
     for node, spec in cluster_config.items():
         mem = spec["memory"]
-        pct_dataset = (mem / dataset_size) * 100
+        pct_dataset = (mem / data_size) * 100
         pct_total_mem = (mem / total_memory) * 100
 
         total_pct_dataset += pct_dataset
@@ -74,73 +74,99 @@ def generate_cluster_config(
         print(f"  - {pct_dataset:.2f}% out of {memory_overprovision_factor * 100:.2f}% of overprovisioned memory")
         print(f"  - {pct_total_mem:.2f}% out of 100.00% of total cluster memory\n")
 
-    return dataset_size, cluster_config
+    return data_size, cluster_config
 
-def generate_dataset(n, skew_type='uniform', zipf_param=2.0, mean=5000, std=2000):
+def generate_data(n, skew_type='uniform', zipf_param=2.0, mean=5000, std=2000):
+    data = []
     if skew_type == 'uniform':
-        return [random.randint(0, n) for _ in range(n)]
-    
+        data = [random.randint(0, n) for _ in range(n)]
     elif skew_type == 'zipf':
-        # Zipf generates values starting at 1, scale down
         raw = np.random.zipf(zipf_param, size=n)
-        capped = np.clip(raw, 1, n)  # Limit to n
-        return capped.tolist()
-    
+        capped = np.clip(raw, 1, n)
+        data = capped.tolist()
     elif skew_type == 'exponential':
         raw = np.random.exponential(scale=n/5, size=n)
         capped = np.clip(raw, 0, n)
-        return capped.astype(int).tolist()
-    
+        data = capped.astype(int).tolist()
     elif skew_type == 'gaussian':
         raw = np.random.normal(loc=mean, scale=std, size=n)
         capped = np.clip(raw, 0, n)
-        return capped.astype(int).tolist()
-    
+        data = capped.astype(int).tolist()
     else:
         raise ValueError(f"Unsupported skew type: {skew_type}")
 
-# Re-using the plot_dataset_distribution function from previous turn
-def plot_dataset_distribution(
-    data,
-    n,
-    skew_type,
-    filename='dataset_distribution.png'
-):  
-    # Ensure output directory exists
+    plot_data_distribution(data, n, skew_type, filename=f'{skew_type}_distribution.png')
+    return data
+
+# Re-using the plot_data_distribution function from previous turn
+# Updated plotting function to support bell curve for any distribution type
+def plot_data_distribution(data, n, skew_type, filename='data.png'):
     os.makedirs('out', exist_ok=True)
-    
+
     indices = list(range(n))
+    plt.figure(figsize=(18, 6))
 
-    plt.figure(figsize=(10, 6))
-    plt.scatter(indices, data, s=1, alpha=0.5) # s controls marker size, alpha controls transparency
-    plt.title(f'Distribution of {skew_type.capitalize()} Data (Total {n} Integers)')
-    plt.xlabel('Index of Integer')
-    plt.ylabel('Integer Value')
-    plt.xlim(0, n)
-    plt.ylim(0, n) # Set y-axis limit based on max possible value
+    # Scatter plot (Index vs Value)
+    plt.subplot(1, 3, 1)
+    plt.scatter(indices, data, s=1, alpha=0.5)
+    plt.title(f'Scatter: {skew_type.capitalize()} Distribution')
+    plt.xlabel('Index')
+    plt.ylabel('Value')
     plt.grid(True, linestyle='--', alpha=0.7)
+    plt.xlim(0, n)
+    plt.ylim(0, n)
 
-    plt.savefig('out/'+filename)
-    plt.close() # Close the plot to free up memory
+    # Sorted scatter plot (Index vs Sorted Value)
+    plt.subplot(1, 3, 2)
+    sorted_data = sorted(data)
+    plt.scatter(indices, sorted_data, s=1, alpha=0.5, color='orange')
+    plt.title(f'Sorted Scatter: {skew_type.capitalize()}')
+    plt.xlabel('Index')
+    plt.ylabel('Sorted Value')
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.xlim(0, n)
+    plt.ylim(0, n)
 
-    print(f"Generated a scatter plot of the {skew_type} dataset and saved it as '{filename}'.")
+    # Histogram with bell curve
+    plt.subplot(1, 3, 3)
+    count, bins, ignored = plt.hist(data, bins=100, density=True, alpha=0.6, color='skyblue', label='Histogram')
 
-# Example Usage to use generate_dataset output as input to plot_dataset_distribution:
+    # Bell curve based on sample mean and std deviation
+    mu = np.mean(data)
+    sigma = np.std(data)
+    bell_curve = (1 / (sigma * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((bins - mu) / sigma) ** 2)
+    plt.plot(bins, bell_curve, color='red', linewidth=2, label='Fitted Bell Curve')
+
+    plt.title(f'Histogram: {skew_type.capitalize()} Data')
+    plt.xlabel('Value')
+    plt.ylabel('Density')
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+
+    plt.tight_layout()
+    plt.savefig(f'out/{filename}')
+    plt.close()
+    print(f"Saved plot with bell curve as 'out/{filename}'.")
+
+
+# Example Usage to use generate_dataset output as input to plot_data_distribution:
 if __name__ == '__main__':
     # Get the dataset size (n) from generate_cluster_config
-    dataset_size, _ = generate_cluster_config(num_nodes=4, data_scale=100, seed=42)
+    data_size, _ = generate_cluster_config(num_nodes=4, data_scale=100, seed=42)
 
-    print(f"Dataset size: {dataset_size} elements\n")
+    print(f"Data size: {data_size} elements\n")
 
     # Generate data using 'gaussian' skew type
-    data = generate_dataset(
-        n=dataset_size,
-        skew_type='uniform',
+    data = generate_data(
+        n=data_size,
+        skew_type='gaussian',
+        mean=10000,
+        std=6000,
     )
     # Plot the generated gaussian data
-    plot_dataset_distribution(
+    plot_data_distribution(
         data=data,
-        n=dataset_size,
-        skew_type='uniform',
-        filename='uniform_distribution.png'
+        n=data_size,
+        skew_type='gaussian',
+        filename='gaussian_distribution.png'
     )
