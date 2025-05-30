@@ -1,4 +1,42 @@
+import numpy as np
 from ortools.linear_solver import pywraplp
+
+def smart_partition(data, weights):
+
+    n = len(data)
+    num_nodes = len(weights)
+
+    # Step 1: Compute ideal (floating point) partition sizes
+    total_weight = sum(weights)
+    ideal_sizes = np.array(weights) * n / total_weight
+
+    # Step 2: Take floor of each ideal size to get initial allocation
+    partition_sizes = np.floor(ideal_sizes).astype(int)
+
+    # Step 3: Compute remaining items to allocate
+    remaining = n - partition_sizes.sum()
+
+    # Step 4: Distribute the remaining items to nodes with the largest fractional parts
+    fractional_parts = ideal_sizes - partition_sizes
+    indices = np.argsort(-fractional_parts)  # Sort by descending fractional parts
+
+    for i in range(remaining):
+        partition_sizes[indices[i]] += 1
+
+    # Step 5: Slice data accordingly
+    chunks = []
+    start = 0
+    for size in partition_sizes:
+        chunks.append(data[start:start + size])
+        start += size
+        
+    print(f"Remaining items to allocate: {remaining}")
+    print(f"Partition sizes: {partition_sizes.tolist()}")
+    print(f"Ideal sizes: {ideal_sizes.tolist()}")
+    print(f"Fractional parts: {fractional_parts.tolist()}")
+
+    return chunks, partition_sizes
+
 
 def optimize_partitioning(num_nodes, total_data_volume, throughputs, memory_limits, usage_rates, epsilon=1e-6):
     """
