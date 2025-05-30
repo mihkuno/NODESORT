@@ -1,7 +1,8 @@
 import time
 import random
 from multiprocessing import Queue, Process
-from cluster_specs import generate_cluster_config
+from cluster_specs import generate_cluster_config, generate_data
+from model_solver import smart_partition
 
 def _simulate_sorting(chunk, throughput, billing, multiplier=1000):
     time_start = time.perf_counter()
@@ -30,7 +31,7 @@ def node_psrs(id, throughput, memory, billing, chunk, queues, num_nodes, total_d
     percent_initial = (len(chunk) / total_data_size) * 100
     percent_in_memory_initial = (len(chunk) / memory) * 100 if memory > 0 else 0
     
-    print(f"Node {id:<2} ({throughput:>2}x): Phase 1 - Initial Data: {len(chunk):<8} elements | "
+    print(f"Node {id:<2} ({throughput:>2}x): Phase 1 - Initial: {len(chunk)} / {memory} elements | "
           f"{percent_initial:.2f}% of dataset | {percent_in_memory_initial:.2f}% of memory | "
           f"Time: {delay:>7.3f}ms | Cost: ${cost:>9.6f} | Sample: {str(chunk[:5])[:-1]}...{str(chunk[-5:])[1:]}")
     
@@ -142,7 +143,7 @@ def node_psrs(id, throughput, memory, billing, chunk, queues, num_nodes, total_d
     percent_final = (len(chunk) / total_data_size) * 100
     percent_in_memory_final = (len(chunk) / memory) * 100 if memory > 0 else 0
     
-    print(f"Node {id:<2} ({throughput:>2}x): Phase 4 - Final Data:   {len(chunk):<8} elements | "
+    print(f"Node {id:<2} ({throughput:>2}x): Phase 4 - Final: {len(chunk)} / {memory} elements | "
           f"{percent_final:.2f}% of dataset | {percent_in_memory_final:.2f}% of memory | "
           f"Time: {delay:>7.3f}ms | Cost: ${cost:>9.6f} | Sample: {str(chunk[:5])[:-1]}...{str(chunk[-5:])[1:]}")
 
@@ -172,32 +173,46 @@ def node_psrs(id, throughput, memory, billing, chunk, queues, num_nodes, total_d
 # -------- Main function to set up the environment and start processes ------- #
 
 if __name__ == '__main__':
+    
+    print('\n----------------------------- Cluster Configuration ---------------------------')
+    
     num_nodes = 4
     throughput = [] 
     memory = []
     billing = []
     
+    # generate cluster configuration
     data_size, cluster = generate_cluster_config(
         data_scale=5, 
         num_nodes=num_nodes,
         seed=4
     )
     
+    # make the fastest node the coordinator (id=0)
+    cluster = dict(sorted(cluster.items(), key=lambda item: item[1]['throughput'], reverse=True))
+    
+    # extract throughput, memory, and billing from the cluster
     for key, node in cluster.items():
         memory.append(node['memory'])
         billing.append(node['billing'])
         throughput.append(node['throughput'])
+    total_throughput = sum(throughput)
     
-    data = [random.randint(0, 10000) for _ in range(data_size)]
+    # Create queues for inter-process communication
     queues = [Queue() for _ in range(num_nodes)]
     
-    print(f"--- Cluster Configuration ---")
-    print(f"Number of Nodes: {num_nodes}")
+    # Generate data for the nodes
+    data = generate_data(n=data_size,skew_type='uniform')
+    
+    print(f"\nNumber of Nodes: {num_nodes}")
     print(f"Total Data Size: {data_size} elements")
     print(f"Data Sample: {data[:5]}...{data[-5:]}\n")
     
-    print(f"--- Initial Data Distribution ---")
-    total_throughput = sum(throughput)
+    
+    print(f"------------------------------ Regular Sampling ------------------------------")
+    
+    time_start = time.perf_counter()
+    
     chunks = []
     last_idx = 0
     for i in range(num_nodes):
@@ -205,12 +220,14 @@ if __name__ == '__main__':
         partition = data[last_idx:last_idx + partition_size]
         last_idx += partition_size
         chunks.append(partition)
-        print(f"Node {i:<2}: Throughput {throughput[i]:>2}x | Memory {memory[i]:<5} elements | Billing Rate: ${billing[i]:<7.4f} | Initial Chunk Size: {len(partition):<8}")
-    print("-" * 30 + "\n")
 
-    time_start = time.perf_counter()
+    time_end = time.perf_counter()
+        
+    total_time = time_end - time_start
+    print(f"Partition time: {total_time*1000:.3f}ms")
+    print("-" * 30)
     
-    # ------------------------------ Start processes ----------------------------- #
+    # Start processes for each node
     processes = []
     for i in range(num_nodes):
         p = Process(
@@ -218,15 +235,14 @@ if __name__ == '__main__':
             args=(i, throughput[i], memory[i], billing[i], chunks[i], queues, num_nodes, data_size)
         )
         processes.append(p)
-        p.start()
-    
-    # ---------------------------- Wait for completion --------------------------- #
-    
+        p.start()    
     for p in processes:
         p.join()
         
-    time_end = time.perf_counter()
-    total_time = time_end - time_start
-    print(f"--- Simulation Summary ---")
-    print(f"Total execution time: {total_time*1000:.3f}ms")
-    print("-" * 30)
+        
+    print('-------------------------------- LP Guided -----------------------------------')
+    
+    chunks, chunk_size = smart_partition(data, [8.5, 4.21, 2.65, 3.22])
+    print(f"Chunk sizes: {chunk_size}")
+    
+    
