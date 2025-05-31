@@ -38,47 +38,40 @@ def smart_partition(data, weights):
     return chunks, partition_sizes
 
 
-def optimize_partitioning(num_nodes, total_data_volume, throughputs, memory_limits, usage_rates, epsilon=1e-6):
-    """
-    Solves the data partitioning problem using Google OR-Tools.
-
-    Parameters:
-        num_nodes (int): Number of nodes
-        total_data_volume (float): Total data volume to distribute
-        throughputs (list of float): Combined throughput (1 to 10 scale) for each node
-        memory_limits (list of float): Maximum memory for each node
-        usage_rates (list of float): Usage billing rates for each node
-        epsilon (float): Small coefficient for cost term in objective
-
-    Returns:
-        dict: Contains makespan, total cost, and data assignment per node
-    """
+def optimize_proportion(num_nodes, data_size, relative_throughputs, memory_sizes, costs_per_time, base_throughput, cost_weight=1e-6):
     solver = pywraplp.Solver.CreateSolver('CBC')
 
-    # Decision variables: amount of data assigned to each node
-    data_assigned = [solver.NumVar(0, memory_limits[i], f'data_assigned_node_{i}') for i in range(num_nodes)]
-
-    # Makespan variable
+    # Decision variables: data items assigned to each node
+    data_assigned = [solver.NumVar(0, memory_sizes[i], f'data_assigned_node_{i}') for i in range(num_nodes)]
     makespan = solver.NumVar(0, solver.infinity(), 'makespan')
 
-    # Constraint: sum of assigned data equals total volume
-    solver.Add(solver.Sum(data_assigned) == total_data_volume)
+    # Constraint: total data must be fully distributed
+    solver.Add(solver.Sum(data_assigned) == data_size)
 
-    # Constraint: makespan should be at least the processing time on each node
+    # Constraints: simulated processing time per node should not exceed makespan
     for i in range(num_nodes):
-        solver.Add(makespan >= data_assigned[i] / throughputs[i])
+        simulated_time_ms = (data_assigned[i] * base_throughput) / relative_throughputs[i]
+        solver.Add(makespan >= simulated_time_ms)
 
-    # Objective: minimize makespan plus a small weighted cost term
-    total_cost_expr = solver.Sum([usage_rates[i] * (data_assigned[i] / throughputs[i]) for i in range(num_nodes)])
-    solver.Minimize(makespan + epsilon * total_cost_expr)
+    # Objective: minimize makespan with a small penalty on billing cost
+    total_billing_cost_expr = solver.Sum([
+        costs_per_time[i] * ((data_assigned[i] * base_throughput) / relative_throughputs[i])
+        for i in range(num_nodes)
+    ])
+    solver.Minimize(makespan + cost_weight * total_billing_cost_expr)
 
+    # Solve the problem
     status = solver.Solve()
 
     if status == pywraplp.Solver.OPTIMAL:
+        assignments = [data_assigned[i].solution_value() for i in range(num_nodes)]
         result = {
             'makespan': makespan.solution_value(),
-            'total_cost': sum(usage_rates[i] * (data_assigned[i].solution_value() / throughputs[i]) for i in range(num_nodes)),
-            'data_assignments': [data_assigned[i].solution_value() for i in range(num_nodes)]
+            'total_cost': sum(
+                costs_per_time[i] * ((assignments[i] * base_throughput) / relative_throughputs[i])
+                for i in range(num_nodes)
+            ),
+            'weights': [round((assignments[i] / data_size) * 100, 2) for i in range(num_nodes)]  # percentage per node
         }
         return result
     else:
@@ -88,17 +81,16 @@ def optimize_partitioning(num_nodes, total_data_volume, throughputs, memory_limi
 # Example usage
 if __name__ == '__main__':
     num_nodes = 4
-    total_data_volume = 1000
-    # Throughput values between 1 and 10
-    throughputs = [5, 4, 8, 7]  # Example: node 0 = 5x, node 1 = 4x, etc.
-    memory_limits = [400, 300, 500, 350]
-    usage_rates = [0.5, 0.6, 0.55, 0.52]
+    data_size = 1000  # total items to sort
+    relative_throughputs = [5, 4, 8, 7]  # relative speed of each node (1 to 10 scale)
+    memory_sizes = [400, 300, 500, 350]  # how many items each node can handle
+    costs_per_time = [0.005, 0.006, 0.0055, 0.0052]  # cost per millisecond of processing
 
-    result = optimize_partitioning(num_nodes, total_data_volume, throughputs, memory_limits, usage_rates)
+    result = optimize_proportion(num_nodes, data_size, relative_throughputs, memory_sizes, costs_per_time)
     if 'error' in result:
         print(result['error'])
     else:
-        print(f"Optimal makespan: {result['makespan']:.4f}")
+        print(f"Optimal makespan: {result['makespan']:.4f} ms")
         print(f"Total cost: {result['total_cost']:.4f}")
-        for i, data in enumerate(result['data_assignments']):
-            print(f"Node {i}: assigned data = {data:.2f}")
+        for i, percent in enumerate(result['weights']):
+            print(f"Node {i}: assigned = {percent:.2f}%")
