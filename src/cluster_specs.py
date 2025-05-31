@@ -70,7 +70,7 @@ def generate_cluster_config(
         total_pct_dataset += pct_dataset
         total_pct_cluster += pct_total_mem
 
-        print(f"{node}: {spec}")
+        print(f"{spec}")
         print(f"  - {pct_dataset:.2f}% out of {memory_overprovision_factor * 100:.2f}% of overprovisioned memory")
         print(f"  - {pct_total_mem:.2f}% out of 100.00% of total cluster memory\n")
 
