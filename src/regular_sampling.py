@@ -1,157 +1,180 @@
 import time
 import random
 from multiprocessing import Queue, Process
+import heapq # Import for min-heap functionality
 from cluster_specs import generate_cluster_config, generate_data
 from model_solver import smart_partition, optimize_proportion
 
-def simulate_sorting(chunk, relative_throughput, cost_per_time, scale_time):
-    
-    time_start = time.perf_counter()
-    chunk.sort()
-    time_end = time.perf_counter()
-
+def simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time):
+    """Simulates the perceived delay and cost for an operation."""
     actual_time_sec = time_end - time_start
-
-    # Simulate the perceived delay (scaled and adjusted by throughput)
     delay_time = (actual_time_sec * scale_time) / relative_throughput
-    delay_time = round(delay_time, 6)
-
-    # Calculate billing cost based on the simulated delay
-    cost_time = round(delay_time * cost_per_time, 6)
-
+    cost_time = delay_time * cost_per_time
     return delay_time, cost_time
 
+def format_sample(data_list, first_n=3, last_n=3):
+    """Helper function to format a sample of a list for printing."""
+    if not data_list:
+        return "[]"
+    if len(data_list) <= first_n + last_n:
+        return str(data_list)
+    start_str = str(data_list[:first_n])
+    end_str = str(data_list[-last_n:])
+    return f"{start_str[:-1]}...{end_str[1:]}"
 
+def node_sampling(id, relative_throughput, memory_size, cost_per_time, chunk, queues, num_nodes, data_size, scale_time):
+    """Represents the operations performed by each node in the parallel sorting algorithm."""
+    
+    initial_chunk_len = len(chunk)
+    
+    # Phase 1 & 2: Sort + Sample
+    time_start = time.perf_counter()
+    
+    chunk.sort()
+    
+    L_i = (num_nodes - 1) * relative_throughput 
+    L_i = int(L_i)
 
-def node_psrs(id, relative_throughput, memory_size, cost_per_time, chunk, queues, num_nodes, data_size, scale_time):
-    
-    # ---------------------------- Phase 1: Local sort --------------------------- #
-    delay, cost = simulate_sorting(chunk, relative_throughput, cost_per_time, scale_time)
-    percent_initial = (len(chunk) / data_size) * 100
-    percent_in_memory_initial = (len(chunk) / memory_size) * 100 if memory_size > 0 else 0
-    
-    print(f"Node {id:<2} ({relative_throughput:>2}x): Initial: {len(chunk)} / {memory_size} elements | "
-          f"{percent_initial:.2f}% of dataset | {percent_in_memory_initial:.2f}% of memory capacity | "
-          f"Time: {delay} us | Cost: $ {cost} | Sample: {str(chunk[:5])[:-1]}...{str(chunk[-5:])[1:]}")
-    
-    # ------------------------ Phase 2: Sample collection ------------------------ #
-    L_i = (num_nodes - 1) * relative_throughput
     samples = []
+    if num_nodes > 1 and len(chunk) > 0 and L_i > 0:
+        step = max(1, len(chunk) // L_i)
+        for j in range(L_i):
+            sample_index = j * step
+            if sample_index < len(chunk):
+                samples.append(chunk[sample_index])
+            else:
+                break
     
-    if num_nodes > 1 and len(chunk) > 0:
-        num_samples_to_attempt = L_i
-        if num_samples_to_attempt > 0:
-            step = max(1, len(chunk) // num_samples_to_attempt)
-            
-            for j in range(num_samples_to_attempt):
-                sample_index = j * step
-                if sample_index < len(chunk):
-                    samples.append(chunk[sample_index])
-                else:
-                    break
+    if num_nodes > 1:
+        queues[0].put({'from': id, 'type': 'samples', 'payload': samples})
     
-    queues[0].put({'from': id, 'type': 'samples', 'payload': samples})
+    time_end = time.perf_counter()
+    delay_p1_2, cost_p1_2 = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
 
-    # Coordinator collects samples and selects pivots
+    percent_dataset = (initial_chunk_len / data_size) * 100 if data_size > 0 else 0
+    percent_memory = (initial_chunk_len / memory_size) * 100 if memory_size > 0 else 0
+    print(f"N{id:<2}({relative_throughput}x) Sort: items={initial_chunk_len}/{data_size} ({percent_dataset:.1f}%) mem={initial_chunk_len}/{memory_size} ({percent_memory:.1f}%) samples={len(samples):<3} time={delay_p1_2:.3f}µs cost=${cost_p1_2:.3f} data={format_sample(chunk)}")
+    
+    # Coordinator: Collect samples & Select pivots
     if id == 0:
         all_samples = []
-        for _ in range(num_nodes):
-            msg = queues[0].get()
-            all_samples.extend(msg['payload'])
+        if num_nodes > 1:
+            for _ in range(num_nodes):
+                msg = queues[0].get()
+                if msg['type'] == 'samples':
+                    all_samples.extend(msg['payload'])
+
+        print('-'*80)
+        time_start = time.perf_counter()
         
-        delay, cost = simulate_sorting(all_samples, relative_throughput, cost_per_time, scale_time) # Coordinator uses its own billing rate
-        print(f"\n{'':<10}Coordinator: Collected {len(all_samples):<8} samples | Time: {delay} us | "
-              f"Cost: $ {cost} | Sample: {str(all_samples[:5])[:-1]}...{str(all_samples[-5:])[1:]}\n")
+        all_samples.sort()
         
-        # Select p-1 global pivots
         pivots = []
         if num_nodes > 1 and len(all_samples) > 0:
             desired_pivots_count = num_nodes - 1
-            
-            if len(all_samples) < desired_pivots_count:
-                unique_sorted_samples = sorted(list(set(all_samples)))
-                pivots.extend(unique_sorted_samples)
+            if len(all_samples) <= desired_pivots_count:
+                pivots.extend(sorted(list(set(all_samples))))
                 while len(pivots) < desired_pivots_count and pivots:
                     pivots.append(pivots[-1])
+                while len(pivots) < desired_pivots_count:
+                    pivots.append(0)
             else:
                 step = len(all_samples) // num_nodes
                 if step == 0:
-                    unique_sorted_samples = sorted(list(set(all_samples)))
-                    pivots.extend(unique_sorted_samples[:desired_pivots_count])
-                    while len(pivots) < desired_pivots_count and pivots:
-                        pivots.append(pivots[-1])
+                    pivots.extend(all_samples[:desired_pivots_count])
                 else:
                     for i in range(1, num_nodes):
                         pivot_index = i * step
                         if pivot_index < len(all_samples):
                             pivots.append(all_samples[pivot_index])
                         else:
-                            if pivots:
-                                pivots.append(pivots[-1])
-                            elif all_samples:
-                                pivots.append(all_samples[-1])
-                            else:
-                                break
-        
-        print(f"{'':<10}Coordinator: Selected {len(pivots):<8} pivots | Pivots: {pivots}\n")
-        
-        # Broadcast pivots to all nodes
-        for node_id in range(num_nodes):
-            queues[node_id].put({'from': 0, 'type': 'pivots', 'payload': pivots})
-    
-    # ------------------------ Phase 3: Redistribute data ------------------------ #
-    pivots_received = False
-    pivots = []
-    while not pivots_received:
-        msg = queues[id].get()
-        if msg['type'] == 'pivots':
-            pivots = msg['payload']
-            pivots_received = True
-        else:
-            queues[id].put(msg)
-            time.sleep(0.001)
+                            if pivots: pivots.append(pivots[-1])
+                            elif all_samples: pivots.append(all_samples[-1])
+                            else: break
+            while len(pivots) < desired_pivots_count and pivots:
+                pivots.append(pivots[-1])
+            while len(pivots) < desired_pivots_count:
+                 pivots.append(0)
+            pivots = pivots[:desired_pivots_count]
 
-    partitions = [[] for _ in range(num_nodes)]
-    for num in chunk:
-        nid = 0
-        while nid < len(pivots) and num > pivots[nid]:
-            nid += 1
+        # Broadcast pivots
+        if num_nodes > 1:
+            for node_id_target in range(num_nodes):
+                queues[node_id_target].put({'from': 0, 'type': 'pivots', 'payload': pivots})
+    
+        time_end = time.perf_counter()
+        delay_coord_pivots, cost_coord_pivots = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
+        print(f"N0 ({relative_throughput}x) Sampling: samples={len(all_samples)}/{len(all_samples)} pivots={len(pivots)} time={delay_coord_pivots:.3f}µs cost=${cost_coord_pivots:.3f} pivots={pivots}")
+        print('-'*80)
         
-        nid = min(nid, num_nodes - 1)
-        
-        partitions[nid].append(num)
+    # Phase 3.1: Receive pivots & Partition data
+    pivots_received_payload = []
+    if num_nodes > 1:
+        pivots_received_flag = False
+        while not pivots_received_flag:
+            msg = queues[id].get()
+            if msg['type'] == 'pivots':
+                pivots_received_payload = msg['payload']
+                pivots_received_flag = True
+            else:
+                queues[id].put(msg)
+                time.sleep(0.001)
     
-    for nid in range(num_nodes):
-        if nid != id:
-            queues[nid].put({'from': id, 'type': 'partition', 'payload': partitions[nid]})
-    
-    chunk = partitions[id]
-    
-    received_partition_count = 0
-    while received_partition_count < (num_nodes - 1):
-        msg = queues[id].get()
-        if msg['type'] == 'partition':
-            chunk.extend(msg['payload'])
-            received_partition_count += 1
-        else:
-            queues[id].put(msg)
-            time.sleep(0.001)
+    time_start = time.perf_counter()
 
-    # ---------------------------- Phase 4: Final sort --------------------------- #
-    delay, cost = simulate_sorting(chunk, relative_throughput, cost_per_time, scale_time)
-    percent_final = (len(chunk) / data_size) * 100
-    percent_in_memory_final = (len(chunk) / memory_size) * 100 if memory_size > 0 else 0
-    
-    print(f"Node {id:<2} ({relative_throughput:>2}x): Final: {len(chunk)} / {memory_size} elements | "
-          f"{percent_final:.2f}% of dataset | {percent_in_memory_final:.2f}% of memory capacity | "
-          f"Time: {delay} us | Cost: $ {cost} | Sample: {str(chunk[:5])[:-1]}...{str(chunk[-5:])[1:]}")
-
-    if id != 0:
-        queues[0].put({'from': id, 'type': 'final', 'payload': chunk})
+    partitions_to_send = [[] for _ in range(num_nodes)]
+    if num_nodes > 1 and pivots_received_payload:
+        for num in chunk:
+            target_node_idx = 0
+            while target_node_idx < len(pivots_received_payload) and num > pivots_received_payload[target_node_idx]:
+                target_node_idx += 1
+            target_node_idx = min(target_node_idx, num_nodes - 1)
+            partitions_to_send[target_node_idx].append(num)
+    elif num_nodes == 1:
+        partitions_to_send[0] = chunk
     else:
-        results_by_id = {0: chunk}
+        partitions_to_send[id] = chunk
+
+    if num_nodes > 1:
+        for target_node_idx in range(num_nodes):
+            if target_node_idx != id:
+                queues[target_node_idx].put({'from': id, 'type': 'partition', 'payload': partitions_to_send[target_node_idx]})
+    
+    time_end = time.perf_counter()
+    delay_p3_1, cost_p3_1 = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)    
+    print(f"N{id:<2}({relative_throughput}x) Partition: transfer={len(partitions_to_send[id])}/{len(chunk)} time={delay_p3_1:.3f}µs cost=${cost_p3_1:.3f}")
+    
+    # Phase 3.2: Receive partitions
+    chunk = partitions_to_send[id] 
+    if num_nodes > 1:
+        received_partition_count = 0
+        while received_partition_count < (num_nodes - 1):
+            msg = queues[id].get()
+            if msg['type'] == 'partition':
+                chunk.extend(msg['payload'])
+                received_partition_count += 1
+            else:
+                queues[id].put(msg)
+                time.sleep(0.001)
+    
+    # Phase 4: Final sort
+    time_start = time.perf_counter()
+    chunk.sort()
+    
+    if id != 0 and num_nodes > 1:
+        queues[0].put({'from': id, 'type': 'final', 'payload': chunk})
         
+    time_end = time.perf_counter()
+    delay_p4, cost_p4 = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
+    percent_dataset = (initial_chunk_len / data_size) * 100 if data_size > 0 else 0
+    percent_memory = (initial_chunk_len / memory_size) * 100 if memory_size > 0 else 0
+    print(f"N{id:<2}({relative_throughput}x) Final: items={len(chunk)}/{data_size} ({percent_dataset:.1f}%) mem={len(chunk)}/{memory_size} ({percent_memory:.1f}%) time={delay_p4:.3f}µs cost=${cost_p4:.3f} data={format_sample(chunk)}")
+    
+    # Coordinator: Collect & Merge final results
+    if id == 0:
+        results_by_id = {0: chunk}
         collected_final_count = 0
+        
         while collected_final_count < (num_nodes - 1):
             msg = queues[0].get()
             if msg['type'] == 'final':
@@ -161,66 +184,101 @@ def node_psrs(id, relative_throughput, memory_size, cost_per_time, chunk, queues
                 queues[0].put(msg)
                 time.sleep(0.001)
         
-        final_result = []
-        for nid in range(num_nodes):
-            final_result.extend(results_by_id[nid])
+        time_start = time.perf_counter()
         
-        print(f"\n{'':<10}Coordinator: All nodes merged. Total sorted elements: {len(final_result):<8} | "
-              f"Sample: {str(final_result[:5])[:-1]}...{str(final_result[-5:])[1:]}\n")
+        final_result = []
+        for i in range(num_nodes):
+            if i in results_by_id:
+                final_result.extend(results_by_id[i])
 
+        time_end = time.perf_counter()
+        delay_coord_merge, cost_coord_merge = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
+        print('-'*80)
+        print(f"N0 Merge: total={len(final_result):<4} time={delay_coord_merge:.3f}µs cost=${cost_coord_merge:.3f} data={format_sample(final_result)}")
+        print('-'*80)
+    
+def node_static(id, relative_throughput, memory_size, cost_per_time, chunk, queue, data_size, scale_time):
+    initial_chunk_len = len(chunk)
+    
+    percent_dataset = (initial_chunk_len / data_size) * 100 if data_size > 0 else 0
+    percent_memory = (initial_chunk_len / memory_size) * 100 if memory_size > 0 else 0
+    
+    time_start = time.perf_counter()
+    chunk.sort()
+    time_end = time.perf_counter()
+    delay, cost = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
+    
+    queue.put({'from': id, 'type': 'result', 'payload': chunk})
+    print(f"N{id:<2}({relative_throughput}x) Sort: items={initial_chunk_len}/{data_size} ({percent_dataset:.1f}%) mem={initial_chunk_len}/{memory_size} ({percent_memory:.1f}%) time={delay:.3f}µs cost=${cost:.3f} data={format_sample(chunk)}")
+    
 
-# -------- Main function to set up the environment and start processes ------- #
+def linear_scan_merge(sorted_lists):
+    result = []
+    indices = [0] * len(sorted_lists)  # Track current index in each list
+    
+    while True:
+        min_val = None
+        min_list_idx = -1
+        
+        for i, lst in enumerate(sorted_lists):
+            if indices[i] < len(lst):
+                val = lst[indices[i]]
+                if min_val is None or val < min_val:
+                    min_val = val
+                    min_list_idx = i
+        
+        if min_list_idx == -1:
+            break  # All lists are exhausted
+        
+        result.append(min_val)
+        indices[min_list_idx] += 1
 
+    return result
+
+        
 if __name__ == '__main__':
     
-    print('\n----------------------------- Cluster Configuration ---------------------------')
+    print('# --------------------------- Cluster Configuration -------------------------- #')
     
-    scale_time = 10**6 # Scale time basis in microseconds (10^6 or 1 millionth of a second)
+    scale_time = 10**6
     num_nodes = 4
-    relative_throughputs = [] 
-    memory_sizes = []
-    costs_per_time = []
     
-    # generate cluster configuration
     data_size, cluster = generate_cluster_config(
-        data_scale=5, 
+        data_scale=10, 
         num_nodes=num_nodes,
         seed=4
     )
     
-    # make the fastest node the coordinator (id=0)
     cluster = dict(sorted(cluster.items(), key=lambda item: item[1]['throughput'], reverse=True))
     
-    # extract throughput, memory, and billing from the cluster
+    relative_throughputs = []
+    memory_sizes = []
+    costs_per_time = []
+    
     for key, node in cluster.items():
         memory_sizes.append(node['memory'])
         costs_per_time.append(node['billing'])
         relative_throughputs.append(node['throughput'])
+    
     total_relative_throughput = sum(relative_throughputs)
+    data = generate_data(n=data_size, skew_type='uniform')
     
-    # Create queues for inter-process communication
-    queues = [Queue() for _ in range(num_nodes)]
+    print(f"Nodes: {num_nodes} | Data: {data_size} elements | Sample: {format_sample(data, 5, 5)}")
     
-    # Generate data for the nodes
-    data = generate_data(n=data_size,skew_type='uniform')
-    
-    print(f"\nNumber of Nodes: {num_nodes}")
-    print(f"Total Data Size: {data_size} elements")
-    print(f"Data Sample: {data[:5]}...{data[-5:]}\n")
-    
-    print('------------------------------ Sequential Machine ------------------------------')
-    
+    print('\n# ---------------------------- Sequential Baseline --------------------------- #')
     temp = data.copy()
     time_start = time.perf_counter()
     temp.sort()
     time_end = time.perf_counter()
-    total_time = time_end - time_start
-    base_throughput = (total_time * scale_time) / len(temp)
-    print(f'\nTime: {total_time*scale_time:.6f} us')
-    print(f'Base throughput: {base_throughput:.6f} us per element\n')
+    delay, _ = simulation(time_start, time_end, 1, 0, scale_time)
+    base_throughput = delay / data_size
+    print(f'Sequential: time={delay:.3f}µs throughput={base_throughput:.6f}µs/element')
+    print('-'*80)
     
     
-    print(f"------------------------------ Regular Sampling ------------------------------")
+    print(f"\n# ------------------------- Regular Sampling Approach ------------------------ #")
+    
+    queues = [Queue() for _ in range(num_nodes)]
     
     time_start = time.perf_counter()
     
@@ -233,51 +291,88 @@ if __name__ == '__main__':
         chunks.append(partition)
 
     time_end = time.perf_counter()
-    total_time = time_end - time_start
+    delay, cost = simulation(time_start, time_end, relative_throughputs[0], costs_per_time[0], scale_time)
+    print(f"N0 ({relative_throughputs[0]}x) Partition: time={delay:.3f}µs time={cost:.3f}µs cost=${cost:.3f}")
+    print('-'*80)
     
-    print(f"Partition time: {total_time*scale_time:.3f} us")
-    print("-" * 30)
-    
-    # Start processes for each node
     processes = []
     for i in range(num_nodes):
         p = Process(
-            target=node_psrs,
+            target=node_sampling,
             args=(i, relative_throughputs[i], memory_sizes[i], costs_per_time[i], chunks[i], queues, num_nodes, data_size, scale_time)
         )
         processes.append(p)
         p.start()    
+    
     for p in processes:
         p.join()
         
         
-    print('-------------------------------- LP Guided -----------------------------------')
+    print('\n# ------------------------- Static Optimized Approach ------------------------ #')
     
-    print('---- Optimize Solver')
+    queue = Queue()
+    
     time_start = time.perf_counter()
     result = optimize_proportion(num_nodes, data_size, relative_throughputs, memory_sizes, costs_per_time, base_throughput)
     time_end = time.perf_counter()
-    total_time = time_end - time_start
     
-    print(f"Solver time: {total_time*scale_time:.6f} us")
-    print(f"Projected makespan: {result['makespan']:.6f} us")
-    print(f"Projected cost: $ {result['total_cost']:.6f}")
+    # Find the highest weight and set it as Node 0 (Coordinator)
+    weights = result['weights']
+    max_idx = weights.index(max(weights))
+    if max_idx != 0:
+        for arr in (weights, relative_throughputs, memory_sizes, costs_per_time):
+            arr[0], arr[max_idx] = arr[max_idx], arr[0]
+
+    delay, cost = simulation(time_start, time_end, relative_throughputs[0], costs_per_time[0], scale_time)
+    print(f'N0 ({relative_throughputs[0]}x) Solver: time={delay:.3f}µs cost=${cost:.3f} ^makespan={result["makespan"]:.3f}µs ^cost=${result["total_cost"]:.3f}')
+
+    chunks, partition_sizes = smart_partition(data, weights)
+    print('-'*80)
     
-    print("-" * 30)
-    print('---- Smart Partitioning')
-    
-    chunks, partition_sizes = smart_partition(data, result['weights'])
-    
-    print("-" * 30)
-    
-    # TODO: distribute the chunks to the nodes and sort and return a min-heap 
-    
-    for id in range(num_nodes):
+    # Display static node info
+    processes = []
+    for i in range(num_nodes):
+        p = Process(
+            target=node_static,
+            args=(i, relative_throughputs[i], memory_sizes[i], costs_per_time[i], chunks[i], queue, data_size, scale_time)
+        )
+        processes.append(p)
+        p.start()
         
-        percent_initial = (len(chunks[id]) / data_size) * 100
-        percent_in_memory_initial = (len(chunks[id]) / memory_sizes[id]) * 100 if memory_sizes[id] > 0 else 0
+    # Collect results from the queue to prevent blocking
+    static_results = []
+    for _ in range(num_nodes):
+        static_results.append(queue.get())
         
-        print(f"Node {id:<2} ({relative_throughputs[id]:>2}x): Initial: {len(chunks[id])} / {memory_sizes[id]} elements | "
-                f"{percent_initial:.2f}% of dataset | {percent_in_memory_initial:.2f}% of memory capacity | ")
-                # f"Time: {delay} us | Cost: $ {cost} | Sample: {str(chunk[:5])[:-1]}...{str(chunk[-5:])[1:]}")
+    for p in processes:
+        p.join()
+        
+    # Merge the locally sorted results using min-heap
+    time_start = time.perf_counter()
+    # Extract the sorted lists from the collected results
+    lists_to_merge = [item['payload'] for item in static_results]
+    # Perform the min-heap merge
+    merged_sorted_list = list(heapq.merge(*lists_to_merge))
+    time_end = time.perf_counter()
+    delay, cost = simulation(time_start, time_end, relative_throughputs[0], costs_per_time[0], scale_time) # Assuming merge is sequential and has no cost
     
+    print('-'*80)
+    print(f"N0 ({relative_throughputs[0]}x) Merge: total={len(merged_sorted_list):<4} time={delay:.3f}µs cost=${cost:.3f} data={format_sample(merged_sorted_list)}")
+    print('-'*80)
+    
+    
+    # Time and simulate linear scan merge
+    time_start = time.perf_counter()
+    merged_linear_scan = linear_scan_merge(lists_to_merge)
+    time_end = time.perf_counter()
+
+    delay_linear, cost_linear = simulation(
+        time_start,
+        time_end,
+        relative_throughputs[0],
+        costs_per_time[0],
+        scale_time
+    )
+    
+    print(f"N0 ({relative_throughputs[0]}x) Linear Scan Merge: total={len(merged_linear_scan):<4} time={delay_linear:.3f}µs cost=${cost_linear:.3f} data={format_sample(merged_linear_scan)}")
+    print('-'*80)
