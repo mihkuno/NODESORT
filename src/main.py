@@ -53,7 +53,8 @@ def node_sampling(id, relative_throughput, memory_size, cost_per_time, chunk, qu
 
     percent_dataset = (initial_chunk_len / data_size) * 100 if data_size > 0 else 0
     percent_memory = (initial_chunk_len / memory_size) * 100 if memory_size > 0 else 0
-    print(f"N{id:<2}({relative_throughput}x) Sort: items={initial_chunk_len}/{data_size} ({percent_dataset:.1f}%) mem={initial_chunk_len}/{memory_size} ({percent_memory:.1f}%) samples={len(samples):<3} time={delay_p1_2:.3f}µs cost=${cost_p1_2:.3f} data={format_sample(chunk)}")
+    print(f"N{id:<2}({relative_throughput}x) Sort: items={initial_chunk_len}/{data_size} ({percent_dataset:.1f}%) mem={initial_chunk_len}/{memory_size} ({percent_memory:.1f}%) samples={len(samples):<3} time={delay_p1_2:.3f}µs cost=${cost_p1_2:.3f}"# data={format_sample(chunk)}"
+          )
     
     # Coordinator: Collect samples & Select pivots
     if id == 0:
@@ -64,7 +65,7 @@ def node_sampling(id, relative_throughput, memory_size, cost_per_time, chunk, qu
                 if msg['type'] == 'samples':
                     all_samples.extend(msg['payload'])
 
-        print('-'*80)
+        # print('-'*80)
         time_start = time.perf_counter()
         
         all_samples.sort()
@@ -105,7 +106,7 @@ def node_sampling(id, relative_throughput, memory_size, cost_per_time, chunk, qu
         time_end = time.perf_counter()
         delay_coord_pivots, cost_coord_pivots = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
         print(f"N0 ({relative_throughput}x) Sampling: samples={len(all_samples)}/{len(all_samples)} pivots={len(pivots)} time={delay_coord_pivots:.3f}µs cost=${cost_coord_pivots:.3f} pivots={pivots}")
-        print('-'*80)
+        # print('-'*80)
         
     # Phase 3.1: Receive pivots & Partition data
     pivots_received_payload = []
@@ -168,7 +169,8 @@ def node_sampling(id, relative_throughput, memory_size, cost_per_time, chunk, qu
     delay_p4, cost_p4 = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
     percent_dataset = (initial_chunk_len / data_size) * 100 if data_size > 0 else 0
     percent_memory = (initial_chunk_len / memory_size) * 100 if memory_size > 0 else 0
-    print(f"N{id:<2}({relative_throughput}x) Final: items={len(chunk)}/{data_size} ({percent_dataset:.1f}%) mem={len(chunk)}/{memory_size} ({percent_memory:.1f}%) time={delay_p4:.3f}µs cost=${cost_p4:.3f} data={format_sample(chunk)}")
+    print(f"N{id:<2}({relative_throughput}x) Final: items={len(chunk)}/{data_size} ({percent_dataset:.1f}%) mem={len(chunk)}/{memory_size} ({percent_memory:.1f}%) time={delay_p4:.3f}µs cost=${cost_p4:.3f}"# data={format_sample(chunk)}"
+          )
     
     # Coordinator: Collect & Merge final results
     if id == 0:
@@ -193,9 +195,10 @@ def node_sampling(id, relative_throughput, memory_size, cost_per_time, chunk, qu
 
         time_end = time.perf_counter()
         delay_coord_merge, cost_coord_merge = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
-        print('-'*80)
-        print(f"N0 Merge: total={len(final_result):<4} time={delay_coord_merge:.3f}µs cost=${cost_coord_merge:.3f} data={format_sample(final_result)}")
-        print('-'*80)
+        # print('-'*80)
+        print(f"N0 Merge: total={len(final_result):<4} time={delay_coord_merge:.3f}µs cost=${cost_coord_merge:.3f}" # data={format_sample(final_result)}"
+              )
+        # print('-'*80)
     
 def node_static(id, relative_throughput, memory_size, cost_per_time, chunk, queue, data_size, scale_time):
     initial_chunk_len = len(chunk)
@@ -209,7 +212,8 @@ def node_static(id, relative_throughput, memory_size, cost_per_time, chunk, queu
     delay, cost = simulation(time_start, time_end, relative_throughput, cost_per_time, scale_time)
     
     queue.put({'from': id, 'type': 'result', 'payload': chunk})
-    print(f"N{id:<2}({relative_throughput}x) Sort: items={initial_chunk_len}/{data_size} ({percent_dataset:.1f}%) mem={initial_chunk_len}/{memory_size} ({percent_memory:.1f}%) time={delay:.3f}µs cost=${cost:.3f} data={format_sample(chunk)}")
+    print(f"N{id:<2}({relative_throughput}x) Sort: items={initial_chunk_len}/{data_size} ({percent_dataset:.1f}%) mem={initial_chunk_len}/{memory_size} ({percent_memory:.1f}%) time={delay:.3f}µs cost=${cost:.3f}"# data={format_sample(chunk)}"
+          )
     
 
 def linear_scan_merge(sorted_lists):
@@ -241,12 +245,12 @@ if __name__ == '__main__':
     print('# --------------------------- Cluster Configuration -------------------------- #')
     
     scale_time = 10**6
-    num_nodes = 4
+    num_nodes = 8
     
     data_size, cluster = generate_cluster_config(
-        data_scale=10, 
+        data_scale=300, 
         num_nodes=num_nodes,
-        seed=4
+        seed=5
     )
     
     cluster = dict(sorted(cluster.items(), key=lambda item: item[1]['throughput'], reverse=True))
@@ -261,7 +265,8 @@ if __name__ == '__main__':
         relative_throughputs.append(node['throughput'])
     
     total_relative_throughput = sum(relative_throughputs)
-    data = generate_data(n=data_size, skew_type='uniform')
+    data = generate_data(n=data_size, skew_type='gaussian', mean=252000, std=100000, filename='8run_8node_5seed')
+    
     
     print(f"Nodes: {num_nodes} | Data: {data_size} elements | Sample: {format_sample(data, 5, 5)}")
     
@@ -273,7 +278,7 @@ if __name__ == '__main__':
     delay, _ = simulation(time_start, time_end, 1, 0, scale_time)
     base_throughput = delay / data_size
     print(f'Sequential: time={delay:.3f}µs throughput={base_throughput:.6f}µs/element')
-    print('-'*80)
+    # print('-'*80)
     
     
     print(f"\n# ------------------------- Regular Sampling Approach ------------------------ #")
@@ -293,7 +298,7 @@ if __name__ == '__main__':
     time_end = time.perf_counter()
     delay, cost = simulation(time_start, time_end, relative_throughputs[0], costs_per_time[0], scale_time)
     print(f"N0 ({relative_throughputs[0]}x) Partition: time={delay:.3f}µs time={cost:.3f}µs cost=${cost:.3f}")
-    print('-'*80)
+    # print('-'*80)
     
     processes = []
     for i in range(num_nodes):
@@ -327,7 +332,7 @@ if __name__ == '__main__':
     print(f'N0 ({relative_throughputs[0]}x) Solver: time={delay:.3f}µs cost=${cost:.3f} ^makespan={result["makespan"]:.3f}µs ^cost=${result["total_cost"]:.3f}')
 
     chunks, partition_sizes = smart_partition(data, weights)
-    print('-'*80)
+    # print('-'*80)
     
     # Display static node info
     processes = []
@@ -356,9 +361,10 @@ if __name__ == '__main__':
     time_end = time.perf_counter()
     delay, cost = simulation(time_start, time_end, relative_throughputs[0], costs_per_time[0], scale_time) # Assuming merge is sequential and has no cost
     
-    print('-'*80)
-    print(f"N0 ({relative_throughputs[0]}x) Merge: total={len(merged_sorted_list):<4} time={delay:.3f}µs cost=${cost:.3f} data={format_sample(merged_sorted_list)}")
-    print('-'*80)
+    # print('-'*80)
+    print(f"N0 ({relative_throughputs[0]}x) Heap Merge: total={len(merged_sorted_list):<4} time={delay:.3f}µs cost=${cost:.3f}"# data={format_sample(merged_sorted_list)}"
+          )
+    # print('-'*80)
     
     
     # Time and simulate linear scan merge
@@ -374,5 +380,6 @@ if __name__ == '__main__':
         scale_time
     )
     
-    print(f"N0 ({relative_throughputs[0]}x) Linear Scan Merge: total={len(merged_linear_scan):<4} time={delay_linear:.3f}µs cost=${cost_linear:.3f} data={format_sample(merged_linear_scan)}")
-    print('-'*80)
+    print(f"N0 ({relative_throughputs[0]}x) Linear Merge: total={len(merged_linear_scan):<4} time={delay_linear:.3f}µs cost=${cost_linear:.3f}"# data={format_sample(merged_linear_scan)}"
+          )
+    # print('-'*80)

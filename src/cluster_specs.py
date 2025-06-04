@@ -76,7 +76,7 @@ def generate_cluster_config(
 
     return data_size, cluster_config
 
-def generate_data(n, skew_type='uniform', zipf_param=2.0, mean=5000, std=2000):
+def generate_data(n, skew_type='uniform', zipf_param=2.0, mean=5000, std=2000, filename=''):
     data = []
     if skew_type == 'uniform':
         data = [random.randint(0, n) for _ in range(n)]
@@ -95,7 +95,7 @@ def generate_data(n, skew_type='uniform', zipf_param=2.0, mean=5000, std=2000):
     else:
         raise ValueError(f"Unsupported skew type: {skew_type}")
 
-    plot_data_distribution(data, n, skew_type, filename=f'{skew_type}_distribution.png')
+    plot_data_distribution(data, n, skew_type, filename=f'{filename}_{skew_type}.png')
     return data
 
 # Re-using the plot_data_distribution function from previous turn
