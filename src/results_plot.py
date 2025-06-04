@@ -9,7 +9,7 @@ if not os.path.exists(output_dir):
 
 # --- Data based on aggregated results from the research paper ---
 # (Avg of Runs 1 & 2 for 4-node uniform, Avg of Runs 5 & 6 for 4-node Gaussian)
-# (Avg of Runs 3 & 4 for 8-node uniform, Single Run 7 for 8-node Gaussian)
+# (Avg of Runs 3 & 4 for 8-node uniform, Avg of Runs 7 & 8 for 8-node Gaussian)
 
 # Makespan Data (µs)
 makespan_data = {
@@ -19,7 +19,7 @@ makespan_data = {
     },
     'Gaussian': {
         '4 Nodes': {'H-PSRS': 38199.5, 'H-PSLP': 26066.8},
-        '8 Nodes': {'H-PSRS': 446139.2, 'H-PSLP': 319017.1}
+        '8 Nodes': {'H-PSRS': 250614.6, 'H-PSLP': 229910.6} # Avg of Runs 7 & 8
     }
 }
 
@@ -31,7 +31,7 @@ cost_data = {
     },
     'Gaussian': {
         '4 Nodes': {'H-PSRS': 43856.09, 'H-PSLP': 19433.99},
-        '8 Nodes': {'H-PSRS': 839765.87, 'H-PSLP': 292759.19}
+        '8 Nodes': {'H-PSRS': 649911.91, 'H-PSLP': 250626.07} # Avg of Runs 7 & 8
     }
 }
 
@@ -43,27 +43,31 @@ hpslp_items_node3_run1 = 19732
 # --- Plotting Functions ---
 
 def plot_bar_comparison(data_dict, title, ylabel, filename):
-    labels = list(data_dict.keys())
+    """Plots a bar chart comparing H-PSRS and H-PSLP."""
+    labels = list(data_dict.keys()) # Should be H-PSRS, H-PSLP
     values = list(data_dict.values())
 
     x = np.arange(len(labels))
     width = 0.35
 
     fig, ax = plt.subplots(figsize=(8, 6))
+    # Using distinct colors for H-PSRS (e.g., orange) and H-PSLP (e.g., blue)
     rects = ax.bar(x, values, width, label='Values', color=['#ff7f0e', '#1f77b4'])
 
     ax.set_ylabel(ylabel)
     ax.set_title(title)
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
+    # Corrected legend to match colors
     ax.legend(['H-PSRS', 'H-PSLP'])
+
 
     def autolabel(rects_to_label):
         for rect in rects_to_label:
             height = rect.get_height()
             ax.annotate(f'{height:,.1f}',
                         xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 3),
+                        xytext=(0, 3),  # 3 points vertical offset
                         textcoords="offset points",
                         ha='center', va='bottom', fontsize=9)
 
@@ -74,6 +78,7 @@ def plot_bar_comparison(data_dict, title, ylabel, filename):
     plt.close(fig)
 
 def plot_memory_utilization(limit, hpsrs_val, hpslp_val, title, filename):
+    """Plots memory utilization for a specific node."""
     labels = ['H-PSRS Items', 'H-PSLP Items']
     values = [hpsrs_val, hpslp_val]
 
@@ -105,6 +110,7 @@ def plot_memory_utilization(limit, hpsrs_val, hpslp_val, title, filename):
     plt.close(fig)
 
 def plot_line_scaling(data_hpsrs, data_hpslp, nodes, title, ylabel, filename):
+    """Plots a line chart showing scaling with node count."""
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.plot(nodes, data_hpsrs, marker='o', linestyle='-', color='#ff7f0e', label='H-PSRS')
     ax.plot(nodes, data_hpslp, marker='s', linestyle='-', color='#1f77b4', label='H-PSLP')
@@ -112,83 +118,79 @@ def plot_line_scaling(data_hpsrs, data_hpslp, nodes, title, ylabel, filename):
     ax.set_xlabel('Number of Nodes')
     ax.set_ylabel(ylabel)
     ax.set_title(title)
-    ax.set_xticks(nodes)
+    ax.set_xticks(nodes) # Ensure ticks are at 4 and 8
+    ax.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x)))) # Format y-axis with commas
     ax.legend()
     ax.grid(True, linestyle=':', alpha=0.7)
 
+    # Annotate points
     for i, txt in enumerate(data_hpsrs):
-        ax.annotate(f'{txt:,.0f}', (nodes[i], data_hpsrs[i]), textcoords="offset points", xytext=(0, 5), ha='center', color='#ff7f0e')
+        ax.annotate(f'{txt:,.0f}', (nodes[i], data_hpsrs[i]), textcoords="offset points", xytext=(0,5), ha='center', color='#ff7f0e', fontsize=8)
     for i, txt in enumerate(data_hpslp):
-        ax.annotate(f'{txt:,.0f}', (nodes[i], data_hpslp[i]), textcoords="offset points", xytext=(0, -15), ha='center', color='#1f77b4')
+        ax.annotate(f'{txt:,.0f}', (nodes[i], data_hpslp[i]), textcoords="offset points", xytext=(0,-15), ha='center', color='#1f77b4', fontsize=8)
+
 
     fig.tight_layout()
     plt.savefig(os.path.join(output_dir, filename))
     print(f"Saved chart: {filename}")
     plt.close(fig)
 
-# --- Generate Charts ---
-
-# Bar Charts (4-node averages)
+# --- Generate Bar Charts ---
+# Makespan - Uniform, 4 Nodes
 plot_bar_comparison(makespan_data['Uniform']['4 Nodes'],
-                    'Average Makespan (µs) — 4 Nodes, Uniform Distribution',
+                    'Makespan Comparison - Uniform Data, 4 Nodes (Average)',
                     'Makespan (µs)', 'perf_makespan_uniform_4nodes.png')
 
+# Cost - Uniform, 4 Nodes
 plot_bar_comparison(cost_data['Uniform']['4 Nodes'],
-                    'Average Execution Cost ($) — 4 Nodes, Uniform Distribution',
+                    'Cost Comparison - Uniform Data, 4 Nodes (Average)',
                     'Total Cost ($)', 'perf_cost_uniform_4nodes.png')
 
+# Makespan - Gaussian, 4 Nodes
 plot_bar_comparison(makespan_data['Gaussian']['4 Nodes'],
-                    'Average Makespan (µs) — 4 Nodes, Gaussian Distribution',
+                    'Makespan Comparison - Gaussian Data, 4 Nodes (Average)',
                     'Makespan (µs)', 'perf_makespan_gaussian_4nodes.png')
 
+# Cost - Gaussian, 4 Nodes
 plot_bar_comparison(cost_data['Gaussian']['4 Nodes'],
-                    'Average Execution Cost ($) — 4 Nodes, Gaussian Distribution',
+                    'Cost Comparison - Gaussian Data, 4 Nodes (Average)',
                     'Total Cost ($)', 'perf_cost_gaussian_4nodes.png')
 
-# Memory Utilization
+# Memory Utilization Example
 plot_memory_utilization(memory_limit_node3_run1, hpsrs_items_node3_run1, hpslp_items_node3_run1,
-                        'Memory Utilization — Node 3, Run 1 (Uniform, 4 Nodes, Seed 4)',
+                        'Memory Utilization Example - Run 1 (Uniform, 4N, Seed 4), Node 3',
                         'perf_memory_util_example.png')
 
-# Line Charts (Scaling with node count)
+# --- Generate Line Charts ---
 node_counts = [4, 8]
 
-# Uniform
-plot_line_scaling(
-    [makespan_data['Uniform']['4 Nodes']['H-PSRS'], makespan_data['Uniform']['8 Nodes']['H-PSRS']],
-    [makespan_data['Uniform']['4 Nodes']['H-PSLP'], makespan_data['Uniform']['8 Nodes']['H-PSLP']],
-    node_counts,
-    'Scaling of Makespan (µs) with Node Count — Uniform Distribution',
-    'Makespan (µs)',
-    'scale_makespan_uniform_nodes.png'
-)
+# Makespan vs. Node Count - Uniform
+hpsrs_makespan_uniform = [makespan_data['Uniform']['4 Nodes']['H-PSRS'], makespan_data['Uniform']['8 Nodes']['H-PSRS']]
+hpslp_makespan_uniform = [makespan_data['Uniform']['4 Nodes']['H-PSLP'], makespan_data['Uniform']['8 Nodes']['H-PSLP']]
+plot_line_scaling(hpsrs_makespan_uniform, hpslp_makespan_uniform, node_counts,
+                  'Makespan vs. Node Count - Uniform Data', 'Makespan (µs)',
+                  'scale_makespan_uniform_nodes.png')
 
-plot_line_scaling(
-    [cost_data['Uniform']['4 Nodes']['H-PSRS'], cost_data['Uniform']['8 Nodes']['H-PSRS']],
-    [cost_data['Uniform']['4 Nodes']['H-PSLP'], cost_data['Uniform']['8 Nodes']['H-PSLP']],
-    node_counts,
-    'Scaling of Execution Cost ($) with Node Count — Uniform Distribution',
-    'Total Cost ($)',
-    'scale_cost_uniform_nodes.png'
-)
+# Cost vs. Node Count - Uniform
+hpsrs_cost_uniform = [cost_data['Uniform']['4 Nodes']['H-PSRS'], cost_data['Uniform']['8 Nodes']['H-PSRS']]
+hpslp_cost_uniform = [cost_data['Uniform']['4 Nodes']['H-PSLP'], cost_data['Uniform']['8 Nodes']['H-PSLP']]
+plot_line_scaling(hpsrs_cost_uniform, hpslp_cost_uniform, node_counts,
+                  'Cost vs. Node Count - Uniform Data', 'Total Cost ($)',
+                  'scale_cost_uniform_nodes.png')
 
-# Gaussian
-plot_line_scaling(
-    [makespan_data['Gaussian']['4 Nodes']['H-PSRS'], makespan_data['Gaussian']['8 Nodes']['H-PSRS']],
-    [makespan_data['Gaussian']['4 Nodes']['H-PSLP'], makespan_data['Gaussian']['8 Nodes']['H-PSLP']],
-    node_counts,
-    'Scaling of Makespan (µs) with Node Count — Gaussian Distribution',
-    'Makespan (µs)',
-    'scale_makespan_gaussian_nodes.png'
-)
+# Makespan vs. Node Count - Gaussian
+hpsrs_makespan_gaussian = [makespan_data['Gaussian']['4 Nodes']['H-PSRS'], makespan_data['Gaussian']['8 Nodes']['H-PSRS']]
+hpslp_makespan_gaussian = [makespan_data['Gaussian']['4 Nodes']['H-PSLP'], makespan_data['Gaussian']['8 Nodes']['H-PSLP']]
+plot_line_scaling(hpsrs_makespan_gaussian, hpslp_makespan_gaussian, node_counts,
+                  'Makespan vs. Node Count - Gaussian Data', 'Makespan (µs)',
+                  'scale_makespan_gaussian_nodes.png')
 
-plot_line_scaling(
-    [cost_data['Gaussian']['4 Nodes']['H-PSRS'], cost_data['Gaussian']['8 Nodes']['H-PSRS']],
-    [cost_data['Gaussian']['4 Nodes']['H-PSLP'], cost_data['Gaussian']['8 Nodes']['H-PSLP']],
-    node_counts,
-    'Scaling of Execution Cost ($) with Node Count — Gaussian Distribution',
-    'Total Cost ($)',
-    'scale_cost_gaussian_nodes.png'
-)
+# Cost vs. Node Count - Gaussian
+hpsrs_cost_gaussian = [cost_data['Gaussian']['4 Nodes']['H-PSRS'], cost_data['Gaussian']['8 Nodes']['H-PSRS']]
+hpslp_cost_gaussian = [cost_data['Gaussian']['4 Nodes']['H-PSLP'], cost_data['Gaussian']['8 Nodes']['H-PSLP']]
+plot_line_scaling(hpsrs_cost_gaussian, hpslp_cost_gaussian, node_counts,
+                  'Cost vs. Node Count - Gaussian Data', 'Total Cost ($)',
+                  'scale_cost_gaussian_nodes.png')
 
 print(f"\nAll Matplotlib charts saved to '{output_dir}' directory.")
+
