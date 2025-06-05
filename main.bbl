@@ -1,0 +1,28 @@
+\begin{thebibliography}{}
+
+\bibitem[Lu et~al., 2023]{lu_time_aware_2023}
+Lu, S., Zhao, M., Li, C., Du, Q., and Luo, Y. (2023).
+\newblock Time-aware data partition optimization and heterogeneous task scheduling strategies in spark clusters.
+\newblock {\em The Computer Journal}, 66(2):762--776.
+
+\bibitem[Monga and Lodhi, nd]{monga_parallel_heterogeneous}
+Monga, P. and Lodhi, M. (n.d.).
+\newblock Parallel sorting on heterogeneous clusters.
+\newblock Project Report, Dalhousie University, Halifax, Canada.
+
+\bibitem[Terlaky, 2011]{terlaky_lp_2011}
+Terlaky, T. (2011).
+\newblock Introduction to polynomial time algorithms for lp.
+\newblock In Smith, J. and Johnson, A., editors, {\em Wiley Encyclopedia of Operations Research and Management Science}, pages 123--130. Wiley, Hoboken, NJ.
+
+\bibitem[Tokuue and Ishiyama, 2023]{tokuue_fugaku_2023}
+Tokuue, T. and Ishiyama, T. (2023).
+\newblock Performance evaluation of parallel sortings on the supercomputer fugaku.
+\newblock {\em Journal of Information Processing}, 31:452--458.
+
+\bibitem[Yoon and Kamal, 2014]{yoon_optimal_2014}
+Yoon, M. and Kamal, A. (2014).
+\newblock Optimal dataset allocation in distributed heterogeneous clouds.
+\newblock In {\em 2014 IEEE Globecom Workshops (GC Wkshps)}, pages 225--230, Austin, TX. IEEE.
+
+\end{thebibliography}
