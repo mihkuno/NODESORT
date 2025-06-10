@@ -1,0 +1,1146 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{gptclaim1}{article}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{3}{}{%
+        {{hash=b6cf492e87a31dda8d1863b2a96c4291}{%
+           family={Punia},
+           familyi={P\bibinitperiod},
+           given={Anju},
+           giveni={A\bibinitperiod}}}%
+        {{hash=88ed31340f7be921c3b1e603995ae60a}{%
+           family={Gulia},
+           familyi={G\bibinitperiod},
+           given={Parveen},
+           giveni={P\bibinitperiod}}}%
+        {{hash=63e86af698e040a4f613ca9e290b6f9b}{%
+           family={Gill},
+           familyi={G\bibinitperiod},
+           given={Navdeep\bibnamedelima Singh},
+           giveni={N\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{29e1d8aa24c3b25b4e5fee7127c21877}
+      \strng{fullhash}{29e1d8aa24c3b25b4e5fee7127c21877}
+      \strng{bibnamehash}{29e1d8aa24c3b25b4e5fee7127c21877}
+      \strng{authorbibnamehash}{29e1d8aa24c3b25b4e5fee7127c21877}
+      \strng{authornamehash}{29e1d8aa24c3b25b4e5fee7127c21877}
+      \strng{authorfullhash}{29e1d8aa24c3b25b4e5fee7127c21877}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Cloud Computing}
+      \field{title}{A systematic review on blockchain-based access control systems in cloud environment}
+      \field{volume}{13}
+      \field{year}{2024}
+      \field{pages}{146}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1186/s13677-024-00697-7
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1186/s13677-024-00697-7
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1186/s13677-024-00697-7
+      \endverb
+    \endentry
+    \entry{gptclaim2}{report}{}
+      \name{author}{3}{}{%
+        {{hash=5acff24e124dc6794f211c21d63a9f47}{%
+           family={Byrne},
+           familyi={B\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=9f0b91e94133636949a9f98622de0fbf}{%
+           family={Corrado},
+           familyi={C\bibinitperiod},
+           given={Carol},
+           giveni={C\bibinitperiod}}}%
+        {{hash=daebecc952daaf8d2c51917241e4c6b4}{%
+           family={Sichel},
+           familyi={S\bibinitperiod},
+           given={Daniel\bibnamedelima E.},
+           giveni={D\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {National Bureau of Economic Research}%
+      }
+      \strng{namehash}{3e77af4b65d0a0ede42a2ba55c2f1fea}
+      \strng{fullhash}{3e77af4b65d0a0ede42a2ba55c2f1fea}
+      \strng{bibnamehash}{3e77af4b65d0a0ede42a2ba55c2f1fea}
+      \strng{authorbibnamehash}{3e77af4b65d0a0ede42a2ba55c2f1fea}
+      \strng{authornamehash}{3e77af4b65d0a0ede42a2ba55c2f1fea}
+      \strng{authorfullhash}{3e77af4b65d0a0ede42a2ba55c2f1fea}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{10}
+      \field{note}{NBER Working Paper Series}
+      \field{number}{25188}
+      \field{title}{The Rise of Cloud Computing: Minding Your P’s, Q’s and K’s}
+      \field{type}{Working Paper}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb http://www.nber.org/papers/w25188
+      \endverb
+      \verb{url}
+      \verb http://www.nber.org/papers/w25188
+      \endverb
+    \endentry
+    \entry{gptclaim7_8}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=b721752e0f3135a841e03edb967eb6f4}{%
+           family={LeBeane},
+           familyi={L\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=92c99350754b1b4ccebaee9d334f0f3e}{%
+           family={Song},
+           familyi={S\bibinitperiod},
+           given={Shuang},
+           giveni={S\bibinitperiod}}}%
+        {{hash=0739520747fbf69c4fb6012527f1fc51}{%
+           family={Panda},
+           familyi={P\bibinitperiod},
+           given={Reena},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f10c60323c419d58bb5c68230d7183ce}{%
+           family={Ryoo},
+           familyi={R\bibinitperiod},
+           given={Jee\bibnamedelima Ho},
+           giveni={J\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=8d62794517473f5b5fc00a74974d5f4b}{%
+           family={John},
+           familyi={J\bibinitperiod},
+           given={Lizy\bibnamedelima K.},
+           giveni={L\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{organization}{1}{%
+        {ACM}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{8feca6b0d314a23e1b1baee879853133}
+      \strng{fullhash}{ab04caeeec0d2553bb1decd1e2c12ebd}
+      \strng{bibnamehash}{8feca6b0d314a23e1b1baee879853133}
+      \strng{authorbibnamehash}{8feca6b0d314a23e1b1baee879853133}
+      \strng{authornamehash}{8feca6b0d314a23e1b1baee879853133}
+      \strng{authorfullhash}{ab04caeeec0d2553bb1decd1e2c12ebd}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the International Conference on Supercomputing (ICS)}
+      \field{title}{Data partitioning strategies for graph workloads on heterogeneous clusters}
+      \field{year}{2015}
+      \verb{doi}
+      \verb 10.1145/2751205.2751210
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/2751205.2751210
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/2751205.2751210
+      \endverb
+    \endentry
+    \entry{yoon_optimal_2014}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=3525a6a5a31d88bab6fc1239a89faee1}{%
+           family={Yoon},
+           familyi={Y\bibinitperiod},
+           given={Min},
+           giveni={M\bibinitperiod}}}%
+        {{hash=cf2a864b1584bd2ef2cb2fef14c389e3}{%
+           family={Kamal},
+           familyi={K\bibinitperiod},
+           given={Ahmed},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Austin, TX}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{d743ae45517247b5ff897eb3641298df}
+      \strng{fullhash}{d743ae45517247b5ff897eb3641298df}
+      \strng{bibnamehash}{d743ae45517247b5ff897eb3641298df}
+      \strng{authorbibnamehash}{d743ae45517247b5ff897eb3641298df}
+      \strng{authornamehash}{d743ae45517247b5ff897eb3641298df}
+      \strng{authorfullhash}{d743ae45517247b5ff897eb3641298df}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2014 IEEE Globecom Workshops (GC Wkshps)}
+      \field{title}{Optimal Dataset Allocation in Distributed Heterogeneous Clouds}
+      \field{year}{2014}
+      \field{pages}{225\bibrangedash 230}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/GLOCOMW.2014.7063389
+      \endverb
+    \endentry
+    \entry{gptclaim5}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=e0bf1364f9284cae6ce0d8086846521d}{%
+           family={Daraghmi},
+           familyi={D\bibinitperiod},
+           given={Eyad},
+           giveni={E\bibinitperiod}}}%
+        {{hash=ba508831744cf9e057df35b65ede86af}{%
+           family={Eleyan},
+           familyi={E\bibinitperiod},
+           given={Aladdin},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, UK}%
+      }
+      \strng{namehash}{421f2c187c97c470e7297c8c48737612}
+      \strng{fullhash}{421f2c187c97c470e7297c8c48737612}
+      \strng{bibnamehash}{421f2c187c97c470e7297c8c48737612}
+      \strng{authorbibnamehash}{421f2c187c97c470e7297c8c48737612}
+      \strng{authornamehash}{421f2c187c97c470e7297c8c48737612}
+      \strng{authorfullhash}{421f2c187c97c470e7297c8c48737612}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the International Conference on Future Networks and Distributed Systems (ICFNDS)}
+      \field{day}{19}
+      \field{month}{7}
+      \field{note}{Presented at the International Conference on Future Networks and Distributed Systems (ICFNDS) 2017, July 19–20}
+      \field{title}{An improved dynamic load balancing algorithm applied to a cafeteria system in a university campus}
+      \field{year}{2017}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb http://www.icfnds.org/
+      \endverb
+      \verb{url}
+      \verb http://www.icfnds.org/
+      \endverb
+    \endentry
+    \entry{gptclaim6}{article}{}
+      \name{author}{5}{}{%
+        {{hash=b085776e1479238cc4e898ebb70300aa}{%
+           family={Aslanpour},
+           familyi={A\bibinitperiod},
+           given={Mohammad\bibnamedelima Sadegh},
+           giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=b42c42dd188f7eb16e8448ff15448ba7}{%
+           family={Toosi},
+           familyi={T\bibinitperiod},
+           given={Adel\bibnamedelima N.},
+           giveni={A\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=8d1894a8c08f11104d4da0db295f0e9c}{%
+           family={Cheema},
+           familyi={C\bibinitperiod},
+           given={Muhammad\bibnamedelima Aamir},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=b86e6e22776c75f1a81b157e5b480847}{%
+           family={Chhetri},
+           familyi={C\bibinitperiod},
+           given={Mohan\bibnamedelima Baruwal},
+           giveni={M\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=7a06b5d3396370dc41fac748b8fdf8a5}{%
+           family={Salehi},
+           familyi={S\bibinitperiod},
+           given={Mohsen\bibnamedelima Amini},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{8378c6e78a4a95b5be4d43dbaab96719}
+      \strng{fullhash}{08adc5a9b1d0bc03af75e6babdff8edd}
+      \strng{bibnamehash}{8378c6e78a4a95b5be4d43dbaab96719}
+      \strng{authorbibnamehash}{8378c6e78a4a95b5be4d43dbaab96719}
+      \strng{authornamehash}{8378c6e78a4a95b5be4d43dbaab96719}
+      \strng{authorfullhash}{08adc5a9b1d0bc03af75e6babdff8edd}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Future Generation Computer Systems}
+      \field{note}{Available online 17 January 2024}
+      \field{title}{Load balancing for heterogeneous serverless edge computing: A performance-driven and empirical approach}
+      \field{volume}{154}
+      \field{year}{2024}
+      \field{pages}{266\bibrangedash 280}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1016/j.future.2024.01.020
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.future.2024.01.020
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.future.2024.01.020
+      \endverb
+    \endentry
+    \entry{gptclaim14_15}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=6ef9ff97f1f1067e5d12e7c850b62e75}{%
+           family={Kulagina},
+           familyi={K\bibinitperiod},
+           given={Svetlana},
+           giveni={S\bibinitperiod}}}%
+        {{hash=4a374125915b3960914c8d26d052ff0b}{%
+           family={Meyerhenke},
+           familyi={M\bibinitperiod},
+           given={Henning},
+           giveni={H\bibinitperiod}}}%
+        {{hash=cedde6b909258e32cb3fcd18b11bdebf}{%
+           family={Benoit},
+           familyi={B\bibinitperiod},
+           given={Anne},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Gotland, Sweden}%
+      }
+      \strng{namehash}{47e5c7ae82ac64c98650beab9ffa3b29}
+      \strng{fullhash}{47e5c7ae82ac64c98650beab9ffa3b29}
+      \strng{bibnamehash}{47e5c7ae82ac64c98650beab9ffa3b29}
+      \strng{authorbibnamehash}{47e5c7ae82ac64c98650beab9ffa3b29}
+      \strng{authornamehash}{47e5c7ae82ac64c98650beab9ffa3b29}
+      \strng{authorfullhash}{47e5c7ae82ac64c98650beab9ffa3b29}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 53rd International Conference on Parallel Processing (ICPP)}
+      \field{month}{8}
+      \field{note}{HAL Id: hal-04767107, submitted November 12, 2024}
+      \field{title}{Mapping Large Memory-constrained Workflows onto Heterogeneous Platforms}
+      \field{year}{2024}
+      \field{pages}{305\bibrangedash 316}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1145/3673038.3673068
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3673038.3673068
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3673038.3673068
+      \endverb
+    \endentry
+    \entry{gptclaim3}{report}{}
+      \name{author}{1}{}{%
+        {{hash=f5afee891ee6cfd141898b22d69e737f}{%
+           family={{Organisation for Economic Co-operation and Development}},
+           familyi={O\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {Directorate for Financial}%
+        {Enterprise Affairs, Competition Committee}%
+      }
+      \list{language}{1}{%
+        {English}%
+      }
+      \list{location}{1}{%
+        {Paris, France}%
+      }
+      \strng{namehash}{f5afee891ee6cfd141898b22d69e737f}
+      \strng{fullhash}{f5afee891ee6cfd141898b22d69e737f}
+      \strng{bibnamehash}{f5afee891ee6cfd141898b22d69e737f}
+      \strng{authorbibnamehash}{f5afee891ee6cfd141898b22d69e737f}
+      \strng{authornamehash}{f5afee891ee6cfd141898b22d69e737f}
+      \strng{authorfullhash}{f5afee891ee6cfd141898b22d69e737f}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{20}
+      \field{month}{5}
+      \field{note}{Written contribution from Korea submitted for Item 6 of the 146th OECD Competition Committee meeting, 18–20 June 2025}
+      \field{number}{146th OECD Competition Committee meeting}
+      \field{title}{Competition in the Provision of Cloud Computing Services – Note by Korea}
+      \field{type}{DAF/COMP/WD(2025)23}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://one.oecd.org/document/DAF/COMP/WD(2025)23/en/pdf
+      \endverb
+      \verb{url}
+      \verb https://one.oecd.org/document/DAF/COMP/WD(2025)23/en/pdf
+      \endverb
+    \endentry
+    \entry{gptclaim4}{article}{}
+      \name{author}{1}{}{%
+        {{hash=788862f121b9265c69107346e53e16bc}{%
+           family={Dimitri},
+           familyi={D\bibinitperiod},
+           given={Nicola},
+           giveni={N\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {SpringerOpen}%
+      }
+      \strng{namehash}{788862f121b9265c69107346e53e16bc}
+      \strng{fullhash}{788862f121b9265c69107346e53e16bc}
+      \strng{bibnamehash}{788862f121b9265c69107346e53e16bc}
+      \strng{authorbibnamehash}{788862f121b9265c69107346e53e16bc}
+      \strng{authornamehash}{788862f121b9265c69107346e53e16bc}
+      \strng{authorfullhash}{788862f121b9265c69107346e53e16bc}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Cloud Computing: Advances, Systems and Applications}
+      \field{month}{3}
+      \field{note}{Published: 03 March 2020}
+      \field{number}{1}
+      \field{title}{Pricing cloud IaaS computing services}
+      \field{volume}{9}
+      \field{year}{2020}
+      \field{pages}{14}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1186/s13677-020-00176-3
+      \endverb
+      \verb{urlraw}
+      \verb https://journalofcloudcomputing.springeropen.com/articles/10.1186/s13677-020-00176-3
+      \endverb
+      \verb{url}
+      \verb https://journalofcloudcomputing.springeropen.com/articles/10.1186/s13677-020-00176-3
+      \endverb
+    \endentry
+    \entry{gptclaim10}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=a78176a52a2c34b9a119fc756a53a921}{%
+           family={Chung},
+           familyi={C\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=eb3f82855af18c6500a976b9f2253c74}{%
+           family={Park},
+           familyi={P\bibinitperiod},
+           given={Jun\bibnamedelima Woo},
+           giveni={J\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=c088fc39c55370692d55699c15dd1ffb}{%
+           family={Ganger},
+           familyi={G\bibinitperiod},
+           given={Gregory\bibnamedelima R.},
+           giveni={G\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Carlsbad, CA, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{d4a45e86909dc7c722f2de862cea03a8}
+      \strng{fullhash}{d4a45e86909dc7c722f2de862cea03a8}
+      \strng{bibnamehash}{d4a45e86909dc7c722f2de862cea03a8}
+      \strng{authorbibnamehash}{d4a45e86909dc7c722f2de862cea03a8}
+      \strng{authornamehash}{d4a45e86909dc7c722f2de862cea03a8}
+      \strng{authorfullhash}{d4a45e86909dc7c722f2de862cea03a8}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the ACM Symposium on Cloud Computing (SoCC '18)}
+      \field{day}{11}
+      \field{month}{10}
+      \field{title}{Stratus: Cost-aware Container Scheduling in the Public Cloud}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \field{pages}{14 pages}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1145/3267809.3267819
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3267809.3267819
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3267809.3267819
+      \endverb
+    \endentry
+    \entry{tokuue_fugaku_2023}{article}{}
+      \name{author}{2}{}{%
+        {{hash=1a100715b54b45549f765c5dcc1c0b72}{%
+           family={Tokuue},
+           familyi={T\bibinitperiod},
+           given={Tomoyuki},
+           giveni={T\bibinitperiod}}}%
+        {{hash=17b3b7fc30e36d4b7cf67862a68a8e5c}{%
+           family={Ishiyama},
+           familyi={I\bibinitperiod},
+           given={Tomoaki},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{739fbceff18c1b8860936d74013a75a5}
+      \strng{fullhash}{739fbceff18c1b8860936d74013a75a5}
+      \strng{bibnamehash}{739fbceff18c1b8860936d74013a75a5}
+      \strng{authorbibnamehash}{739fbceff18c1b8860936d74013a75a5}
+      \strng{authornamehash}{739fbceff18c1b8860936d74013a75a5}
+      \strng{authorfullhash}{739fbceff18c1b8860936d74013a75a5}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Information Processing}
+      \field{title}{Performance Evaluation of Parallel Sortings on the Supercomputer Fugaku}
+      \field{volume}{31}
+      \field{year}{2023}
+      \field{pages}{452\bibrangedash 458}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.2197/ipsjjip.31.452
+      \endverb
+    \endentry
+    \entry{monga_parallel_heterogeneous}{misc}{}
+      \name{author}{2}{}{%
+        {{hash=ffb4a374c0dfe988e56e2d6097e272c9}{%
+           family={Monga},
+           familyi={M\bibinitperiod},
+           given={P.},
+           giveni={P\bibinitperiod}}}%
+        {{hash=99106d4575d4a565a6b25b78b35809c2}{%
+           family={Lodhi},
+           familyi={L\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{ba4bfeacb2424bda743e97d92bcf907d}
+      \strng{fullhash}{ba4bfeacb2424bda743e97d92bcf907d}
+      \strng{bibnamehash}{ba4bfeacb2424bda743e97d92bcf907d}
+      \strng{authorbibnamehash}{ba4bfeacb2424bda743e97d92bcf907d}
+      \strng{authornamehash}{ba4bfeacb2424bda743e97d92bcf907d}
+      \strng{authorfullhash}{ba4bfeacb2424bda743e97d92bcf907d}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Project Report, Dalhousie University, Halifax, Canada}
+      \field{title}{Parallel Sorting on Heterogeneous Clusters}
+      \field{year}{2003}
+    \endentry
+    \entry{lu_time_aware_2023}{article}{}
+      \name{author}{5}{}{%
+        {{hash=797679eb387c2539b54e6f53646b881c}{%
+           family={Lu},
+           familyi={L\bibinitperiod},
+           given={SenXing},
+           giveni={S\bibinitperiod}}}%
+        {{hash=9d33441181d916105ab86d5340c8f473}{%
+           family={Zhao},
+           familyi={Z\bibinitperiod},
+           given={Mingming},
+           giveni={M\bibinitperiod}}}%
+        {{hash=eb151bbabc5aec6f315453e8a6fce1b1}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Chunlin},
+           giveni={C\bibinitperiod}}}%
+        {{hash=1de301d009caf747dc4b56654c33bd92}{%
+           family={Du},
+           familyi={D\bibinitperiod},
+           given={Quanbing},
+           giveni={Q\bibinitperiod}}}%
+        {{hash=8e97e8b6ab832fb035dc339c95f59326}{%
+           family={Luo},
+           familyi={L\bibinitperiod},
+           given={Youlong},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press}%
+      }
+      \strng{namehash}{6d9a71a78169eddcd7754fb81e68ad75}
+      \strng{fullhash}{45b07518fa7348dbf806bd0225bdc2d6}
+      \strng{bibnamehash}{6d9a71a78169eddcd7754fb81e68ad75}
+      \strng{authorbibnamehash}{6d9a71a78169eddcd7754fb81e68ad75}
+      \strng{authornamehash}{6d9a71a78169eddcd7754fb81e68ad75}
+      \strng{authorfullhash}{45b07518fa7348dbf806bd0225bdc2d6}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Computer Journal}
+      \field{number}{2}
+      \field{title}{Time-Aware Data Partition Optimization and Heterogeneous Task Scheduling Strategies in Spark Clusters}
+      \field{volume}{66}
+      \field{year}{2023}
+      \field{pages}{762\bibrangedash 776}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1093/comjnl/bxad017
+      \endverb
+    \endentry
+    \entry{gptlp3}{article}{}
+      \name{author}{3}{}{%
+        {{hash=028bee845a910c3045388c8e2ea5132b}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Jiexing},
+           giveni={J\bibinitperiod}}}%
+        {{hash=4946a61a26bbc406ec2808ece3f4256b}{%
+           family={Naughton},
+           familyi={N\bibinitperiod},
+           given={Jeffrey},
+           giveni={J\bibinitperiod}}}%
+        {{hash=a5f3534215d0ae9fd5c05e819a2b1108}{%
+           family={Nehme},
+           familyi={N\bibinitperiod},
+           given={Rimma\bibnamedelima V.},
+           giveni={R\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+      }
+      \strng{namehash}{62ad284e7f6ae10e86924fed62f3afc0}
+      \strng{fullhash}{62ad284e7f6ae10e86924fed62f3afc0}
+      \strng{bibnamehash}{62ad284e7f6ae10e86924fed62f3afc0}
+      \strng{authorbibnamehash}{62ad284e7f6ae10e86924fed62f3afc0}
+      \strng{authornamehash}{62ad284e7f6ae10e86924fed62f3afc0}
+      \strng{authorfullhash}{62ad284e7f6ae10e86924fed62f3afc0}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the VLDB Endowment}
+      \field{number}{1}
+      \field{title}{Resource Bricolage for Parallel Database Systems}
+      \field{volume}{8}
+      \field{year}{2014}
+      \field{pages}{25\bibrangedash 36}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.14778/2735461.2735464
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.14778/2735461.2735464
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.14778/2735461.2735464
+      \endverb
+    \endentry
+    \entry{gptlp4_5}{article}{}
+      \name{author}{2}{}{%
+        {{hash=860022f00ec9426cccda9ca118f28430}{%
+           family={Boinski},
+           familyi={B\bibinitperiod},
+           given={Tomasz},
+           giveni={T\bibinitperiod}}}%
+        {{hash=4eaff833a999c0f5440819df16e022e5}{%
+           family={Czarnul},
+           familyi={C\bibinitperiod},
+           given={Paweł},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press on behalf of The British Computer Society}%
+      }
+      \strng{namehash}{c1d79ea2aeb34e19254861df95cb1eac}
+      \strng{fullhash}{c1d79ea2aeb34e19254861df95cb1eac}
+      \strng{bibnamehash}{c1d79ea2aeb34e19254861df95cb1eac}
+      \strng{authorbibnamehash}{c1d79ea2aeb34e19254861df95cb1eac}
+      \strng{authornamehash}{c1d79ea2aeb34e19254861df95cb1eac}
+      \strng{authorfullhash}{c1d79ea2aeb34e19254861df95cb1eac}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Computer Journal}
+      \field{note}{Open Access under CC BY-NC 4.0}
+      \field{title}{Optimization of Data Assignment for Parallel Processing in a Hybrid Heterogeneous Environment Using Integer Linear Programming}
+      \field{year}{2021}
+      \verb{doi}
+      \verb 10.1093/comjnl/bxaa187
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1093/comjnl/bxaa187
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1093/comjnl/bxaa187
+      \endverb
+    \endentry
+    \entry{gptlp6}{unpublished}{}
+      \name{author}{6}{}{%
+        {{hash=5ede4a7f17e57b76c1bf3d7a058742aa}{%
+           family={Garcia},
+           familyi={G\bibinitperiod},
+           given={Jordi},
+           giveni={J\bibinitperiod}}}%
+        {{hash=3c09319d4090af09c147aec1ba16957f}{%
+           family={Aguiló},
+           familyi={A\bibinitperiod},
+           given={Francesc},
+           giveni={F\bibinitperiod}}}%
+        {{hash=5838a8f721afb307b4826aacd409b2ad}{%
+           family={Asensio},
+           familyi={A\bibinitperiod},
+           given={Adrià},
+           giveni={A\bibinitperiod}}}%
+        {{hash=928b07dcb017325ea1a68166a7c2ceb0}{%
+           family={Simó},
+           familyi={S\bibinitperiod},
+           given={Ester},
+           giveni={E\bibinitperiod}}}%
+        {{hash=3d4d6664743dde20eca69e5eb1937553}{%
+           family={Zaragozá},
+           familyi={Z\bibinitperiod},
+           given={Marisa},
+           giveni={M\bibinitperiod}}}%
+        {{hash=3abc263cfd9cc60dbd13d80cfe9399de}{%
+           family={Masip-Bruin},
+           familyi={M\bibinithyphendelim B\bibinitperiod},
+           given={Xavi},
+           giveni={X\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {CRAAX Lab, UPC BarcelonaTECH}%
+      }
+      \list{location}{1}{%
+        {Vilanova i la Geltru, Spain}%
+      }
+      \strng{namehash}{f96430f981f5224c61f584934d5ddae8}
+      \strng{fullhash}{6d0adb046d04ac0101805bb4b681432b}
+      \strng{bibnamehash}{f96430f981f5224c61f584934d5ddae8}
+      \strng{authorbibnamehash}{f96430f981f5224c61f584934d5ddae8}
+      \strng{authornamehash}{f96430f981f5224c61f584934d5ddae8}
+      \strng{authorfullhash}{6d0adb046d04ac0101805bb4b681432b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{9}
+      \field{note}{Preprint submitted to Elsevier}
+      \field{title}{Data-Flow Driven Optimal Tasks Distribution for Global Heterogeneous Systems}
+      \field{year}{2021}
+    \endentry
+    \entry{gptlp7}{thesis}{}
+      \name{author}{1}{}{%
+        {{hash=c117cbdc6ca0945479b9ed94bb596b09}{%
+           family={Yu},
+           familyi={Y\bibinitperiod},
+           given={Teng},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {University of St Andrews}%
+      }
+      \strng{namehash}{c117cbdc6ca0945479b9ed94bb596b09}
+      \strng{fullhash}{c117cbdc6ca0945479b9ed94bb596b09}
+      \strng{bibnamehash}{c117cbdc6ca0945479b9ed94bb596b09}
+      \strng{authorbibnamehash}{c117cbdc6ca0945479b9ed94bb596b09}
+      \strng{authornamehash}{c117cbdc6ca0945479b9ed94bb596b09}
+      \strng{authorfullhash}{c117cbdc6ca0945479b9ed94bb596b09}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{PhD thesis, University of St Andrews}
+      \field{title}{Heterogeneity-Aware Scheduling and Data Partitioning for System Performance Acceleration}
+      \field{type}{phdthesis}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb http://hdl.handle.net/10023/19797
+      \endverb
+      \verb{url}
+      \verb http://hdl.handle.net/10023/19797
+      \endverb
+    \endentry
+    \entry{gptlp8}{article}{}
+      \name{author}{10}{}{%
+        {{hash=5e3214f7013daad0787ab9dd9b960fcc}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Yujie},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=4af527e9561dd03b3a607b3daf3b66d1}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Shiju},
+           giveni={S\bibinitperiod}}}%
+        {{hash=da4665b08e46c2915886cc71ad5d1065}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Shenhan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=4c2af0f2502756ef88874800bca0ef08}{%
+           family={Fu},
+           familyi={F\bibinitperiod},
+           given={Fangcheng},
+           giveni={F\bibinitperiod}}}%
+        {{hash=69be1248ab71da4b806d79d77bb6b0b8}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Xinyi},
+           giveni={X\bibinitperiod}}}%
+        {{hash=3dbb7fdbbe5f83d4990efb7a602fb91f}{%
+           family={Xiao},
+           familyi={X\bibinitperiod},
+           given={Xuefeng},
+           giveni={X\bibinitperiod}}}%
+        {{hash=5408b384a80fc8e55d0e662f066a36fc}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Huixia},
+           giveni={H\bibinitperiod}}}%
+        {{hash=91960f7a9cd377acd057fb7944047ab3}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Jiashi},
+           giveni={J\bibinitperiod}}}%
+        {{hash=01883f5db3c06f2a3c0121ba0b211ed9}{%
+           family={Wu},
+           familyi={W\bibinitperiod},
+           given={Faming},
+           giveni={F\bibinitperiod}}}%
+        {{hash=f6c0b53300ebf4c432dfa05ee736c54c}{%
+           family={Cui},
+           familyi={C\bibinitperiod},
+           given={Bin},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{96c72f69b34a20ebb03adcc5a26b9dfd}
+      \strng{fullhash}{5baa695ccff2bf791dae8a2bd114e74e}
+      \strng{bibnamehash}{96c72f69b34a20ebb03adcc5a26b9dfd}
+      \strng{authorbibnamehash}{96c72f69b34a20ebb03adcc5a26b9dfd}
+      \strng{authornamehash}{96c72f69b34a20ebb03adcc5a26b9dfd}
+      \strng{authorfullhash}{5baa695ccff2bf791dae8a2bd114e74e}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2412.01523}
+      \field{note}{arXiv:2412.01523v1 [cs.DC], 02 Dec 2024}
+      \field{title}{Data-Centric and Heterogeneity-Adaptive Sequence Parallelism for Efficient LLM Training}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2412.01523
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2412.01523
+      \endverb
+    \endentry
+    \entry{gptlp1}{article}{}
+      \name{author}{3}{}{%
+        {{hash=1acaf91084cb7332c50d9f2b32527cbd}{%
+           family={Cérin},
+           familyi={C\bibinitperiod},
+           given={Christophe},
+           giveni={C\bibinitperiod}}}%
+        {{hash=b47da40c9b7d622250bc841bfb0b4e01}{%
+           family={Dubacq},
+           familyi={D\bibinitperiod},
+           given={Jean-Christophe},
+           giveni={J\bibinithyphendelim C\bibinitperiod}}}%
+        {{hash=6669d69cf4a26ee762b0261210289012}{%
+           family={Roch},
+           familyi={R\bibinitperiod},
+           given={Jean-Louis},
+           giveni={J\bibinithyphendelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{1eaab13079b6ecd2262c14b0a650999b}
+      \strng{fullhash}{1eaab13079b6ecd2262c14b0a650999b}
+      \strng{bibnamehash}{1eaab13079b6ecd2262c14b0a650999b}
+      \strng{authorbibnamehash}{1eaab13079b6ecd2262c14b0a650999b}
+      \strng{authornamehash}{1eaab13079b6ecd2262c14b0a650999b}
+      \strng{authorfullhash}{1eaab13079b6ecd2262c14b0a650999b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Advances in Grid and Pervasive Computing}
+      \field{note}{arXiv:cs/0607041 [cs.DC], submitted 10 Jul 2006}
+      \field{title}{Methods for Partitioning Data to Improve Parallel Execution Time for Sorting on Heterogeneous Clusters}
+      \field{year}{2006}
+      \field{pages}{175\bibrangedash 186}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.48550/arXiv.cs/0607041
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/cs/0607041
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/cs/0607041
+      \endverb
+    \endentry
+    \entry{gptlp2}{article}{}
+      \name{author}{5}{}{%
+        {{hash=1acaf91084cb7332c50d9f2b32527cbd}{%
+           family={Cérin},
+           familyi={C\bibinitperiod},
+           given={Christophe},
+           giveni={C\bibinitperiod}}}%
+        {{hash=423be0665adfb596924e00d2bbc7b580}{%
+           family={Cozette},
+           familyi={C\bibinitperiod},
+           given={Olivier},
+           giveni={O\bibinitperiod}}}%
+        {{hash=deca54ae4070c9eb6464762b86812e37}{%
+           family={Utard},
+           familyi={U\bibinitperiod},
+           given={Gil},
+           giveni={G\bibinitperiod}}}%
+        {{hash=9f329fe1bb2eb006e486eb5abd346cac}{%
+           family={Fkaier},
+           familyi={F\bibinitperiod},
+           given={Hazem},
+           giveni={H\bibinitperiod}}}%
+        {{hash=408e2aa31e4f52f47f7c532659eb5554}{%
+           family={Jemni},
+           familyi={J\bibinitperiod},
+           given={Mohamed},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{cdf1f9cba502a81ae266ea1b29e0421f}
+      \strng{fullhash}{1c34c4bb1cebe0499e853eee3693654f}
+      \strng{bibnamehash}{cdf1f9cba502a81ae266ea1b29e0421f}
+      \strng{authorbibnamehash}{cdf1f9cba502a81ae266ea1b29e0421f}
+      \strng{authornamehash}{cdf1f9cba502a81ae266ea1b29e0421f}
+      \strng{authorfullhash}{1c34c4bb1cebe0499e853eee3693654f}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of High Performance Computing and Networking}
+      \field{number}{2}
+      \field{title}{Parallel Out-of-core Sorting and Fast Accesses to Disks}
+      \field{volume}{3}
+      \field{year}{2005}
+      \field{pages}{188\bibrangedash 202}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1504/IJHPCN.2005.008035
+      \endverb
+    \endentry
+    \entry{gptclaim11_12}{misc}{}
+      \name{author}{2}{}{%
+        {{hash=12b146af23dbbfe52032d50f0381ff7b}{%
+           family={Zviran},
+           familyi={Z\bibinitperiod},
+           given={Moshe},
+           giveni={M\bibinitperiod}}}%
+        {{hash=0ff237805584222e072a9d72c3be759c}{%
+           family={Glezer},
+           familyi={G\bibinitperiod},
+           given={Chanan},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {Tel Aviv University}%
+        {Ben Gurion University of the Negev}%
+      }
+      \list{location}{2}{%
+        {Tel Aviv, Israel}%
+        {Beer Sheva, Israel}%
+      }
+      \strng{namehash}{a5d29d921f732c413ca99bf756bdd5dd}
+      \strng{fullhash}{a5d29d921f732c413ca99bf756bdd5dd}
+      \strng{bibnamehash}{a5d29d921f732c413ca99bf756bdd5dd}
+      \strng{authorbibnamehash}{a5d29d921f732c413ca99bf756bdd5dd}
+      \strng{authornamehash}{a5d29d921f732c413ca99bf756bdd5dd}
+      \strng{authorfullhash}{a5d29d921f732c413ca99bf756bdd5dd}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{1}
+      \field{note}{Faculty of Management, Department of Information Systems Engineering}
+      \field{title}{Enhancing Robustness of Telecommunications Networks}
+      \field{year}{2004}
+    \endentry
+    \entry{gptclaim13}{article}{}
+      \name{author}{4}{}{%
+        {{hash=4e4fff5f7cc77136096386a9b9dc7c07}{%
+           family={Torres\bibnamedelima Jr},
+           familyi={T\bibinitperiod\bibinitdelim J\bibinitperiod},
+           given={Pedro\bibnamedelima R.},
+           giveni={P\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=fe7e854ebee995622010e42804a30223}{%
+           family={García-Martínez},
+           familyi={G\bibinithyphendelim M\bibinitperiod},
+           given={Alberto},
+           giveni={A\bibinitperiod}}}%
+        {{hash=b7f65283636265f338c6b94867fdd837}{%
+           family={Bagnulo},
+           familyi={B\bibinitperiod},
+           given={Marcelo},
+           giveni={M\bibinitperiod}}}%
+        {{hash=499762a49647d9f71967130807999e94}{%
+           family={Parente\bibnamedelima Ribeiro},
+           familyi={P\bibinitperiod\bibinitdelim R\bibinitperiod},
+           given={Eduardo},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{f385bd7fd458c44da861b495eb4a7460}
+      \strng{fullhash}{9e73c63dfc4cb828b8c061ce8dbb230d}
+      \strng{bibnamehash}{f385bd7fd458c44da861b495eb4a7460}
+      \strng{authorbibnamehash}{f385bd7fd458c44da861b495eb4a7460}
+      \strng{authornamehash}{f385bd7fd458c44da861b495eb4a7460}
+      \strng{authorfullhash}{9e73c63dfc4cb828b8c061ce8dbb230d}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computer Networks}
+      \field{month}{3}
+      \field{note}{Postprint version. © 2020 Elsevier B.V. All rights reserved.}
+      \field{title}{Bartolomeu: An SDN Rebalancing System Across Multiple Interdomain Paths}
+      \field{volume}{169}
+      \field{year}{2020}
+      \field{pages}{107117}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.comnet.2020.107117
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.comnet.2020.107117
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.comnet.2020.107117
+      \endverb
+    \endentry
+    \entry{gptmerge1_2}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=89256955c7f8f5097859cdcc42fafcdb}{%
+           family={Dementiev},
+           familyi={D\bibinitperiod},
+           given={Roman},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Max-Planck-Institut für Informatik}%
+      }
+      \strng{namehash}{89256955c7f8f5097859cdcc42fafcdb}
+      \strng{fullhash}{89256955c7f8f5097859cdcc42fafcdb}
+      \strng{bibnamehash}{89256955c7f8f5097859cdcc42fafcdb}
+      \strng{authorbibnamehash}{89256955c7f8f5097859cdcc42fafcdb}
+      \strng{authornamehash}{89256955c7f8f5097859cdcc42fafcdb}
+      \strng{authorfullhash}{89256955c7f8f5097859cdcc42fafcdb}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://stxxl.org/tags/1.4.1/design_algo_sorting.html}}
+      \field{note}{STXXL: Standard Template Library for Extra Large Data Sets, Version 1.4.1}
+      \field{title}{Parallel Disk Sorting}
+      \field{year}{2006}
+    \endentry
+    \entry{gptmerge3_7}{misc}{}
+      \name{author}{4}{}{%
+        {{hash=db29e25fc3cdfd60f562adf63c75b45c}{%
+           family={Polyntsov},
+           familyi={P\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=068b5f9e4885a19551937914e6928a41}{%
+           family={Grigorev},
+           familyi={G\bibinitperiod},
+           given={Valentin},
+           giveni={V\bibinitperiod}}}%
+        {{hash=be510ef89e3378d056cb8394bd133547}{%
+           family={Smirnov},
+           familyi={S\bibinitperiod},
+           given={Kirill},
+           giveni={K\bibinitperiod}}}%
+        {{hash=5cac09a983d2b458d9945bc188e03ce6}{%
+           family={Chernishev},
+           familyi={C\bibinitperiod},
+           given={George},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{9006cbcee9aa7aaaa143fab4b2072311}
+      \strng{fullhash}{4a270181d544a739ff44247538aa71b9}
+      \strng{bibnamehash}{9006cbcee9aa7aaaa143fab4b2072311}
+      \strng{authorbibnamehash}{9006cbcee9aa7aaaa143fab4b2072311}
+      \strng{authornamehash}{9006cbcee9aa7aaaa143fab4b2072311}
+      \strng{authorfullhash}{4a270181d544a739ff44247538aa71b9}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.DB}
+      \field{eprinttype}{arXiv}
+      \field{note}{arXiv preprint arXiv:2207.12713}
+      \field{title}{Implementing the Comparison-Based External Sort}
+      \field{year}{2022}
+      \verb{eprint}
+      \verb 2207.12713
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2207.12713
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2207.12713
+      \endverb
+    \endentry
+    \entry{gptmerge4_5_8}{incollection}{}
+      \name{author}{1}{}{%
+        {{hash=be6c7f12620ef1a8d1d85d96d476a158}{%
+           family={Sanders},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM Journal of Experimental Algorithmics}%
+      }
+      \strng{namehash}{be6c7f12620ef1a8d1d85d96d476a158}
+      \strng{fullhash}{be6c7f12620ef1a8d1d85d96d476a158}
+      \strng{bibnamehash}{be6c7f12620ef1a8d1d85d96d476a158}
+      \strng{authorbibnamehash}{be6c7f12620ef1a8d1d85d96d476a158}
+      \strng{authornamehash}{be6c7f12620ef1a8d1d85d96d476a158}
+      \strng{authorfullhash}{be6c7f12620ef1a8d1d85d96d476a158}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Algorithm Engineering and Experimentation}
+      \field{note}{Published in: ACM J. Exp. Algorithmics, Vol. 5}
+      \field{title}{Fast Priority Queues for Cached Memory}
+      \field{year}{2008}
+      \field{pages}{316\bibrangedash 321}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1007/3-540-48518-X_19
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/3-540-48518-X_19
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/3-540-48518-X_19
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
