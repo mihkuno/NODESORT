@@ -1,226 +1,503 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import seaborn as sns
 import os
+import json
+from cluster_specs import plot_data_distribution
 
-# Create an 'out' directory if it doesn't exist
-output_dir = 'out_matplotlib_charts'
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
+# Ensure the output directory for charts exists
+OUTPUT_DIR = 'out_matplotlib_charts'
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# --- Data based on aggregated results & individual runs from the research paper ---
-
-# Makespan Data (µs) - Averages for 4-node, individual for 8-node to combine later
-avg_hpsrs_makespan_gaussian_8nodes = (446139.2 + 178432.2) / 2
-avg_hpslp_makespan_gaussian_8nodes = (319017.1 + 124284.2) / 2
-
-makespan_data = {
-    'Uniform': {
-        '4 Nodes': {'H-PSRS': 36345.8, 'H-PSLP (Heap)': 25213.5},
-        '8 Nodes': {'H-PSRS': 359099.1, 'H-PSLP (Heap)': 212877.4}
-    },
-    'Gaussian': {
-        '4 Nodes': {'H-PSRS': 38199.5, 'H-PSLP (Heap)': 26066.8},
-        '8 Nodes': {'H-PSRS': avg_hpsrs_makespan_gaussian_8nodes, 'H-PSLP (Heap)': avg_hpslp_makespan_gaussian_8nodes}
-    }
+# Define a consistent, professional color palette
+COLORS = {
+    'hpsrs': '#2E86AB',      # Deep Blue
+    'hpslp': '#A23B72',      # Deep Magenta
+    'accent': '#F18F01',     # Orange
+    'success': '#2A9D8F',    # Teal
+    'warning': '#E76F51',    # Coral
+    'neutral': '#6C757D',    # Gray
+    'background': '#FFFFFF', # White
+    'grid': '#E9ECEF',       # Light Gray
+    'text': '#212529'        # Dark Gray
 }
 
-# Cost Data ($) - Averages for 4-node, individual for 8-node to combine later
-avg_hpsrs_cost_gaussian_8nodes = (839765.87 + 428716.62) / 2
-avg_hpslp_cost_gaussian_8nodes = (292759.19 + 154602.50) / 2
+def setup_plot_style():
+    """Configure matplotlib and seaborn for consistent, beautiful plots."""
+    plt.style.use('default')
+    
+    # Configure matplotlib parameters
+    plt.rcParams.update({
+        'figure.facecolor': COLORS['background'],
+        'axes.facecolor': COLORS['background'],
+        'axes.spines.top': False,
+        'axes.spines.right': False,
+        'axes.spines.left': True,
+        'axes.spines.bottom': True,
+        'axes.linewidth': 1.5,
+        'axes.edgecolor': COLORS['grid'],
+        'grid.alpha': 0.4,
+        'grid.linewidth': 1.0,
+        'grid.color': COLORS['grid'],
+        'font.size': 12,
+        'axes.titlesize': 16,
+        'axes.labelsize': 14,
+        'xtick.labelsize': 12,
+        'ytick.labelsize': 12,
+        'legend.fontsize': 11,
+        'figure.titlesize': 18,
+        'axes.titleweight': 'bold',
+        'axes.labelweight': 'bold'
+    })
+    
+    # Set seaborn style
+    sns.set_palette([COLORS['hpsrs'], COLORS['hpslp'], COLORS['accent'], 
+                     COLORS['success'], COLORS['warning'], COLORS['neutral']])
 
-cost_data = {
-    'Uniform': {
-        '4 Nodes': {'H-PSRS': 43359.34, 'H-PSLP (Heap)': 21172.96},
-        '8 Nodes': {'H-PSRS': 561310.60, 'H-PSLP (Heap)': 197406.66}
-    },
-    'Gaussian': {
-        '4 Nodes': {'H-PSRS': 43856.09, 'H-PSLP (Heap)': 19433.99},
-        '8 Nodes': {'H-PSRS': avg_hpsrs_cost_gaussian_8nodes, 'H-PSLP (Heap)': avg_hpslp_cost_gaussian_8nodes}
+def format_large_numbers(x, pos):
+    """Format large numbers with K, M suffixes for readability."""
+    if x >= 1e6:
+        return f'{x/1e6:.1f}M'
+    elif x >= 1e3:
+        return f'{x/1e3:.0f}K'
+    else:
+        return f'{int(x)}'
+
+def create_scatter_plot(ax, x_data, y_hpsrs, y_hpslp, df, title, ylabel):
+    """Create a consistent scatter plot with proper styling."""
+    # Plot scatter points with better styling
+    ax.scatter(x_data, df[y_hpsrs], color=COLORS['hpsrs'], label='H-PSRS', 
+               alpha=0.8, s=60, edgecolors='white', linewidth=1)
+    ax.scatter(x_data, df[y_hpslp], color=COLORS['hpslp'], label='H-PSLP', 
+               alpha=0.8, s=60, edgecolors='white', linewidth=1)
+    
+    # Styling
+    ax.set_title(title, pad=20)
+    ax.set_xlabel('Simulation Run')
+    ax.set_ylabel(ylabel)
+    ax.legend(frameon=True, fancybox=True, shadow=True)
+    ax.grid(True, linestyle='--', alpha=0.5)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(format_large_numbers))
+
+def create_bar_plot(ax, y_hpsrs, y_hpslp, df, title, ylabel=None):
+    """Create a consistent bar plot with proper styling."""
+    avg_vals = df[[y_hpsrs, y_hpslp]].mean()
+    
+    # Create bars with better styling
+    bars = ax.bar(['H-PSRS', 'H-PSLP'], avg_vals, 
+                  color=[COLORS['hpsrs'], COLORS['hpslp']], 
+                  alpha=0.9, edgecolor='white', linewidth=2)
+    
+    # Add value labels on bars
+    for bar, val in zip(bars, avg_vals):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height,
+                f'{val:,.0f}', ha='center', va='bottom', fontweight='bold')
+    
+    ax.set_title(title, pad=20)
+    if ylabel:
+        ax.set_ylabel(ylabel)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(format_large_numbers))
+    ax.grid(True, axis='y', linestyle='--', alpha=0.5)
+
+def plot_aggregated_metrics(df, filename='agg_metrics_comparison.png'):
+    """Plot comprehensive performance comparison with improved styling."""
+    setup_plot_style()
+    
+    if df.empty:
+        print("Warning: No data for aggregated metrics plot. Skipping.")
+        return
+
+    runs = df['run']
+    fig, axes = plt.subplots(3, 2, figsize=(16, 18))
+    fig.suptitle('Performance Analysis: Individual Runs vs Average Performance', 
+                 fontsize=22, fontweight='bold', y=0.98)
+
+    # Left Column: Scatter Plots (All Runs)
+    create_scatter_plot(axes[0, 0], runs, 'hpsrs_makespan', 'hpslp_makespan', df,
+                       'Makespan Comparison (All Runs)', 'Makespan (µs)')
+    
+    create_scatter_plot(axes[1, 0], runs, 'hpsrs_cost', 'hpslp_cost', df,
+                       'Total Cost Comparison (All Runs)', 'Cost ($)')
+    
+    create_scatter_plot(axes[2, 0], runs, 'hpsrs_mem_util', 'hpslp_mem_util', df,
+                       'Memory Utilization (All Runs)', 'Utilization (%)')
+
+    # Right Column: Bar Charts (Averages)
+    create_bar_plot(axes[0, 1], 'hpsrs_makespan', 'hpslp_makespan', df,
+                   'Average Makespan', 'Makespan (µs)')
+    
+    create_bar_plot(axes[1, 1], 'hpsrs_cost', 'hpslp_cost', df,
+                   'Average Total Cost', 'Cost ($)')
+    
+    create_bar_plot(axes[2, 1], 'hpsrs_mem_util', 'hpslp_mem_util', df,
+                   'Average Memory Utilization', 'Utilization (%)')
+
+    # Special formatting for cost plot
+    axes[1, 0].set_yscale('log')
+    axes[1, 1].set_yscale('log')
+
+    plt.tight_layout(rect=[0, 0.03, 1, 0.96])
+    plt.savefig(os.path.join(OUTPUT_DIR, filename), dpi=300, bbox_inches='tight')
+    print(f"✓ Saved aggregated metrics chart: {filename}")
+    plt.close(fig)
+
+def plot_lp_prediction_accuracy(df, filename='lp_prediction_accuracy.png'):
+    """Plot LP model prediction accuracy with enhanced visualization."""
+    setup_plot_style()
+    
+    df_filtered = df[
+        (df['hpslp_predicted_makespan'] > 0) & 
+        (df['hpslp_actual_sort_makespan'] > 0) & 
+        (df['hpslp_actual_sort_cost'] > 0)
+    ].copy()
+    
+    if df_filtered.empty:
+        print("Warning: No prediction data for LP accuracy plot. Skipping.")
+        return
+
+    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+    fig.suptitle('Linear Programming Model Prediction Accuracy', 
+                 fontsize=20, fontweight='bold', y=0.98)
+
+    # Makespan scatter plot
+    sns.scatterplot(data=df_filtered, x='hpslp_predicted_makespan', 
+                   y='hpslp_actual_sort_makespan', hue='distribution', 
+                   style='nodes', ax=axes[0, 0], s=80, alpha=0.8)
+    
+    # Perfect prediction line
+    lims_makespan = [0, max(df_filtered['hpslp_predicted_makespan'].max(), 
+                           df_filtered['hpslp_actual_sort_makespan'].max()) * 1.05]
+    axes[0, 0].plot(lims_makespan, lims_makespan, 'k--', alpha=0.7, 
+                    linewidth=2, label='Perfect Prediction')
+    axes[0, 0].set_title('Sort Phase Makespan Prediction', pad=15)
+    axes[0, 0].set_xlabel('Predicted Makespan (µs)')
+    axes[0, 0].set_ylabel('Actual Makespan (µs)')
+    axes[0, 0].legend()
+    axes[0, 0].grid(True, alpha=0.3)
+
+    # Cost scatter plot
+    sns.scatterplot(data=df_filtered, x='hpslp_predicted_cost', 
+                   y='hpslp_actual_sort_cost', hue='distribution', 
+                   style='nodes', ax=axes[0, 1], s=80, alpha=0.8)
+    
+    lims_cost = [0, max(df_filtered['hpslp_predicted_cost'].max(), 
+                       df_filtered['hpslp_actual_sort_cost'].max()) * 1.05]
+    axes[0, 1].plot(lims_cost, lims_cost, 'k--', alpha=0.7, 
+                    linewidth=2, label='Perfect Prediction')
+    axes[0, 1].set_title('Sort Phase Cost Prediction', pad=15)
+    axes[0, 1].set_xlabel('Predicted Cost ($)')
+    axes[0, 1].set_ylabel('Actual Cost ($)')
+    axes[0, 1].legend()
+    axes[0, 1].grid(True, alpha=0.3)
+
+    # Calculate MAPE
+    mape_makespan = np.mean(np.abs((df_filtered['hpslp_actual_sort_makespan'] - 
+                                   df_filtered['hpslp_predicted_makespan']) / 
+                                  df_filtered['hpslp_actual_sort_makespan'])) * 100
+    mape_cost = np.mean(np.abs((df_filtered['hpslp_actual_sort_cost'] - 
+                               df_filtered['hpslp_predicted_cost']) / 
+                              df_filtered['hpslp_actual_sort_cost'])) * 100
+
+    # Makespan comparison bars
+    avg_predicted_makespan = df_filtered['hpslp_predicted_makespan'].mean()
+    avg_actual_makespan = df_filtered['hpslp_actual_sort_makespan'].mean()
+    
+    bars1 = axes[1, 0].bar(['Predicted', 'Actual'], 
+                          [avg_predicted_makespan, avg_actual_makespan], 
+                          color=[COLORS['accent'], COLORS['hpslp']], 
+                          alpha=0.9, edgecolor='white', linewidth=2)
+    
+    for bar, val in zip(bars1, [avg_predicted_makespan, avg_actual_makespan]):
+        height = bar.get_height()
+        axes[1, 0].text(bar.get_x() + bar.get_width()/2., height,
+                       f'{val:,.0f}', ha='center', va='bottom', fontweight='bold')
+    
+    axes[1, 0].set_title(f'Average Makespan Comparison\n(MAPE: {mape_makespan:.1f}%)', pad=15)
+    axes[1, 0].set_ylabel('Makespan (µs)')
+    axes[1, 0].grid(True, axis='y', alpha=0.3)
+
+    # Cost comparison bars
+    avg_predicted_cost = df_filtered['hpslp_predicted_cost'].mean()
+    avg_actual_cost = df_filtered['hpslp_actual_sort_cost'].mean()
+    
+    bars2 = axes[1, 1].bar(['Predicted', 'Actual'], 
+                          [avg_predicted_cost, avg_actual_cost], 
+                          color=[COLORS['accent'], COLORS['hpslp']], 
+                          alpha=0.9, edgecolor='white', linewidth=2)
+    
+    for bar, val in zip(bars2, [avg_predicted_cost, avg_actual_cost]):
+        height = bar.get_height()
+        axes[1, 1].text(bar.get_x() + bar.get_width()/2., height,
+                       f'{val:,.0f}', ha='center', va='bottom', fontweight='bold')
+    
+    axes[1, 1].set_title(f'Average Cost Comparison\n(MAPE: {mape_cost:.1f}%)', pad=15)
+    axes[1, 1].set_ylabel('Cost ($)')
+    axes[1, 1].grid(True, axis='y', alpha=0.3)
+
+    # Format all y-axes
+    for ax in axes.flat:
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(format_large_numbers))
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.savefig(os.path.join(OUTPUT_DIR, filename), dpi=300, bbox_inches='tight')
+    print(f"✓ Saved LP accuracy chart: {filename}")
+    plt.close(fig)
+
+def plot_scalability(df, filename='scalability_analysis.png'):
+    """Generate scalability analysis with clean line plots and confidence intervals."""
+    setup_plot_style()
+    
+    if df.empty:
+        print("Warning: No data for scalability plots. Skipping.")
+        return
+
+    # Define colors for different combinations
+    colors = {
+        'H-PSRS (uniform)': COLORS['hpsrs'],
+        'H-PSLP (uniform)': COLORS['hpslp'],
+        'H-PSRS (gaussian)': COLORS['accent'],
+        'H-PSLP (gaussian)': COLORS['warning']
     }
-}
+    
+    markers = {
+        'H-PSRS (uniform)': 'o',
+        'H-PSLP (uniform)': 's',
+        'H-PSRS (gaussian)': '^',
+        'H-PSLP (gaussian)': 'D'
+    }
 
-# Memory Utilization Example Data (Run 1, Node 3)
-memory_limit_node3_run1 = 19744
-hpsrs_items_node3_run1 = 84000
-hpslp_items_node3_run1 = 19732
+    dataset_sizes = sorted(df['dataset_size'].unique())
+    fig, axes = plt.subplots(2, len(dataset_sizes), figsize=(20, 12))
+    
+    if len(dataset_sizes) == 1:
+        axes = axes.reshape(-1, 1)
+    
+    fig.suptitle('Scalability Analysis Across Dataset Sizes and Node Counts', 
+                 fontsize=20, fontweight='bold', y=0.98)
+    
+    for j, size in enumerate(dataset_sizes):
+        df_size = df[df['dataset_size'] == size]
+        
+        # Makespan Plot
+        ax_makespan = axes[0, j]
+        for dist in ['uniform', 'gaussian']:
+            subset = df_size[df_size['distribution'] == dist]
+            if subset.empty:
+                continue
+            
+            # Group by nodes and calculate statistics
+            grouped = subset.groupby('nodes').agg({
+                'hpsrs_makespan': ['mean', 'std'],
+                'hpslp_makespan': ['mean', 'std']
+            }).reset_index()
+            
+            grouped.columns = ['nodes', 'hpsrs_makespan_mean', 'hpsrs_makespan_std', 
+                              'hpslp_makespan_mean', 'hpslp_makespan_std']
 
-# Predicted vs. Actual Data for H-PSLP Sort Phase (from individual run tables)
-# (run_label, lp_pred_makespan, actual_max_local_sort_time, lp_pred_cost, actual_sum_local_sort_costs)
-predicted_vs_actual_data = [
-    # Run 1: Uniform, 4N, S4
-    {'run_label': 'R1 U4S4', 'pred_makespan': 14044.3, 'actual_makespan': 16422.7, 'pred_cost': 17655.42, 'actual_cost': 21189.53},
-    # Run 2: Uniform, 4N, S5
-    {'run_label': 'R2 U4S5', 'pred_makespan': 9145.8, 'actual_makespan': 9790.4, 'pred_cost': 9921.22, 'actual_cost': 10049.08},
-    # Run 3: Uniform, 8N, S4
-    {'run_label': 'R3 U8S4', 'pred_makespan': 125524.1, 'actual_makespan': 122323.7, 'pred_cost': 303521.59, 'actual_cost': 274580.60},
-    # Run 4: Uniform, 8N, S5
-    {'run_label': 'R4 U8S5', 'pred_makespan': 47603.4, 'actual_makespan': 43836.4, 'pred_cost': 136047.90, 'actual_cost': 87424.32},
-    # Run 5: Gaussian, 4N, S4
-    {'run_label': 'R5 G4S4', 'pred_makespan': 13854.7, 'actual_makespan': 18009.5, 'pred_cost': 17417.16, 'actual_cost': 21842.52},
-    # Run 6: Gaussian, 4N, S5
-    {'run_label': 'R6 G4S5', 'pred_makespan': 9556.7, 'actual_makespan': 11038.9, 'pred_cost': 10366.95, 'actual_cost': 12135.29},
-    # Run 7: Gaussian, 8N, S4
-    {'run_label': 'R7 G8S4', 'pred_makespan': 125524.1, 'actual_makespan': 122323.7, 'pred_cost': 303521.59, 'actual_cost': 274580.60},
-    # Run 8: Gaussian, 8N, S5
-    {'run_label': 'R8 G8S5', 'pred_makespan': 48478.5, 'actual_makespan': 44617.9, 'pred_cost': 138548.89, 'actual_cost': 126599.78},
-]
+            # Plot H-PSRS
+            series_name_hpsrs = f'H-PSRS ({dist})'
+            ax_makespan.plot(grouped['nodes'], grouped['hpsrs_makespan_mean'], 
+                           marker=markers[series_name_hpsrs], linestyle='-', 
+                           label=series_name_hpsrs, color=colors[series_name_hpsrs], 
+                           linewidth=2.5, markersize=8)
+            
+            # Add confidence interval
+            ax_makespan.fill_between(grouped['nodes'], 
+                                   grouped['hpsrs_makespan_mean'] - grouped['hpsrs_makespan_std'],
+                                   grouped['hpsrs_makespan_mean'] + grouped['hpsrs_makespan_std'], 
+                                   color=colors[series_name_hpsrs], alpha=0.2)
+            
+            # Plot H-PSLP
+            series_name_hpslp = f'H-PSLP ({dist})'
+            ax_makespan.plot(grouped['nodes'], grouped['hpslp_makespan_mean'], 
+                           marker=markers[series_name_hpslp], linestyle='-', 
+                           label=series_name_hpslp, color=colors[series_name_hpslp], 
+                           linewidth=2.5, markersize=8)
+            
+            ax_makespan.fill_between(grouped['nodes'], 
+                                   grouped['hpslp_makespan_mean'] - grouped['hpslp_makespan_std'],
+                                   grouped['hpslp_makespan_mean'] + grouped['hpslp_makespan_std'], 
+                                   color=colors[series_name_hpslp], alpha=0.2)
 
+        ax_makespan.set_title(f'Dataset Size: {size:,} Elements', pad=15)
+        ax_makespan.set_ylabel('Makespan (µs)' if j == 0 else '')
+        ax_makespan.grid(True, alpha=0.3)
+        ax_makespan.set_xticks(sorted(df['nodes'].unique()))
+        
+        # Cost Plot
+        ax_cost = axes[1, j]
+        for dist in ['uniform', 'gaussian']:
+            subset = df_size[df_size['distribution'] == dist]
+            if subset.empty:
+                continue
+            
+            grouped = subset.groupby('nodes').agg({
+                'hpsrs_cost': ['mean', 'std'],
+                'hpslp_cost': ['mean', 'std']
+            }).reset_index()
+            
+            grouped.columns = ['nodes', 'hpsrs_cost_mean', 'hpsrs_cost_std', 
+                              'hpslp_cost_mean', 'hpslp_cost_std']
 
-# --- Plotting Functions ---
+            # Plot H-PSRS
+            series_name_hpsrs = f'H-PSRS ({dist})'
+            ax_cost.plot(grouped['nodes'], grouped['hpsrs_cost_mean'], 
+                        marker=markers[series_name_hpsrs], linestyle='-', 
+                        label=series_name_hpsrs, color=colors[series_name_hpsrs], 
+                        linewidth=2.5, markersize=8)
+            
+            ax_cost.fill_between(grouped['nodes'], 
+                               grouped['hpsrs_cost_mean'] - grouped['hpsrs_cost_std'],
+                               grouped['hpsrs_cost_mean'] + grouped['hpsrs_cost_std'], 
+                               color=colors[series_name_hpsrs], alpha=0.2)
+            
+            # Plot H-PSLP
+            series_name_hpslp = f'H-PSLP ({dist})'
+            ax_cost.plot(grouped['nodes'], grouped['hpslp_cost_mean'], 
+                        marker=markers[series_name_hpslp], linestyle='-', 
+                        label=series_name_hpslp, color=colors[series_name_hpslp], 
+                        linewidth=2.5, markersize=8)
+            
+            ax_cost.fill_between(grouped['nodes'], 
+                               grouped['hpslp_cost_mean'] - grouped['hpslp_cost_std'],
+                               grouped['hpslp_cost_mean'] + grouped['hpslp_cost_std'], 
+                               color=colors[series_name_hpslp], alpha=0.2)
+            
+        ax_cost.set_xlabel('Number of Nodes')
+        ax_cost.set_ylabel('Total Cost ($)' if j == 0 else '')
+        ax_cost.grid(True, alpha=0.3)
+        ax_cost.set_xticks(sorted(df['nodes'].unique()))
 
-def plot_bar_comparison(data_dict, title, ylabel, filename):
-    labels = list(data_dict.keys()) 
-    values = list(data_dict.values())
-    x = np.arange(len(labels))
-    width = 0.35
-    fig, ax = plt.subplots(figsize=(8, 6))
-    rects = ax.bar(x, values, width, color=['#ff7f0e', '#1f77b4'])
-    ax.set_ylabel(ylabel)
-    ax.set_title(title)
-    ax.set_xticks(x)
-    ax.set_xticklabels(labels)
-    ax.legend(['H-PSRS', 'H-PSLP']) # Updated to reflect H-PSLP (not H-PSLP (Heap))
-    def autolabel(rects_to_label):
-        for rect in rects_to_label:
-            height = rect.get_height()
-            ax.annotate(f'{height:,.1f}', xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=9)
-    autolabel(rects)
-    fig.tight_layout()
-    plt.savefig(os.path.join(output_dir, filename))
-    print(f"Saved chart: {filename}")
+    # Format all axes
+    for ax in axes.flat:
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(format_large_numbers))
+
+    # Add legend
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper right', bbox_to_anchor=(0.98, 0.94), 
+               frameon=True, fancybox=True, shadow=True)
+    
+    plt.tight_layout(rect=[0, 0, 1, 0.94])
+    plt.savefig(os.path.join(OUTPUT_DIR, filename), dpi=300, bbox_inches='tight')
+    print(f"✓ Saved scalability chart: {filename}")
     plt.close(fig)
 
-def plot_memory_utilization(limit, hpsrs_val, hpslp_val, title, filename):
-    labels = ['H-PSRS Items', 'H-PSLP Items']
-    values = [hpsrs_val, hpslp_val]
-    x = np.arange(len(labels))
-    width = 0.35
-    fig, ax = plt.subplots(figsize=(8, 6))
-    bars = ax.bar(x, values, width, color=['#ff7f0e', '#1f77b4'])
-    ax.axhline(limit, color='red', linestyle='--', label=f'Memory Limit ({limit:,.0f})')
-    ax.set_ylabel('Number of Items')
-    ax.set_title(title)
-    ax.set_xticks(x)
-    ax.set_xticklabels(labels)
-    ax.legend()
-    def autolabel(rects_to_label):
-        for rect in rects_to_label:
-            height = rect.get_height()
-            ax.annotate(f'{height:,.0f}', xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=9)
-    autolabel(bars)
-    fig.tight_layout()
-    plt.savefig(os.path.join(output_dir, filename))
-    print(f"Saved chart: {filename}")
+def plot_dataset_examples(example_datasets, filename='dataset_examples.png'):
+    """Create beautiful dataset visualization with enhanced styling."""
+    setup_plot_style()
+    
+    if not example_datasets:
+        print("Warning: No example datasets provided. Skipping dataset examples plot.")
+        return
+
+    num_rows = len(example_datasets)
+    if num_rows == 0:
+        return
+    
+    fig, axes = plt.subplots(num_rows, 3, figsize=(18, 6 * num_rows))
+    if num_rows == 1:
+        axes = axes.reshape(1, -1)
+    
+    fig.suptitle('Dataset Examples: Distribution Characteristics', 
+                 fontsize=20, fontweight='bold', y=0.98)
+
+    for i, (key, details) in enumerate(sorted(example_datasets.items())):
+        if not details:
+            continue
+            
+        dist_type, data_size_str = key.split('_')
+        data = details.get('data', [])
+        seed = details.get('seed', 'N/A')
+        n = len(data)
+
+        if n == 0:
+            continue
+
+        # Statistics text box
+        mean_val = np.mean(data)
+        std_val = np.std(data)
+        stats_text = (f'{dist_type.upper()} Distribution\n'
+                     f'Size: {n:,} elements\n'
+                     f'Seed: {seed}\n'
+                     f'Range: [{min(data):,}, {max(data):,}]\n'
+                     f'Mean: {mean_val:,.1f}\n'
+                     f'Std: {std_val:,.1f}')
+        
+        # Original data scatter plot
+        axes[i, 0].scatter(range(n), data, s=2, alpha=0.6, color=COLORS['hpsrs'], 
+                          edgecolors='none')
+        axes[i, 0].set_title('Original Data Distribution', pad=15)
+        axes[i, 0].set_xlabel('Index')
+        axes[i, 0].set_ylabel('Value')
+        axes[i, 0].grid(True, alpha=0.3)
+        
+        # Add statistics box
+        axes[i, 0].text(0.02, 0.98, stats_text, transform=axes[i, 0].transAxes, 
+                       ha='left', va='top', fontsize=10, 
+                       bbox=dict(boxstyle='round,pad=0.5', facecolor='white', 
+                                alpha=0.9, edgecolor=COLORS['grid']))
+
+        # Sorted data
+        sorted_data = sorted(data)
+        axes[i, 1].plot(range(n), sorted_data, color=COLORS['accent'], 
+                       linewidth=2, alpha=0.8)
+        axes[i, 1].set_title('Sorted Data Profile', pad=15)
+        axes[i, 1].set_xlabel('Rank')
+        axes[i, 1].set_ylabel('Value')
+        axes[i, 1].grid(True, alpha=0.3)
+        
+        # Histogram
+        axes[i, 2].hist(data, bins=50, density=True, alpha=0.8, 
+                       color=COLORS['hpslp'], edgecolor='white', linewidth=0.5)
+        axes[i, 2].set_title('Value Distribution Histogram', pad=15)
+        axes[i, 2].set_xlabel('Value')
+        axes[i, 2].set_ylabel('Density')
+        axes[i, 2].grid(True, alpha=0.3)
+    
+    # Format all y-axes
+    for ax in axes.flat:
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(format_large_numbers))
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.savefig(os.path.join(OUTPUT_DIR, filename), dpi=300, bbox_inches='tight')
+    print(f"✓ Saved dataset examples chart: {filename}")
     plt.close(fig)
 
-def plot_line_scaling(data_hpsrs, data_hpslp, nodes, title, ylabel, filename):
-    fig, ax = plt.subplots(figsize=(8, 6))
-    ax.plot(nodes, data_hpsrs, marker='o', linestyle='-', color='#ff7f0e', label='H-PSRS')
-    ax.plot(nodes, data_hpslp, marker='s', linestyle='-', color='#1f77b4', label='H-PSLP') # Updated label
-    ax.set_xlabel('Number of Nodes')
-    ax.set_ylabel(ylabel)
-    ax.set_title(title)
-    ax.set_xticks(nodes)
-    ax.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
-    ax.legend()
-    ax.grid(True, linestyle=':', alpha=0.7)
-    for i, txt in enumerate(data_hpsrs):
-        ax.annotate(f'{txt:,.0f}', (nodes[i], data_hpsrs[i]), textcoords="offset points", xytext=(0,5), ha='center', color='#ff7f0e', fontsize=8)
-    for i, txt in enumerate(data_hpslp):
-        ax.annotate(f'{txt:,.0f}', (nodes[i], data_hpslp[i]), textcoords="offset points", xytext=(0,-15), ha='center', color='#1f77b4', fontsize=8)
-    fig.tight_layout()
-    plt.savefig(os.path.join(output_dir, filename))
-    print(f"Saved chart: {filename}")
-    plt.close(fig)
+def generate_all_plots(results_file, example_datasets):
+    """Main function to generate all enhanced visualizations."""
+    print(f"\n🎨 Generating Enhanced Visualization Suite")
+    print(f"📁 Input file: {results_file}")
+    print(f"📊 Output directory: {OUTPUT_DIR}/")
+    print("=" * 70)
+    
+    try:
+        df = pd.read_json(results_file)
+        print(f"✓ Successfully loaded {len(df)} experimental results")
+    except Exception as e:
+        print(f"❌ Error reading results file '{results_file}': {e}")
+        return
 
-def plot_predicted_vs_actual_grouped_bar(runs_data, data_key_predicted, data_key_actual, title, ylabel, filename):
-    """Plots a grouped bar chart for predicted vs. actual values for multiple runs."""
-    run_labels = [r['run_label'] for r in runs_data]
-    predicted_values = [r[data_key_predicted] for r in runs_data]
-    actual_values = [r[data_key_actual] for r in runs_data]
+    if df.empty:
+        print("❌ Results dataframe is empty. No plots generated.")
+        return
+        
+    print(f"\n📊 Generating Performance Analysis Charts...")
+    plot_aggregated_metrics(df)
+    plot_lp_prediction_accuracy(df)
 
-    x = np.arange(len(run_labels))  # the label locations
-    width = 0.35  # the width of the bars
+    print(f"\n📈 Generating Scalability Analysis...")
+    plot_scalability(df)
+    
+    print(f"\n📋 Generating Dataset Visualizations...")
+    plot_dataset_examples(example_datasets)
+    
+    print(f"\n🎉 Visualization suite completed successfully!")
+    print(f"   📁 All charts saved in: {OUTPUT_DIR}/")
+    print(f"   📈 Generated {len([f for f in os.listdir(OUTPUT_DIR) if f.endswith('.png')])} charts")
+    print("=" * 70)
 
-    fig, ax = plt.subplots(figsize=(12, 7)) # Wider for more runs
-    rects1 = ax.bar(x - width/2, predicted_values, width, label='LP Predicted', color='#17becf') # Teal
-    rects2 = ax.bar(x + width/2, actual_values, width, label='Actual Observed', color='#9467bd') # Purple
-
-    ax.set_ylabel(ylabel)
-    ax.set_title(title)
-    ax.set_xticks(x)
-    ax.set_xticklabels(run_labels, rotation=45, ha="right")
-    ax.legend()
-    ax.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda val, loc: "{:,}".format(int(val))))
-
-
-    def autolabel_bars(rects_to_label, va_pos='bottom'):
-        for rect in rects_to_label:
-            height = rect.get_height()
-            ax.annotate(f'{height:,.0f}',
-                        xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 3 if va_pos=='bottom' else -3),  # 3 points vertical offset
-                        textcoords="offset points",
-                        ha='center', va=va_pos, fontsize=7)
-
-    autolabel_bars(rects1)
-    autolabel_bars(rects2)
-
-    fig.tight_layout()
-    plt.savefig(os.path.join(output_dir, filename))
-    print(f"Saved chart: {filename}")
-    plt.close(fig)
-
-# --- Generate Bar Charts ---
-plot_bar_comparison(makespan_data['Uniform']['4 Nodes'],
-                    'Makespan Comparison - Uniform Data, 4 Nodes (Average)',
-                    'Makespan (µs)', 'perf_makespan_uniform_4nodes.png')
-plot_bar_comparison(cost_data['Uniform']['4 Nodes'],
-                    'Cost Comparison - Uniform Data, 4 Nodes (Average)',
-                    'Total Cost ($)', 'perf_cost_uniform_4nodes.png')
-plot_bar_comparison(makespan_data['Gaussian']['4 Nodes'],
-                    'Makespan Comparison - Gaussian Data, 4 Nodes (Average)',
-                    'Makespan (µs)', 'perf_makespan_gaussian_4nodes.png')
-plot_bar_comparison(cost_data['Gaussian']['4 Nodes'],
-                    'Cost Comparison - Gaussian Data, 4 Nodes (Average)',
-                    'Total Cost ($)', 'perf_cost_gaussian_4nodes.png')
-plot_memory_utilization(memory_limit_node3_run1, hpsrs_items_node3_run1, hpslp_items_node3_run1,
-                        'Memory Utilization Example - Run 1 (Uniform, 4N, Seed 4), Node 3',
-                        'perf_memory_util_example.png')
-
-# --- Generate Line Charts ---
-node_counts = [4, 8]
-hpsrs_makespan_uniform = [makespan_data['Uniform']['4 Nodes']['H-PSRS'], makespan_data['Uniform']['8 Nodes']['H-PSRS']]
-hpslp_makespan_uniform = [makespan_data['Uniform']['4 Nodes']['H-PSLP (Heap)'], makespan_data['Uniform']['8 Nodes']['H-PSLP (Heap)']]
-plot_line_scaling(hpsrs_makespan_uniform, hpslp_makespan_uniform, node_counts,
-                  'Makespan vs. Node Count - Uniform Data', 'Makespan (µs)',
-                  'scale_makespan_uniform_nodes.png')
-hpsrs_cost_uniform = [cost_data['Uniform']['4 Nodes']['H-PSRS'], cost_data['Uniform']['8 Nodes']['H-PSRS']]
-hpslp_cost_uniform = [cost_data['Uniform']['4 Nodes']['H-PSLP (Heap)'], cost_data['Uniform']['8 Nodes']['H-PSLP (Heap)']]
-plot_line_scaling(hpsrs_cost_uniform, hpslp_cost_uniform, node_counts,
-                  'Cost vs. Node Count - Uniform Data', 'Total Cost ($)',
-                  'scale_cost_uniform_nodes.png')
-hpsrs_makespan_gaussian = [makespan_data['Gaussian']['4 Nodes']['H-PSRS'], makespan_data['Gaussian']['8 Nodes']['H-PSRS']]
-hpslp_makespan_gaussian = [makespan_data['Gaussian']['4 Nodes']['H-PSLP (Heap)'], makespan_data['Gaussian']['8 Nodes']['H-PSLP (Heap)']]
-plot_line_scaling(hpsrs_makespan_gaussian, hpslp_makespan_gaussian, node_counts,
-                  'Makespan vs. Node Count - Gaussian Data', 'Makespan (µs)',
-                  'scale_makespan_gaussian_nodes.png')
-hpsrs_cost_gaussian = [cost_data['Gaussian']['4 Nodes']['H-PSRS'], cost_data['Gaussian']['8 Nodes']['H-PSRS']]
-hpslp_cost_gaussian = [cost_data['Gaussian']['4 Nodes']['H-PSLP (Heap)'], cost_data['Gaussian']['8 Nodes']['H-PSLP (Heap)']]
-plot_line_scaling(hpsrs_cost_gaussian, hpslp_cost_gaussian, node_counts,
-                  'Cost vs. Node Count - Gaussian Data', 'Total Cost ($)',
-                  'scale_cost_gaussian_nodes.png')
-
-# --- Generate Predicted vs. Actual Charts for H-PSLP Sort Phase ---
-plot_predicted_vs_actual_grouped_bar(predicted_vs_actual_data, 'pred_makespan', 'actual_makespan',
-                                     'H-PSLP: LP Predicted vs. Actual Sort Makespan (All Runs)',
-                                     'Makespan (µs)', 'pred_vs_actual_makespan_hpslp.png')
-
-plot_predicted_vs_actual_grouped_bar(predicted_vs_actual_data, 'pred_cost', 'actual_cost',
-                                     'H-PSLP: LP Predicted vs. Actual Sort Cost (All Runs)',
-                                     'Cost ($)', 'pred_vs_actual_cost_hpslp.png')
-
-print(f"\nAll Matplotlib charts saved to '{output_dir}' directory.")
-
+if __name__ == '__main__':
+    # Main execution
+    generate_all_plots('results.json', example_datasets={})

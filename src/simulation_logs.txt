@@ -1,0 +1,2600 @@
+
+=========================
+--- Starting Run 1/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=10000, Seed=4
+Nodes: 2 | Data: 10000 elements | Sample: [6579, 9001, 4741, 964, 3636...4850, 8583, 5315, 4760, 6786]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1110.041µs throughput=0.111004µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (5x) Sort: items=5555/10000 (55.5%) mem=5555/4505 (123.3%) samples=5   time=243.553µs cost=$111.182
+N1 (4x) Sort: items=4445/10000 (44.5%) mem=4445/10495 (42.4%) samples=4   time=266.281µs cost=$51.339
+N0 (5x) Sampling: samples=9/9 pivots=1 time=63.840µs cost=$29.143 pivots=[4021]
+N1 (4x) Partition: items kept=2668, sent=1777 time=101.579µs cost=$19.585
+N0 (5x) Partition: items kept=2224, sent=3331 time=94.437µs cost=$43.111
+N0 (5x) Merge: items=4001/10000 (55.5%) mem=4001/4505 (88.8%) time=79.633µs cost=$36.352
+N1 (4x) Merge: items=5999/10000 (44.5%) mem=5999/10495 (57.2%) time=138.622µs cost=$26.726
+N0 Concat: total=10000 time=19.317µs cost=$8.818
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (5x) Solver: time=774.557µs cost=$353.585 ^makespan=152.492µs ^cost=$75.057
+N0 (5x) Sort: items=4505/10000 (45.1%) mem=4505/4505 (100.0%) time=252.251µs cost=$115.152
+N1 (4x) Sort: items=5495/10000 (54.9%) mem=5495/10495 (52.4%) time=348.684µs cost=$67.226
+N0 (5x) Heap Merge: total=10000 time=206.639µs cost=$94.331
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |             506.48 |             555.32
+Total Cost ($)            |             326.26 |             276.71
+Max. Peak Memory Util.(%) |             123.31 |             100.00
+-----------------------------------------------
+
+
+=========================
+--- Starting Run 2/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=10000, Seed=5
+Nodes: 2 | Data: 10000 elements | Sample: [8684, 475, 7628, 4080, 849...7265, 6744, 7389, 6220, 5206]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1132.555µs throughput=0.113256µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=6666/10000 (66.7%) mem=6666/8402 (79.3%) samples=10  time=141.953µs cost=$108.963
+N1 (5x) Sort: items=3334/10000 (33.3%) mem=3334/6598 (50.5%) samples=5   time=178.179µs cost=$145.341
+N0 (10x) Sampling: samples=15/15 pivots=1 time=39.086µs cost=$30.003 pivots=[4031]
+N0 (10x) Partition: items kept=2720, sent=3946 time=66.780µs cost=$51.260
+N1 (5x) Partition: items kept=2001, sent=1333 time=80.127µs cost=$65.360
+N0 (10x) Merge: items=4053/10000 (66.7%) mem=4053/8402 (48.2%) time=40.976µs cost=$31.453
+N1 (5x) Merge: items=5947/10000 (33.3%) mem=5947/6598 (90.1%) time=230.024µs cost=$187.630
+N0 Concat: total=10000 time=7.204µs cost=$5.529
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=212.902µs cost=$163.423 ^makespan=75.504µs ^cost=$119.545
+N0 (10x) Sort: items=6667/10000 (66.7%) mem=6667/8402 (79.4%) time=89.991µs cost=$69.077
+N1 (5x) Sort: items=3333/10000 (33.3%) mem=3333/6598 (50.5%) time=89.550µs cost=$73.046
+N0 (10x) Heap Merge: total=10000 time=102.498µs cost=$78.677
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |             488.33 |             192.49
+Total Cost ($)            |             625.54 |             220.80
+Max. Peak Memory Util.(%) |              90.13 |              79.35
+-----------------------------------------------
+
+
+=========================
+--- Starting Run 3/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=10000, Seed=6
+Nodes: 2 | Data: 10000 elements | Sample: [7704, 6113, 5232, 358, 4467...4235, 7911, 8925, 9220, 4507]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1115.093µs throughput=0.111509µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=8333/10000 (83.3%) mem=8333/10 (83330.0%) samples=10  time=172.150µs cost=$92.358
+N1 (2x) Sort: items=1667/10000 (16.7%) mem=1667/14990 (11.1%) samples=2   time=396.266µs cost=$132.947
+N0 (10x) Sampling: samples=12/12 pivots=1 time=35.197µs cost=$18.883 pivots=[4872]
+N1 (2x) Partition: items kept=833, sent=834 time=82.113µs cost=$27.549
+N0 (10x) Partition: items kept=4057, sent=4276 time=80.185µs cost=$43.019
+N0 (10x) Merge: items=4891/10000 (83.3%) mem=4891/10 (48910.0%) time=73.920µs cost=$39.658
+N1 (2x) Merge: items=5109/10000 (16.7%) mem=5109/14990 (34.1%) time=312.171µs cost=$104.733
+N0 Concat: total=10000 time=9.880µs cost=$5.300
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=126.743µs cost=$67.998 ^makespan=556.989µs ^cost=$186.930
+N0 (10x) Sort: items=10/10000 (0.1%) mem=10/10 (100.0%) time=0.234µs cost=$0.125
+N1 (2x) Sort: items=9990/10000 (99.9%) mem=9990/14990 (66.6%) time=1157.002µs cost=$388.174
+N0 (10x) Heap Merge: total=10000 time=189.599µs cost=$101.720
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |             790.55 |           1,346.60
+Total Cost ($)            |             464.45 |             490.02
+Max. Peak Memory Util.(%) |           83330.00 |             100.00
+-----------------------------------------------
+
+
+=========================
+--- Starting Run 4/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=100000, Seed=4
+Nodes: 2 | Data: 100000 elements | Sample: [52637, 72011, 37929, 7713, 29088...59404, 10682, 41103, 69134, 80326]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=20591.677µs throughput=0.205917µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (4x) Sort: items=44445/100000 (44.4%) mem=44445/104953 (42.3%) samples=4   time=2420.415µs cost=$466.656
+N0 (5x) Sort: items=55555/100000 (55.6%) mem=55555/45047 (123.3%) samples=5   time=2797.355µs cost=$1276.992
+N0 (5x) Sampling: samples=9/9 pivots=1 time=58.772µs cost=$26.829 pivots=[39729]
+N1 (4x) Partition: items kept=26769, sent=17676 time=1784.906µs cost=$344.130
+N0 (5x) Partition: items kept=22223, sent=33332 time=1453.732µs cost=$663.629
+N0 (5x) Merge: items=39899/100000 (55.6%) mem=39899/45047 (88.6%) time=1693.198µs cost=$772.945
+N1 (4x) Merge: items=60101/100000 (44.4%) mem=60101/104953 (57.3%) time=2300.968µs cost=$443.627
+N0 Concat: total=100000 time=228.100µs cost=$104.128
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (5x) Solver: time=347.598µs cost=$158.678 ^makespan=2828.936µs ^cost=$1392.312
+N0 (5x) Sort: items=45050/100000 (45.1%) mem=45050/45047 (100.0%) time=1504.631µs cost=$686.864
+N1 (4x) Sort: items=54950/100000 (54.9%) mem=54950/104953 (52.4%) time=2801.252µs cost=$540.081
+N0 (5x) Heap Merge: total=100000 time=1864.147µs cost=$850.983
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           6,506.29 |           4,665.40
+Total Cost ($)            |           4,098.94 |           2,077.93
+Max. Peak Memory Util.(%) |             123.33 |             100.01
+-----------------------------------------------
+
+
+=========================
+--- Starting Run 5/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=100000, Seed=5
+Nodes: 2 | Data: 100000 elements | Sample: [69473, 3801, 61030, 32643, 85062...84763, 18911, 7887, 19307, 78977]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=15878.337µs throughput=0.158783µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (5x) Sort: items=33334/100000 (33.3%) mem=33334/65971 (50.5%) samples=5   time=1973.035µs cost=$1609.405
+N0 (10x) Sort: items=66666/100000 (66.7%) mem=66666/84029 (79.3%) samples=10  time=1736.377µs cost=$1332.843
+N0 (10x) Sampling: samples=15/15 pivots=1 time=43.188µs cost=$33.151 pivots=[40085]
+N1 (5x) Partition: items kept=19959, sent=13375 time=639.274µs cost=$521.455
+N0 (10x) Partition: items kept=26665, sent=40001 time=802.397µs cost=$615.920
+N0 (10x) Merge: items=40040/100000 (66.7%) mem=40040/84029 (47.7%) time=644.199µs cost=$494.487
+N1 (5x) Merge: items=59960/100000 (33.3%) mem=59960/65971 (90.9%) time=1693.583µs cost=$1381.455
+N0 Concat: total=100000 time=106.295µs cost=$81.592
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=132.380µs cost=$101.615 ^makespan=1058.556µs ^cost=$1676.011
+N1 (5x) Sort: items=33330/100000 (33.3%) mem=33330/65971 (50.5%) time=1136.742µs cost=$927.241
+N0 (10x) Sort: items=66670/100000 (66.7%) mem=66670/84029 (79.3%) time=1719.882µs cost=$1320.182
+N0 (10x) Heap Merge: total=100000 time=877.747µs cost=$673.759
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           4,305.89 |           2,597.63
+Total Cost ($)            |           6,070.31 |           2,921.18
+Max. Peak Memory Util.(%) |              90.89 |              79.34
+-----------------------------------------------
+
+
+=========================
+--- Starting Run 6/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=100000, Seed=6
+Nodes: 2 | Data: 100000 elements | Sample: [61637, 99579, 96316, 48910, 41862...23546, 51660, 4092, 39927, 89695]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=14942.969µs throughput=0.149430µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (2x) Sort: items=16667/100000 (16.7%) mem=16667/149898 (11.1%) samples=2   time=1441.436µs cost=$483.602
+N0 (10x) Sort: items=83333/100000 (83.3%) mem=83333/102 (81699.0%) samples=10  time=2073.106µs cost=$1112.221
+N0 (10x) Sampling: samples=12/12 pivots=1 time=64.887µs cost=$34.812 pivots=[50026]
+N1 (2x) Partition: items kept=8334, sent=8333 time=663.668µs cost=$222.661
+N0 (10x) Partition: items kept=41666, sent=41667 time=1239.647µs cost=$665.071
+N1 (2x) Merge: items=50001/100000 (16.7%) mem=50001/149898 (33.4%) time=2251.953µs cost=$755.530
+N0 (10x) Merge: items=49999/100000 (83.3%) mem=49999/102 (49018.6%) time=718.422µs cost=$385.434
+N0 Concat: total=100000 time=148.274µs cost=$79.549
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=131.877µs cost=$70.752 ^makespan=7463.864µs ^cost=$2504.944
+N0 (10x) Sort: items=100/100000 (0.1%) mem=100/102 (98.0%) time=1.493µs cost=$0.801
+N1 (2x) Sort: items=99900/100000 (99.9%) mem=99900/149898 (66.6%) time=10458.930µs cost=$3508.971
+N0 (10x) Heap Merge: total=100000 time=780.238µs cost=$418.598
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           4,357.06 |          11,239.17
+Total Cost ($)            |           3,738.88 |           3,928.37
+Max. Peak Memory Util.(%) |           81699.02 |              98.04
+-----------------------------------------------
+
+
+=========================
+--- Starting Run 7/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=1000000, Seed=4
+Nodes: 2 | Data: 1000000 elements | Sample: [421098, 576089, 962545, 303432, 839335...986112, 870945, 306996, 713012, 596596]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=224338.793µs throughput=0.224339µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (4x) Sort: items=444445/1000000 (44.4%) mem=444445/1049533 (42.3%) samples=4   time=21855.737µs cost=$4213.786
+N0 (5x) Sort: items=555555/1000000 (55.6%) mem=555555/450467 (123.3%) samples=5   time=25475.181µs cost=$11629.420
+N0 (5x) Sampling: samples=9/9 pivots=1 time=92.729µs cost=$42.331 pivots=[399940]
+N1 (4x) Partition: items kept=266514, sent=177931 time=20414.320µs cost=$3935.881
+N0 (5x) Partition: items kept=222223, sent=333332 time=23794.313µs cost=$10862.104
+N0 (5x) Merge: items=400154/1000000 (55.6%) mem=400154/450467 (88.8%) time=12182.124µs cost=$5561.140
+N1 (4x) Merge: items=599846/1000000 (44.4%) mem=599846/1049533 (57.2%) time=23397.458µs cost=$4511.030
+N0 Concat: total=1000000 time=1667.713µs cost=$761.311
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (5x) Solver: time=404.345µs cost=$184.583 ^makespan=30820.392µs ^cost=$15168.696
+N0 (5x) Sort: items=450500/1000000 (45.1%) mem=450500/450467 (100.0%) time=17151.855µs cost=$7829.822
+N1 (4x) Sort: items=549500/1000000 (54.9%) mem=549500/1049533 (52.4%) time=28568.827µs cost=$5508.070
+N0 (5x) Heap Merge: total=1000000 time=17195.657µs cost=$7849.818
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          65,667.51 |          45,764.48
+Total Cost ($)            |          41,517.00 |          21,187.71
+Max. Peak Memory Util.(%) |             123.33 |             100.01
+-----------------------------------------------
+
+
+=========================
+--- Starting Run 8/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=1000000, Seed=5
+Nodes: 2 | Data: 1000000 elements | Sample: [967127, 555787, 30414, 881168, 488240...634383, 47409, 583762, 750791, 487762]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=240179.137µs throughput=0.240179µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (5x) Sort: items=333334/1000000 (33.3%) mem=333334/659702 (50.5%) samples=5   time=15071.820µs cost=$12294.083
+N0 (10x) Sort: items=666666/1000000 (66.7%) mem=666666/840298 (79.3%) samples=10  time=15883.452µs cost=$12192.138
+N0 (10x) Sampling: samples=15/15 pivots=1 time=46.044µs cost=$35.343 pivots=[400616]
+N1 (5x) Partition: items kept=200001, sent=133333 time=9441.467µs cost=$7701.405
+N0 (10x) Partition: items kept=267542, sent=399124 time=12835.484µs cost=$9852.518
+N0 (10x) Merge: items=400875/1000000 (66.7%) mem=400875/840298 (47.7%) time=7296.292µs cost=$5600.633
+N1 (5x) Merge: items=599125/1000000 (33.3%) mem=599125/659702 (90.8%) time=17440.764µs cost=$14226.432
+N0 Concat: total=1000000 time=849.092µs cost=$651.763
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=153.935µs cost=$118.161 ^makespan=16011.942µs ^cost=$25351.709
+N1 (5x) Sort: items=333300/1000000 (33.3%) mem=333300/659702 (50.5%) time=14023.141µs cost=$11438.676
+N0 (10x) Sort: items=666700/1000000 (66.7%) mem=666700/840298 (79.3%) time=15799.605µs cost=$12127.777
+N0 (10x) Heap Merge: total=1000000 time=8241.474µs cost=$6326.155
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          41,954.05 |          24,041.08
+Total Cost ($)            |          62,554.31 |          29,892.61
+Max. Peak Memory Util.(%) |              90.82 |              79.34
+-----------------------------------------------
+
+
+=========================
+--- Starting Run 9/54 ---
+=========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=2, Size=1000000, Seed=6
+Nodes: 2 | Data: 1000000 elements | Sample: [493097, 796635, 770531, 391287, 334900...529227, 622161, 433443, 48839, 152603]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=237721.964µs throughput=0.237722µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (2x) Sort: items=166667/1000000 (16.7%) mem=166667/1498979 (11.1%) samples=2   time=15219.287µs cost=$5106.071
+N0 (10x) Sort: items=833333/1000000 (83.3%) mem=833333/1021 (81619.3%) samples=10  time=19314.246µs cost=$10362.093
+N0 (10x) Sampling: samples=12/12 pivots=1 time=53.005µs cost=$28.437 pivots=[500282]
+N1 (2x) Partition: items kept=83333, sent=83334 time=13263.111µs cost=$4449.774
+N0 (10x) Partition: items kept=416663, sent=416670 time=11276.814µs cost=$6050.011
+N0 (10x) Merge: items=499997/1000000 (83.3%) mem=499997/1021 (48971.3%) time=10440.708µs cost=$5601.440
+N1 (2x) Merge: items=500003/1000000 (16.7%) mem=500003/1498979 (33.4%) time=33812.724µs cost=$11344.169
+N0 Concat: total=1000000 time=1203.010µs cost=$645.415
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=135.485µs cost=$72.688 ^makespan=118739.625µs ^cost=$39850.166
+N0 (10x) Sort: items=1000/1000000 (0.1%) mem=1000/1021 (97.9%) time=17.782µs cost=$9.540
+N1 (2x) Sort: items=999000/1000000 (99.9%) mem=999000/1498979 (66.6%) time=110472.388µs cost=$37063.486
+N0 (10x) Heap Merge: total=1000000 time=7690.981µs cost=$4126.211
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          62,295.12 |         118,163.37
+Total Cost ($)            |          43,587.41 |          41,199.24
+Max. Peak Memory Util.(%) |           81619.29 |              97.94
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 10/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=10000, Seed=4
+Nodes: 5 | Data: 10000 elements | Sample: [1739, 4288, 3512, 420, 4264...6515, 9393, 4878, 1913, 7701]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1903.003µs throughput=0.190300µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (7x) Sort: items=2692/10000 (26.9%) mem=2692/2103 (128.0%) samples=28  time=142.678µs cost=$132.149
+N0 (8x) Sort: items=3076/10000 (30.8%) mem=3076/1315 (233.9%) samples=32  time=348.966µs cost=$286.292
+N2 (5x) Sort: items=1923/10000 (19.2%) mem=1923/1687 (114.0%) samples=20  time=222.643µs cost=$35.601
+N3 (4x) Sort: items=1538/10000 (15.4%) mem=1538/5816 (26.4%) samples=16  time=192.373µs cost=$46.073
+N4 (2x) Sort: items=771/10000 (7.7%) mem=771/4079 (18.9%) samples=8   time=410.482µs cost=$189.396
+N0 (8x) Sampling: samples=104/104 pivots=4 time=399.354µs cost=$327.630 pivots=[1805, 3744, 5568, 7517]
+N1 (7x) Partition: items kept=520, sent=2172 time=388.241µs cost=$359.589
+N0 (8x) Partition: items kept=537, sent=2539 time=170.180µs cost=$139.616
+N2 (5x) Partition: items kept=329, sent=1594 time=647.845µs cost=$103.590
+N0 (8x) Merge: items=1796/10000 (30.8%) mem=1796/1315 (136.6%) time=71.425µs cost=$58.597
+N4 (2x) Partition: items kept=178, sent=593 time=2188.310µs cost=$1009.686
+N1 (7x) Merge: items=1948/10000 (26.9%) mem=1948/2103 (92.6%) time=77.553µs cost=$71.829
+N3 (4x) Partition: items kept=298, sent=1240 time=1155.796µs cost=$276.813
+N2 (5x) Merge: items=1849/10000 (19.2%) mem=1849/1687 (109.6%) time=247.634µs cost=$39.597
+N3 (4x) Merge: items=1904/10000 (15.4%) mem=1904/5816 (32.7%) time=182.940µs cost=$43.814
+N4 (2x) Merge: items=2503/10000 (7.7%) mem=2503/4079 (61.4%) time=1115.546µs cost=$514.713
+N0 Concat: total=10000 time=42.319µs cost=$34.719
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=223.276µs cost=$183.176 ^makespan=155.253µs ^cost=$197.699
+N0 (8x) Sort: items=1315/10000 (13.2%) mem=1315/1315 (100.0%) time=21.102µs cost=$17.312
+N1 (7x) Sort: items=2103/10000 (21.0%) mem=2103/2103 (100.0%) time=76.501µs cost=$70.855
+N2 (5x) Sort: items=1687/10000 (16.9%) mem=1687/1687 (100.0%) time=40.744µs cost=$6.515
+N3 (4x) Sort: items=3263/10000 (32.6%) mem=3263/5816 (56.1%) time=226.212µs cost=$54.178
+N4 (2x) Sort: items=1632/10000 (16.3%) mem=1632/4079 (40.0%) time=92.934µs cost=$42.880
+N0 (8x) Heap Merge: total=10000 time=198.035µs cost=$162.468
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           3,714.34 |             424.25
+Total Cost ($)            |           3,669.70 |             354.21
+Max. Peak Memory Util.(%) |             233.92 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 11/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=10000, Seed=5
+Nodes: 5 | Data: 10000 elements | Sample: [3550, 6687, 4579, 2983, 6380...1630, 6916, 3217, 4146, 8994]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1077.012µs throughput=0.107701µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=3225/10000 (32.2%) mem=3225/2827 (114.1%) samples=40  time=102.397µs cost=$87.683
+N1 (9x) Sort: items=2903/10000 (29.0%) mem=2903/775 (374.6%) samples=36  time=113.893µs cost=$16.708
+N2 (6x) Sort: items=1935/10000 (19.4%) mem=1935/2895 (66.8%) samples=24  time=348.651µs cost=$112.998
+N3 (5x) Sort: items=1612/10000 (16.1%) mem=1612/6604 (24.4%) samples=20  time=160.890µs cost=$128.454
+N4 (1x) Sort: items=325/10000 (3.2%) mem=325/1899 (17.1%) samples=4   time=698.744µs cost=$168.537
+N0 (10x) Sampling: samples=124/124 pivots=4 time=271.157µs cost=$232.192 pivots=[1767, 3729, 5467, 7488]
+N0 (10x) Partition: items kept=561, sent=2664 time=76.029µs cost=$65.104
+N2 (6x) Partition: items kept=333, sent=1602 time=418.587µs cost=$135.664
+N1 (9x) Partition: items kept=594, sent=2309 time=392.309µs cost=$57.552
+N1 (9x) Merge: items=2004/10000 (29.0%) mem=2004/775 (258.6%) time=51.933µs cost=$7.619
+N3 (5x) Partition: items kept=298, sent=1314 time=575.183µs cost=$459.226
+N4 (1x) Partition: items kept=74, sent=251 time=2632.314µs cost=$634.914
+N0 (10x) Merge: items=1748/10000 (32.2%) mem=1748/2827 (61.8%) time=86.159µs cost=$73.778
+N2 (6x) Merge: items=1747/10000 (19.4%) mem=1747/2895 (60.3%) time=87.441µs cost=$28.340
+N3 (5x) Merge: items=1986/10000 (16.1%) mem=1986/6604 (30.1%) time=82.761µs cost=$66.077
+N4 (1x) Merge: items=2515/10000 (3.2%) mem=2515/1899 (132.4%) time=971.544µs cost=$234.336
+N0 Concat: total=10000 time=13.045µs cost=$11.171
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=141.916µs cost=$121.522 ^makespan=62.880µs ^cost=$109.644
+N0 (10x) Sort: items=2827/10000 (28.3%) mem=2827/2827 (100.0%) time=42.351µs cost=$36.265
+N1 (9x) Sort: items=775/10000 (7.8%) mem=775/775 (100.0%) time=19.399µs cost=$2.846
+N2 (6x) Sort: items=2895/10000 (28.9%) mem=2895/2895 (100.0%) time=117.479µs cost=$38.075
+N3 (5x) Sort: items=2919/10000 (29.2%) mem=2919/6604 (44.2%) time=75.806µs cost=$60.523
+N4 (1x) Sort: items=584/10000 (5.8%) mem=584/1899 (30.8%) time=103.417µs cost=$24.944
+N0 (10x) Heap Merge: total=10000 time=141.687µs cost=$121.327
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           4,302.60 |             259.17
+Total Cost ($)            |           2,520.35 |             283.98
+Max. Peak Memory Util.(%) |             374.58 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 12/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=10000, Seed=6
+Nodes: 5 | Data: 10000 elements | Sample: [8819, 8835, 1543, 3161, 9231...1898, 8357, 1637, 1193, 7095]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1101.572µs throughput=0.110157µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=3846/10000 (38.5%) mem=3846/3865 (99.5%) samples=40  time=505.859µs cost=$50.788
+N2 (5x) Sort: items=1923/10000 (19.2%) mem=1923/3663 (52.5%) samples=20  time=212.322µs cost=$166.418
+N1 (8x) Sort: items=3076/10000 (30.8%) mem=3076/4024 (76.4%) samples=32  time=283.647µs cost=$148.404
+N3 (2x) Sort: items=769/10000 (7.7%) mem=769/1368 (56.2%) samples=8   time=677.351µs cost=$471.775
+N4 (1x) Sort: items=386/10000 (3.9%) mem=386/2080 (18.6%) samples=4   time=1294.323µs cost=$564.066
+N0 (10x) Sampling: samples=104/104 pivots=4 time=406.608µs cost=$40.823 pivots=[1674, 3638, 5620, 7432]
+N1 (8x) Partition: items kept=614, sent=2462 time=519.946µs cost=$272.036
+N0 (10x) Partition: items kept=679, sent=3167 time=182.966µs cost=$18.370
+N2 (5x) Partition: items kept=392, sent=1531 time=802.981µs cost=$629.376
+N1 (8x) Merge: items=2009/10000 (30.8%) mem=2009/4024 (49.9%) time=103.645µs cost=$54.227
+N0 (10x) Merge: items=1675/10000 (38.5%) mem=1675/3865 (43.3%) time=64.744µs cost=$6.500
+N4 (1x) Partition: items kept=96, sent=290 time=4931.199µs cost=$2149.017
+N3 (2x) Partition: items kept=135, sent=634 time=3270.076µs cost=$2277.608
+N2 (5x) Merge: items=1942/10000 (19.2%) mem=1942/3663 (53.0%) time=230.936µs cost=$181.008
+N3 (2x) Merge: items=1804/10000 (7.7%) mem=1804/1368 (131.9%) time=512.345µs cost=$356.848
+N4 (1x) Merge: items=2570/10000 (3.9%) mem=2570/2080 (123.6%) time=1257.374µs cost=$547.964
+N0 Concat: total=10000 time=14.066µs cost=$1.412
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=151.039µs cost=$15.164 ^makespan=42.368µs ^cost=$107.602
+N0 (10x) Sort: items=3846/10000 (38.5%) mem=3846/3865 (99.5%) time=46.931µs cost=$4.712
+N1 (8x) Sort: items=3077/10000 (30.8%) mem=3077/4024 (76.5%) time=62.636µs cost=$32.771
+N2 (5x) Sort: items=1923/10000 (19.2%) mem=1923/3663 (52.5%) time=148.494µs cost=$116.389
+N3 (2x) Sort: items=769/10000 (7.7%) mem=769/1368 (56.2%) time=118.078µs cost=$82.241
+N4 (1x) Sort: items=385/10000 (3.9%) mem=385/2080 (18.5%) time=56.123µs cost=$24.458
+N0 (10x) Heap Merge: total=10000 time=135.069µs cost=$13.561
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           7,482.90 |             283.56
+Total Cost ($)            |           7,936.64 |             274.13
+Max. Peak Memory Util.(%) |             131.87 |              99.51
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 13/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=100000, Seed=4
+Nodes: 5 | Data: 100000 elements | Sample: [13917, 34304, 28101, 3360, 83976...36451, 99115, 6040, 32985, 97281]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=21109.350µs throughput=0.211093µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (8x) Sort: items=30769/100000 (30.8%) mem=30769/13128 (234.4%) samples=32  time=723.865µs cost=$593.859
+N2 (5x) Sort: items=19230/100000 (19.2%) mem=19230/16871 (114.0%) samples=20  time=868.153µs cost=$138.818
+N1 (7x) Sort: items=26923/100000 (26.9%) mem=26923/21033 (128.0%) samples=28  time=1484.063µs cost=$1374.539
+N3 (4x) Sort: items=15384/100000 (15.4%) mem=15384/58169 (26.4%) samples=16  time=1399.550µs cost=$335.192
+N4 (2x) Sort: items=7694/100000 (7.7%) mem=7694/40799 (18.9%) samples=8   time=897.522µs cost=$414.116
+N0 (8x) Sampling: samples=104/104 pivots=4 time=326.153µs cost=$267.576 pivots=[17724, 36614, 56282, 75215]
+N1 (7x) Partition: items kept=5271, sent=21652 time=1194.049µs cost=$1105.928
+N3 (4x) Partition: items kept=2903, sent=12481 time=1650.382µs cost=$395.267
+N2 (5x) Partition: items kept=3709, sent=15521 time=1889.621µs cost=$302.150
+N0 (8x) Partition: items kept=5327, sent=25442 time=1077.513µs cost=$883.992
+N4 (2x) Partition: items kept=1927, sent=5767 time=2438.625µs cost=$1125.181
+N1 (7x) Merge: items=19022/100000 (26.9%) mem=19022/21033 (90.4%) time=729.196µs cost=$675.381
+N0 (8x) Merge: items=17777/100000 (30.8%) mem=17777/13128 (135.4%) time=909.953µs cost=$746.526
+N4 (2x) Merge: items=24738/100000 (7.7%) mem=24738/40799 (60.6%) time=3309.796µs cost=$1527.140
+N3 (4x) Merge: items=18899/100000 (15.4%) mem=18899/58169 (32.5%) time=1310.027µs cost=$313.751
+N2 (5x) Merge: items=19564/100000 (19.2%) mem=19564/16871 (116.0%) time=1004.370µs cost=$160.599
+N0 Concat: total=100000 time=330.410µs cost=$271.068
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=421.823µs cost=$346.063 ^makespan=1722.804µs ^cost=$2193.062
+N0 (8x) Sort: items=13130/100000 (13.1%) mem=13130/13128 (100.0%) time=347.571µs cost=$285.148
+N1 (7x) Sort: items=21030/100000 (21.0%) mem=21030/21033 (100.0%) time=754.732µs cost=$699.033
+N2 (5x) Sort: items=16870/100000 (16.9%) mem=16870/16871 (100.0%) time=801.441µs cost=$128.150
+N3 (4x) Sort: items=32650/100000 (32.6%) mem=32650/58169 (56.1%) time=1968.317µs cost=$471.412
+N4 (2x) Sort: items=16320/100000 (16.3%) mem=16320/40799 (40.0%) time=1649.593µs cost=$761.122
+N0 (8x) Heap Merge: total=100000 time=1780.489µs cost=$1460.713
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           6,645.94 |           3,748.81
+Total Cost ($)            |          10,631.08 |           3,805.58
+Max. Peak Memory Util.(%) |             234.38 |             100.02
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 14/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=100000, Seed=5
+Nodes: 5 | Data: 100000 elements | Sample: [95837, 28407, 53497, 36632, 23865...36314, 40793, 26399, 35841, 75156]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=19653.643µs throughput=0.196536µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=32258/100000 (32.3%) mem=32258/28276 (114.1%) samples=40  time=570.750µs cost=$488.733
+N1 (9x) Sort: items=29032/100000 (29.0%) mem=29032/7755 (374.4%) samples=36  time=574.688µs cost=$84.307
+N2 (6x) Sort: items=19354/100000 (19.4%) mem=19354/28957 (66.8%) samples=24  time=920.401µs cost=$298.302
+N4 (1x) Sort: items=3227/100000 (3.2%) mem=3227/18964 (17.0%) samples=4   time=1660.753µs cost=$400.574
+N3 (5x) Sort: items=16129/100000 (16.1%) mem=16129/66048 (24.4%) samples=20  time=1114.337µs cost=$889.686
+N0 (10x) Sampling: samples=124/124 pivots=4 time=200.709µs cost=$171.867 pivots=[17623, 36986, 55791, 75050]
+N2 (6x) Partition: items kept=3588, sent=15766 time=718.662µs cost=$232.918
+N3 (5x) Partition: items kept=3088, sent=13041 time=781.628µs cost=$624.052
+N1 (9x) Partition: items kept=5611, sent=23421 time=729.995µs cost=$107.090
+N0 (10x) Partition: items kept=5644, sent=26614 time=907.659µs cost=$777.228
+N4 (1x) Partition: items kept=779, sent=2448 time=2640.340µs cost=$636.850
+N1 (9x) Merge: items=19282/100000 (29.0%) mem=19282/7755 (248.6%) time=463.967µs cost=$68.064
+N0 (10x) Merge: items=17597/100000 (32.3%) mem=17597/28276 (62.2%) time=541.397µs cost=$463.599
+N2 (6x) Merge: items=18970/100000 (19.4%) mem=18970/28957 (65.5%) time=761.156µs cost=$246.691
+N3 (5x) Merge: items=19126/100000 (16.1%) mem=19126/66048 (29.0%) time=1018.788µs cost=$813.400
+N4 (1x) Merge: items=25025/100000 (3.2%) mem=25025/18964 (132.0%) time=6313.649µs cost=$1522.852
+N0 Concat: total=100000 time=243.002µs cost=$208.083
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=156.672µs cost=$134.159 ^makespan=1146.856µs ^cost=$2000.398
+N0 (10x) Sort: items=28277/100000 (28.3%) mem=28277/28276 (100.0%) time=517.751µs cost=$443.350
+N1 (9x) Sort: items=7749/100000 (7.7%) mem=7749/7755 (99.9%) time=116.367µs cost=$17.071
+N2 (6x) Sort: items=28957/100000 (29.0%) mem=28957/28957 (100.0%) time=1189.061µs cost=$385.375
+N4 (1x) Sort: items=5840/100000 (5.8%) mem=5840/18964 (30.8%) time=1245.504µs cost=$300.416
+N3 (5x) Sort: items=29177/100000 (29.2%) mem=29177/66048 (44.2%) time=1231.449µs cost=$983.189
+N0 (10x) Heap Merge: total=100000 time=1347.168µs cost=$1153.580
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          10,614.74 |           2,592.67
+Total Cost ($)            |           8,034.30 |           3,282.98
+Max. Peak Memory Util.(%) |             374.36 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 15/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=100000, Seed=6
+Nodes: 5 | Data: 100000 elements | Sample: [70556, 70680, 89397, 12348, 25294...99289, 76237, 65522, 65261, 47641]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=18622.264µs throughput=0.186223µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=38461/100000 (38.5%) mem=38461/38654 (99.5%) samples=40  time=718.888µs cost=$72.176
+N1 (8x) Sort: items=30769/100000 (30.8%) mem=30769/40248 (76.4%) samples=32  time=685.969µs cost=$358.899
+N3 (2x) Sort: items=7692/100000 (7.7%) mem=7692/13686 (56.2%) samples=8   time=988.331µs cost=$688.373
+N2 (5x) Sort: items=19230/100000 (19.2%) mem=19230/36630 (52.5%) samples=20  time=1888.533µs cost=$1480.232
+N4 (1x) Sort: items=3848/100000 (3.8%) mem=3848/20782 (18.5%) samples=4   time=1279.645µs cost=$557.669
+N0 (10x) Sampling: samples=104/104 pivots=4 time=189.297µs cost=$19.005 pivots=[17683, 37430, 55223, 74810]
+N4 (1x) Partition: items kept=936, sent=2912 time=3321.452µs cost=$1447.489
+N2 (5x) Partition: items kept=3347, sent=15883 time=1659.604µs cost=$1300.798
+N3 (2x) Partition: items kept=1510, sent=6182 time=2332.558µs cost=$1624.627
+N0 (10x) Partition: items kept=6728, sent=31733 time=1641.114µs cost=$164.768
+N1 (8x) Partition: items kept=6113, sent=24656 time=2327.839µs cost=$1217.926
+N1 (8x) Merge: items=19832/100000 (30.8%) mem=19832/40248 (49.3%) time=509.925µs cost=$266.793
+N0 (10x) Merge: items=17623/100000 (38.5%) mem=17623/38654 (45.6%) time=581.953µs cost=$58.428
+N3 (2x) Merge: items=19647/100000 (7.7%) mem=19647/13686 (143.6%) time=1957.142µs cost=$1363.150
+N2 (5x) Merge: items=17716/100000 (19.2%) mem=17716/36630 (48.4%) time=1183.012µs cost=$927.245
+N4 (1x) Merge: items=25182/100000 (3.8%) mem=25182/20782 (121.2%) time=7864.821µs cost=$3427.489
+N0 Concat: total=100000 time=167.953µs cost=$16.863
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=148.725µs cost=$14.932 ^makespan=716.241µs ^cost=$1819.037
+N0 (10x) Sort: items=38460/100000 (38.5%) mem=38460/38654 (99.5%) time=689.777µs cost=$69.254
+N1 (8x) Sort: items=30770/100000 (30.8%) mem=30770/40248 (76.5%) time=658.407µs cost=$344.479
+N2 (5x) Sort: items=19230/100000 (19.2%) mem=19230/36630 (52.5%) time=868.890µs cost=$681.036
+N3 (2x) Sort: items=7690/100000 (7.7%) mem=7690/13686 (56.2%) time=973.503µs cost=$678.045
+N4 (1x) Sort: items=3850/100000 (3.9%) mem=3850/20782 (18.5%) time=862.297µs cost=$375.789
+N0 (10x) Heap Merge: total=100000 time=1393.854µs cost=$139.943
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          12,465.92 |           2,367.36
+Total Cost ($)            |          14,991.93 |           2,288.55
+Max. Peak Memory Util.(%) |             143.56 |              99.50
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 16/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=1000000, Seed=4
+Nodes: 5 | Data: 1000000 elements | Sample: [111341, 274432, 224815, 988764, 972528...634283, 138742, 587165, 987425, 717681]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=222307.400µs throughput=0.222307µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (2x) Sort: items=76925/1000000 (7.7%) mem=76925/407993 (18.9%) samples=8   time=6968.281µs cost=$3215.165
+N3 (4x) Sort: items=153846/1000000 (15.4%) mem=153846/581690 (26.4%) samples=16  time=8276.174µs cost=$1982.144
+N2 (5x) Sort: items=192307/1000000 (19.2%) mem=192307/168713 (114.0%) samples=20  time=9318.456µs cost=$1490.021
+N1 (7x) Sort: items=269230/1000000 (26.9%) mem=269230/210339 (128.0%) samples=28  time=7266.447µs cost=$6730.183
+N0 (8x) Sort: items=307692/1000000 (30.8%) mem=307692/131265 (234.4%) samples=32  time=9238.330µs cost=$7579.126
+N0 (8x) Sampling: samples=104/104 pivots=4 time=326.830µs cost=$268.132 pivots=[178302, 374310, 561798, 749481]
+N4 (2x) Partition: items kept=19306, sent=57619 time=13311.382µs cost=$6141.872
+N3 (4x) Partition: items kept=28905, sent=124941 time=11644.957µs cost=$2788.967
+N2 (5x) Partition: items kept=36127, sent=156180 time=12422.738µs cost=$1986.396
+N0 (8x) Partition: items kept=55111, sent=252581 time=8494.431µs cost=$6968.831
+N1 (7x) Partition: items kept=52672, sent=216558 time=11697.155µs cost=$10833.905
+N3 (4x) Merge: items=187795/1000000 (15.4%) mem=187795/581690 (32.3%) time=9129.058µs cost=$2186.409
+N2 (5x) Merge: items=187637/1000000 (19.2%) mem=187637/168713 (111.2%) time=8343.111µs cost=$1334.064
+N0 (8x) Merge: items=178680/1000000 (30.8%) mem=178680/131265 (136.1%) time=4600.778µs cost=$3774.478
+N4 (2x) Merge: items=250146/1000000 (7.7%) mem=250146/407993 (61.3%) time=22820.172µs cost=$10529.228
+N1 (7x) Merge: items=195742/1000000 (26.9%) mem=195742/210339 (93.1%) time=5846.182µs cost=$5414.734
+N0 Concat: total=1000000 time=1714.812µs cost=$1406.832
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=184.814µs cost=$151.622 ^makespan=18143.359µs ^cost=$23095.662
+N0 (8x) Sort: items=131300/1000000 (13.1%) mem=131300/131265 (100.0%) time=4583.056µs cost=$3759.939
+N2 (5x) Sort: items=168700/1000000 (16.9%) mem=168700/168713 (100.0%) time=7883.675µs cost=$1260.600
+N4 (2x) Sort: items=163200/1000000 (16.3%) mem=163200/407993 (40.0%) time=18948.280µs cost=$8742.736
+N1 (7x) Sort: items=210300/1000000 (21.0%) mem=210300/210339 (100.0%) time=7974.141µs cost=$7385.649
+N3 (4x) Sort: items=326500/1000000 (32.6%) mem=326500/581690 (56.1%) time=20285.683µs cost=$4858.421
+N0 (8x) Heap Merge: total=1000000 time=16390.566µs cost=$13446.820
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          43,099.83 |          36,676.25
+Total Cost ($)            |          74,630.48 |          39,454.17
+Max. Peak Memory Util.(%) |             234.41 |             100.03
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 17/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=1000000, Seed=5
+Nodes: 5 | Data: 1000000 elements | Sample: [766701, 227257, 427977, 293058, 190920...964551, 390388, 106752, 164149, 906013]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=239937.779µs throughput=0.239938µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (1x) Sort: items=32260/1000000 (3.2%) mem=32260/189627 (17.0%) samples=4   time=9321.130µs cost=$2248.257
+N3 (5x) Sort: items=161290/1000000 (16.1%) mem=161290/660481 (24.4%) samples=20  time=7226.604µs cost=$5769.720
+N2 (6x) Sort: items=193548/1000000 (19.4%) mem=193548/289578 (66.8%) samples=24  time=7580.221µs cost=$2456.750
+N1 (9x) Sort: items=290322/1000000 (29.0%) mem=290322/77554 (374.3%) samples=36  time=7893.628µs cost=$1157.995
+N0 (10x) Sort: items=322580/1000000 (32.3%) mem=322580/282760 (114.1%) samples=40  time=8489.914µs cost=$7269.914
+N0 (10x) Sampling: samples=124/124 pivots=4 time=211.623µs cost=$181.213 pivots=[174767, 374199, 554189, 750446]
+N4 (1x) Partition: items kept=8120, sent=24140 time=10581.554µs cost=$2552.271
+N3 (5x) Partition: items kept=31686, sent=129604 time=10784.762µs cost=$8610.554
+N2 (6x) Partition: items kept=34879, sent=158669 time=9650.533µs cost=$3127.738
+N1 (9x) Partition: items kept=57746, sent=232576 time=8452.090µs cost=$1239.922
+N0 (10x) Partition: items kept=56449, sent=266131 time=7784.357µs cost=$6665.745
+N2 (6x) Merge: items=180707/1000000 (19.4%) mem=180707/289578 (62.4%) time=6974.485µs cost=$2260.431
+N3 (5x) Merge: items=196204/1000000 (16.1%) mem=196204/660481 (29.7%) time=7660.400µs cost=$6116.063
+N1 (9x) Merge: items=199407/1000000 (29.0%) mem=199407/77554 (257.1%) time=5505.512µs cost=$807.659
+N4 (1x) Merge: items=248791/1000000 (3.2%) mem=248791/189627 (131.2%) time=46081.791µs cost=$11114.928
+N0 (10x) Merge: items=174891/1000000 (32.3%) mem=174891/282760 (61.9%) time=3878.515µs cost=$3321.172
+N0 Concat: total=1000000 time=855.254µs cost=$732.354
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=218.024µs cost=$186.694 ^makespan=14000.689µs ^cost=$24421.096
+N1 (9x) Sort: items=77585/1000000 (7.8%) mem=77585/77554 (100.0%) time=2455.426µs cost=$360.211
+N4 (1x) Sort: items=58388/1000000 (5.8%) mem=58388/189627 (30.8%) time=16797.014µs cost=$4051.440
+N0 (10x) Sort: items=282743/1000000 (28.3%) mem=282743/282760 (100.0%) time=7300.506µs cost=$6251.423
+N2 (6x) Sort: items=289542/1000000 (29.0%) mem=289542/289578 (100.0%) time=12377.173µs cost=$4011.442
+N3 (5x) Sort: items=291742/1000000 (29.2%) mem=291742/660481 (44.2%) time=14491.855µs cost=$11570.297
+N0 (10x) Heap Merge: total=1000000 time=13386.554µs cost=$11462.906
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          65,984.47 |          30,183.57
+Total Cost ($)            |          65,632.68 |          37,707.72
+Max. Peak Memory Util.(%) |             374.35 |             100.04
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 18/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=5, Size=1000000, Seed=6
+Nodes: 5 | Data: 1000000 elements | Sample: [564453, 565445, 715183, 98786, 202359...174081, 10206, 126572, 773999, 625838]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=251684.485µs throughput=0.251684µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (1x) Sort: items=38463/1000000 (3.8%) mem=38463/207796 (18.5%) samples=4   time=6737.370µs cost=$2936.146
+N3 (2x) Sort: items=76923/1000000 (7.7%) mem=76923/136869 (56.2%) samples=8   time=6828.682µs cost=$4756.177
+N2 (5x) Sort: items=192307/1000000 (19.2%) mem=192307/366306 (52.5%) samples=20  time=8513.907µs cost=$6673.200
+N1 (8x) Sort: items=307692/1000000 (30.8%) mem=307692/402489 (76.4%) samples=32  time=8988.742µs cost=$4702.910
+N0 (10x) Sort: items=384615/1000000 (38.5%) mem=384615/386540 (99.5%) samples=40  time=9765.073µs cost=$980.413
+N0 (10x) Sampling: samples=104/104 pivots=4 time=4358.447µs cost=$437.588 pivots=[175446, 373882, 549432, 750018]
+N2 (5x) Partition: items kept=34193, sent=158114 time=10163.044µs cost=$7965.794
+N4 (1x) Partition: items kept=9665, sent=28798 time=10867.376µs cost=$4736.002
+N3 (2x) Partition: items kept=15506, sent=61417 time=12204.247µs cost=$8500.258
+N1 (8x) Partition: items kept=60568, sent=247124 time=10050.284µs cost=$5258.308
+N0 (10x) Partition: items kept=67306, sent=317309 time=9495.822µs cost=$953.381
+N4 (1x) Merge: items=250398/1000000 (3.8%) mem=250398/207796 (120.5%) time=62131.039µs cost=$27076.707
+N2 (5x) Merge: items=176420/1000000 (19.2%) mem=176420/366306 (48.2%) time=17763.656µs cost=$13923.154
+N3 (2x) Merge: items=200354/1000000 (7.7%) mem=200354/136869 (146.4%) time=43592.524µs cost=$30362.193
+N1 (8x) Merge: items=198220/1000000 (30.8%) mem=198220/402489 (49.2%) time=13064.360µs cost=$6835.273
+N0 (10x) Merge: items=174608/1000000 (38.5%) mem=174608/386540 (45.2%) time=3555.384µs cost=$356.961
+N0 Concat: total=1000000 time=1559.995µs cost=$156.623
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=159.051µs cost=$15.969 ^makespan=9680.173µs ^cost=$24584.734
+N4 (1x) Sort: items=38500/1000000 (3.9%) mem=38500/207796 (18.5%) time=8361.385µs cost=$3643.892
+N3 (2x) Sort: items=76900/1000000 (7.7%) mem=76900/136869 (56.2%) time=7999.580µs cost=$5571.708
+N2 (5x) Sort: items=192300/1000000 (19.2%) mem=192300/366306 (52.5%) time=10303.373µs cost=$8075.783
+N1 (8x) Sort: items=307700/1000000 (30.8%) mem=307700/402489 (76.4%) time=9752.191µs cost=$5102.346
+N0 (10x) Sort: items=384600/1000000 (38.5%) mem=384600/386540 (99.5%) time=9573.486µs cost=$961.178
+N0 (10x) Heap Merge: total=1000000 time=13356.850µs cost=$1341.028
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          79,735.78 |          23,660.22
+Total Cost ($)            |         126,611.09 |          24,695.93
+Max. Peak Memory Util.(%) |             146.38 |              99.50
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 19/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=10000, Seed=4
+Nodes: 8 | Data: 10000 elements | Sample: [4745, 6101, 1420, 9926, 5528...8017, 788, 1802, 1520, 161]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=2071.324µs throughput=0.207132µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (8x) Sort: items=2424/10000 (24.2%) mem=2424/2830 (85.7%) samples=56  time=146.073µs cost=$22.349
+N1 (7x) Sort: items=2121/10000 (21.2%) mem=2121/113 (1877.0%) samples=49  time=169.219µs cost=$167.696
+N2 (5x) Sort: items=1515/10000 (15.2%) mem=1515/1156 (131.1%) samples=35  time=290.161µs cost=$172.501
+N3 (4x) Sort: items=1212/10000 (12.1%) mem=1212/3653 (33.2%) samples=28  time=432.019µs cost=$50.892
+N4 (3x) Sort: items=909/10000 (9.1%) mem=909/1149 (79.1%) samples=21  time=250.085µs cost=$142.123
+N5 (2x) Sort: items=606/10000 (6.1%) mem=606/4166 (14.5%) samples=14  time=459.526µs cost=$165.613
+N6 (2x) Sort: items=606/10000 (6.1%) mem=606/1200 (50.5%) samples=14  time=892.395µs cost=$378.554
+N7 (2x) Sort: items=607/10000 (6.1%) mem=607/733 (82.8%) samples=14  time=360.127µs cost=$288.749
+N0 (8x) Sampling: samples=231/231 pivots=7 time=609.297µs cost=$93.222 pivots=[1070, 2235, 3445, 4643, 5828, 7116, 8281]
+N1 (7x) Partition: items kept=248, sent=1873 time=836.401µs cost=$828.874
+N0 (8x) Partition: items kept=250, sent=2174 time=271.367µs cost=$41.519
+N4 (3x) Partition: items kept=85, sent=824 time=1820.146µs cost=$1034.389
+N3 (4x) Partition: items kept=132, sent=1080 time=1731.050µs cost=$203.918
+N1 (7x) Merge: items=1150/10000 (21.2%) mem=1150/113 (1017.7%) time=57.308µs cost=$56.792
+N2 (5x) Partition: items kept=178, sent=1337 time=1527.131µs cost=$907.879
+N7 (2x) Partition: items kept=87, sent=520 time=2139.073µs cost=$1715.108
+N6 (2x) Partition: items kept=75, sent=531 time=2131.982µs cost=$904.387
+N5 (2x) Partition: items kept=78, sent=528 time=3160.821µs cost=$1139.160
+N2 (5x) Merge: items=1254/10000 (15.2%) mem=1254/1156 (108.5%) time=100.201µs cost=$59.569
+N4 (3x) Merge: items=1198/10000 (9.1%) mem=1198/1149 (104.3%) time=147.531µs cost=$83.842
+N0 (8x) Merge: items=1076/10000 (24.2%) mem=1076/2830 (38.0%) time=135.781µs cost=$20.774
+N3 (4x) Merge: items=1158/10000 (12.1%) mem=1158/3653 (31.7%) time=132.291µs cost=$15.584
+N6 (2x) Merge: items=1190/10000 (6.1%) mem=1190/1200 (99.2%) time=390.370µs cost=$165.595
+N5 (2x) Merge: items=1275/10000 (6.1%) mem=1275/4166 (30.6%) time=834.831µs cost=$300.873
+N7 (2x) Merge: items=1699/10000 (6.1%) mem=1699/733 (231.8%) time=2233.930µs cost=$1791.165
+N0 Concat: total=10000 time=99.057µs cost=$15.156
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=190.485µs cost=$29.144 ^makespan=104.058µs ^cost=$242.849
+N0 (8x) Sort: items=2830/10000 (28.3%) mem=2830/2830 (100.0%) time=45.710µs cost=$6.994
+N1 (7x) Sort: items=113/10000 (1.1%) mem=113/113 (100.0%) time=2.009µs cost=$1.991
+N2 (5x) Sort: items=1156/10000 (11.6%) mem=1156/1156 (100.0%) time=64.083µs cost=$38.098
+N3 (4x) Sort: items=2009/10000 (20.1%) mem=2009/3653 (55.0%) time=149.538µs cost=$17.616
+N4 (3x) Sort: items=1149/10000 (11.5%) mem=1149/1149 (100.0%) time=129.159µs cost=$73.401
+N5 (2x) Sort: items=1005/10000 (10.1%) mem=1005/4166 (24.1%) time=139.097µs cost=$50.131
+N6 (2x) Sort: items=1005/10000 (10.1%) mem=1005/1200 (83.8%) time=56.495µs cost=$23.965
+N7 (2x) Sort: items=733/10000 (7.3%) mem=733/733 (100.0%) time=46.355µs cost=$37.167
+N0 (8x) Heap Merge: total=10000 time=314.504µs cost=$48.119
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           4,733.13 |             464.04
+Total Cost ($)            |          10,766.28 |             297.48
+Max. Peak Memory Util.(%) |            1876.99 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 20/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=10000, Seed=5
+Nodes: 8 | Data: 10000 elements | Sample: [29, 87, 3431, 3530, 2717...4391, 7089, 3140, 3084, 9794]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1078.627µs throughput=0.107863µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=2272/10000 (22.7%) mem=2272/1102 (206.2%) samples=70  time=92.129µs cost=$83.911
+N1 (9x) Sort: items=2045/10000 (20.4%) mem=2045/629 (325.1%) samples=63  time=94.490µs cost=$30.416
+N2 (8x) Sort: items=1818/10000 (18.2%) mem=1818/547 (332.4%) samples=56  time=117.861µs cost=$72.661
+N3 (6x) Sort: items=1363/10000 (13.6%) mem=1363/3021 (45.1%) samples=42  time=144.049µs cost=$75.223
+N4 (5x) Sort: items=1136/10000 (11.4%) mem=1136/3615 (31.4%) samples=35  time=163.569µs cost=$33.025
+N5 (4x) Sort: items=909/10000 (9.1%) mem=909/2436 (37.3%) samples=28  time=222.052µs cost=$24.825
+N6 (1x) Sort: items=227/10000 (2.3%) mem=227/3145 (7.2%) samples=7   time=700.902µs cost=$413.112
+N7 (1x) Sort: items=230/10000 (2.3%) mem=230/505 (45.5%) samples=7   time=644.589µs cost=$190.218
+N0 (10x) Sampling: samples=308/308 pivots=7 time=297.321µs cost=$270.800 pivots=[1122, 2328, 3486, 4789, 5917, 7192, 8388]
+N3 (6x) Partition: items kept=160, sent=1203 time=464.139µs cost=$242.373
+N1 (9x) Partition: items kept=274, sent=1771 time=497.387µs cost=$160.109
+N2 (8x) Partition: items kept=196, sent=1622 time=573.879µs cost=$353.796
+N0 (10x) Partition: items kept=264, sent=2008 time=233.994µs cost=$213.122
+N5 (4x) Partition: items kept=97, sent=812 time=1437.473µs cost=$160.709
+N6 (1x) Partition: items kept=21, sent=206 time=5372.291µs cost=$3166.428
+N7 (1x) Partition: items kept=39, sent=191 time=5353.475µs cost=$1579.810
+N0 (10x) Merge: items=1113/10000 (22.7%) mem=1113/1102 (101.0%) time=50.491µs cost=$45.987
+N2 (8x) Merge: items=1184/10000 (18.2%) mem=1184/547 (216.5%) time=38.358µs cost=$23.648
+N1 (9x) Merge: items=1221/10000 (20.4%) mem=1221/629 (194.1%) time=31.202µs cost=$10.044
+N5 (4x) Merge: items=1230/10000 (9.1%) mem=1230/2436 (50.5%) time=129.077µs cost=$14.431
+N3 (6x) Merge: items=1269/10000 (13.6%) mem=1269/3021 (42.0%) time=161.789µs cost=$84.486
+N4 (5x) Partition: items kept=127, sent=1009 time=1985.876µs cost=$400.948
+N6 (1x) Merge: items=1205/10000 (2.3%) mem=1205/3145 (38.3%) time=383.213µs cost=$225.866
+N4 (5x) Merge: items=1167/10000 (11.4%) mem=1167/3615 (32.3%) time=76.215µs cost=$15.388
+N7 (1x) Merge: items=1611/10000 (2.3%) mem=1611/505 (319.0%) time=592.436µs cost=$174.828
+N0 Concat: total=10000 time=81.991µs cost=$74.677
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=165.595µs cost=$150.824 ^makespan=48.995µs ^cost=$102.091
+N0 (10x) Sort: items=1102/10000 (11.0%) mem=1102/1102 (100.0%) time=12.528µs cost=$11.411
+N1 (9x) Sort: items=629/10000 (6.3%) mem=629/629 (100.0%) time=9.033µs cost=$2.908
+N2 (8x) Sort: items=547/10000 (5.5%) mem=547/547 (100.0%) time=14.411µs cost=$8.885
+N3 (6x) Sort: items=2726/10000 (27.3%) mem=2726/3021 (90.2%) time=116.373µs cost=$60.770
+N4 (5x) Sort: items=2271/10000 (22.7%) mem=2271/3615 (62.8%) time=145.854µs cost=$29.448
+N5 (4x) Sort: items=1817/10000 (18.2%) mem=1817/2436 (74.6%) time=65.342µs cost=$7.305
+N6 (1x) Sort: items=454/10000 (4.5%) mem=454/3145 (14.4%) time=55.791µs cost=$32.883
+N7 (1x) Sort: items=454/10000 (4.5%) mem=454/505 (89.9%) time=47.602µs cost=$14.047
+N0 (10x) Heap Merge: total=10000 time=208.846µs cost=$190.217
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           6,590.50 |             354.70
+Total Cost ($)            |           8,140.84 |             357.87
+Max. Peak Memory Util.(%) |             332.36 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 21/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=10000, Seed=6
+Nodes: 8 | Data: 10000 elements | Sample: [6958, 5498, 1525, 5933, 6716...6162, 3547, 8567, 8426, 690]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1096.705µs throughput=0.109670µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=2500/10000 (25.0%) mem=2500/1783 (140.2%) samples=70  time=162.725µs cost=$85.138
+N1 (10x) Sort: items=2500/10000 (25.0%) mem=2500/2276 (109.8%) samples=70  time=156.623µs cost=$74.020
+N2 (8x) Sort: items=2000/10000 (20.0%) mem=2000/639 (313.0%) samples=56  time=186.554µs cost=$81.300
+N3 (5x) Sort: items=1250/10000 (12.5%) mem=1250/1834 (68.2%) samples=35  time=295.771µs cost=$234.576
+N4 (3x) Sort: items=750/10000 (7.5%) mem=750/2662 (28.2%) samples=21  time=226.570µs cost=$171.468
+N5 (2x) Sort: items=500/10000 (5.0%) mem=500/2260 (22.1%) samples=14  time=389.258µs cost=$305.101
+N6 (1x) Sort: items=250/10000 (2.5%) mem=250/2667 (9.4%) samples=7   time=673.114µs cost=$232.494
+N7 (1x) Sort: items=250/10000 (2.5%) mem=250/879 (28.4%) samples=7   time=1708.442µs cost=$1403.827
+N0 (10x) Sampling: samples=280/280 pivots=7 time=583.873µs cost=$305.482 pivots=[1093, 2283, 3537, 4781, 6023, 7209, 8368]
+N1 (10x) Partition: items kept=310, sent=2190 time=526.674µs cost=$248.906
+N2 (8x) Partition: items kept=261, sent=1739 time=741.914µs cost=$323.326
+N4 (3x) Partition: items kept=83, sent=667 time=1652.137µs cost=$1250.338
+N0 (10x) Partition: items kept=281, sent=2219 time=230.289µs cost=$120.487
+N1 (10x) Merge: items=1199/10000 (25.0%) mem=1199/2276 (52.7%) time=61.202µs cost=$28.924
+N5 (2x) Partition: items kept=63, sent=437 time=2798.954µs cost=$2193.821
+N3 (5x) Partition: items kept=165, sent=1085 time=1625.143µs cost=$1288.901
+N6 (1x) Partition: items kept=29, sent=221 time=5927.126µs cost=$2047.229
+N0 (10x) Merge: items=1104/10000 (25.0%) mem=1104/1783 (61.9%) time=63.443µs cost=$33.193
+N2 (8x) Merge: items=1282/10000 (20.0%) mem=1282/639 (200.6%) time=137.325µs cost=$59.846
+N3 (5x) Merge: items=1215/10000 (12.5%) mem=1215/1834 (66.2%) time=168.320µs cost=$133.495
+N4 (3x) Merge: items=1222/10000 (7.5%) mem=1222/2662 (45.9%) time=211.363µs cost=$159.960
+N7 (1x) Partition: items kept=37, sent=213 time=7784.570µs cost=$6396.581
+N5 (2x) Merge: items=1159/10000 (5.0%) mem=1159/2260 (51.3%) time=510.834µs cost=$400.391
+N7 (1x) Merge: items=1597/10000 (2.5%) mem=1597/879 (181.7%) time=787.679µs cost=$647.236
+N6 (1x) Merge: items=1222/10000 (2.5%) mem=1222/2667 (45.8%) time=826.168µs cost=$285.358
+N0 Concat: total=10000 time=67.453µs cost=$35.291
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=206.193µs cost=$107.880 ^makespan=54.334µs ^cost=$204.869
+N0 (10x) Sort: items=1783/10000 (17.8%) mem=1783/1783 (100.0%) time=20.604µs cost=$10.780
+N1 (10x) Sort: items=2277/10000 (22.8%) mem=2277/2276 (100.0%) time=32.034µs cost=$15.139
+N2 (8x) Sort: items=639/10000 (6.4%) mem=639/639 (100.0%) time=17.499µs cost=$7.626
+N3 (5x) Sort: items=1834/10000 (18.3%) mem=1834/1834 (100.0%) time=209.320µs cost=$166.012
+N4 (3x) Sort: items=1486/10000 (14.9%) mem=1486/2662 (55.8%) time=116.219µs cost=$87.955
+N5 (2x) Sort: items=991/10000 (9.9%) mem=991/2260 (43.8%) time=101.502µs cost=$79.557
+N6 (1x) Sort: items=495/10000 (5.0%) mem=495/2667 (18.6%) time=62.420µs cost=$21.560
+N7 (1x) Sort: items=495/10000 (5.0%) mem=495/879 (56.3%) time=93.766µs cost=$77.048
+N0 (10x) Heap Merge: total=10000 time=163.706µs cost=$85.651
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          10,280.69 |             373.03
+Total Cost ($)            |          18,546.69 |             551.33
+Max. Peak Memory Util.(%) |             312.99 |             100.04
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 22/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=100000, Seed=4
+Nodes: 8 | Data: 100000 elements | Sample: [37963, 82178, 95930, 48810, 11366...48083, 52085, 65411, 6542, 638]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=18747.253µs throughput=0.187473µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (8x) Sort: items=24242/100000 (24.2%) mem=24242/28309 (85.6%) samples=56  time=647.479µs cost=$99.064
+N1 (7x) Sort: items=21212/100000 (21.2%) mem=21212/1132 (1873.9%) samples=49  time=542.287µs cost=$537.406
+N2 (5x) Sort: items=15151/100000 (15.2%) mem=15151/11564 (131.0%) samples=35  time=724.012µs cost=$430.425
+N3 (4x) Sort: items=12121/100000 (12.1%) mem=12121/36536 (33.2%) samples=28  time=1244.877µs cost=$146.647
+N4 (3x) Sort: items=9090/100000 (9.1%) mem=9090/11499 (79.1%) samples=21  time=1194.423µs cost=$678.791
+N5 (2x) Sort: items=6060/100000 (6.1%) mem=6060/41666 (14.5%) samples=14  time=1084.249µs cost=$390.763
+N6 (2x) Sort: items=6060/100000 (6.1%) mem=6060/12007 (50.5%) samples=14  time=1312.605µs cost=$556.807
+N7 (2x) Sort: items=6064/100000 (6.1%) mem=6064/7287 (83.2%) samples=14  time=750.473µs cost=$601.729
+N0 (8x) Sampling: samples=231/231 pivots=7 time=1094.503µs cost=$167.459 pivots=[10420, 22534, 34773, 46823, 58703, 71234, 83167]
+N2 (5x) Partition: items kept=1922, sent=13229 time=2378.982µs cost=$1414.305
+N3 (4x) Partition: items kept=1431, sent=10690 time=3043.046µs cost=$358.471
+N4 (3x) Partition: items kept=1057, sent=8033 time=4191.152µs cost=$2381.832
+N0 (8x) Partition: items kept=2480, sent=21762 time=1229.755µs cost=$188.152
+N6 (2x) Partition: items kept=691, sent=5369 time=5792.096µs cost=$2457.007
+N1 (7x) Partition: items kept=2564, sent=18648 time=2729.812µs cost=$2705.244
+N5 (2x) Partition: items kept=749, sent=5311 time=7096.045µs cost=$2557.415
+N1 (7x) Merge: items=12223/100000 (21.2%) mem=12223/1132 (1079.8%) time=425.217µs cost=$421.390
+N0 (8x) Merge: items=10477/100000 (24.2%) mem=10477/28309 (37.0%) time=325.452µs cost=$49.794
+N7 (2x) Partition: items kept=1010, sent=5054 time=5211.270µs cost=$4178.396
+N5 (2x) Merge: items=12529/100000 (6.1%) mem=12529/41666 (30.1%) time=1762.434µs cost=$635.181
+N3 (4x) Merge: items=11933/100000 (12.1%) mem=11933/36536 (32.7%) time=1413.421µs cost=$166.501
+N6 (2x) Merge: items=11865/100000 (6.1%) mem=11865/12007 (98.8%) time=2203.207µs cost=$934.600
+N4 (3x) Merge: items=11886/100000 (9.1%) mem=11886/11499 (103.4%) time=1955.985µs cost=$1111.586
+N2 (5x) Merge: items=12243/100000 (15.2%) mem=12243/11564 (105.9%) time=1324.381µs cost=$787.345
+N7 (2x) Merge: items=16844/100000 (6.1%) mem=16844/7287 (231.2%) time=4477.786µs cost=$3590.289
+N0 Concat: total=100000 time=379.663µs cost=$58.088
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=209.648µs cost=$32.076 ^makespan=942.260µs ^cost=$2195.651
+N0 (8x) Sort: items=28313/100000 (28.3%) mem=28313/28309 (100.0%) time=668.115µs cost=$102.222
+N1 (7x) Sort: items=1130/100000 (1.1%) mem=1130/1132 (99.8%) time=17.651µs cost=$17.492
+N2 (5x) Sort: items=11561/100000 (11.6%) mem=11561/11564 (100.0%) time=314.619µs cost=$187.041
+N3 (4x) Sort: items=20102/100000 (20.1%) mem=20102/36536 (55.0%) time=1188.364µs cost=$139.989
+N4 (3x) Sort: items=11501/100000 (11.5%) mem=11501/11499 (100.0%) time=708.368µs cost=$402.566
+N5 (2x) Sort: items=10051/100000 (10.1%) mem=10051/41666 (24.1%) time=663.793µs cost=$239.231
+N6 (2x) Sort: items=10051/100000 (10.1%) mem=10051/12007 (83.7%) time=816.600µs cost=$346.402
+N7 (2x) Sort: items=7291/100000 (7.3%) mem=7291/7287 (100.1%) time=926.309µs cost=$742.715
+N0 (8x) Heap Merge: total=100000 time=1864.404µs cost=$285.254
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          10,439.53 |           3,052.77
+Total Cost ($)            |          27,604.69 |           2,462.91
+Max. Peak Memory Util.(%) |            1873.85 |             100.05
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 23/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=100000, Seed=5
+Nodes: 8 | Data: 100000 elements | Sample: [232, 696, 27453, 28243, 21739...34812, 94623, 88402, 64885, 3859]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=23213.125µs throughput=0.232131µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=22727/100000 (22.7%) mem=22727/11028 (206.1%) samples=70  time=452.669µs cost=$412.291
+N1 (9x) Sort: items=20454/100000 (20.5%) mem=20454/6298 (324.8%) samples=63  time=481.824µs cost=$155.099
+N2 (8x) Sort: items=18181/100000 (18.2%) mem=18181/5475 (332.1%) samples=56  time=629.553µs cost=$388.120
+N3 (6x) Sort: items=13636/100000 (13.6%) mem=13636/30216 (45.1%) samples=42  time=588.978µs cost=$307.564
+N4 (5x) Sort: items=11363/100000 (11.4%) mem=11363/36159 (31.4%) samples=35  time=546.291µs cost=$110.296
+N5 (4x) Sort: items=9090/100000 (9.1%) mem=9090/24365 (37.3%) samples=28  time=575.566µs cost=$64.348
+N6 (1x) Sort: items=2272/100000 (2.3%) mem=2272/31456 (7.2%) samples=7   time=1094.753µs cost=$645.247
+N7 (1x) Sort: items=2277/100000 (2.3%) mem=2277/5003 (45.5%) samples=7   time=1363.374µs cost=$402.332
+N0 (10x) Sampling: samples=308/308 pivots=7 time=678.724µs cost=$618.181 pivots=[11278, 23489, 35695, 48046, 60050, 72621, 85301]
+N2 (8x) Partition: items kept=2271, sent=15910 time=911.230µs cost=$561.774
+N5 (4x) Partition: items kept=1112, sent=7978 time=1604.997µs cost=$179.439
+N4 (5x) Partition: items kept=1368, sent=9995 time=2238.108µs cost=$451.874
+N0 (10x) Partition: items kept=2593, sent=20134 time=878.563µs cost=$800.195
+N3 (6x) Partition: items kept=1587, sent=12049 time=2579.015µs cost=$1346.762
+N7 (1x) Partition: items kept=311, sent=1966 time=14724.823µs cost=$4345.295
+N6 (1x) Partition: items kept=316, sent=1956 time=4869.121µs cost=$2869.860
+N0 (10x) Merge: items=11264/100000 (22.7%) mem=11264/11028 (102.1%) time=492.307µs cost=$448.393
+N2 (8x) Merge: items=12282/100000 (18.2%) mem=12282/5475 (224.3%) time=529.639µs cost=$326.523
+N3 (6x) Merge: items=12403/100000 (13.6%) mem=12403/30216 (41.0%) time=660.258µs cost=$344.787
+N1 (9x) Partition: items kept=2453, sent=18001 time=3057.358µs cost=$984.164
+N5 (4x) Merge: items=12361/100000 (9.1%) mem=12361/24365 (50.7%) time=1035.024µs cost=$115.716
+N6 (1x) Merge: items=12904/100000 (2.3%) mem=12904/31456 (41.0%) time=4771.913µs cost=$2812.566
+N7 (1x) Merge: items=14578/100000 (2.3%) mem=14578/5003 (291.4%) time=4445.985µs cost=$1312.010
+N1 (9x) Merge: items=12058/100000 (20.5%) mem=12058/6298 (191.5%) time=532.965µs cost=$171.561
+N4 (5x) Merge: items=12150/100000 (11.4%) mem=12150/36159 (33.6%) time=1080.917µs cost=$218.237
+N0 Concat: total=100000 time=198.936µs cost=$181.191
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=168.106µs cost=$153.111 ^makespan=1054.135µs ^cost=$2196.924
+N0 (10x) Sort: items=11030/100000 (11.0%) mem=11030/11028 (100.0%) time=274.012µs cost=$249.570
+N1 (9x) Sort: items=6300/100000 (6.3%) mem=6300/6298 (100.0%) time=159.032µs cost=$51.193
+N2 (8x) Sort: items=5470/100000 (5.5%) mem=5470/5475 (99.9%) time=142.547µs cost=$87.880
+N3 (6x) Sort: items=27250/100000 (27.3%) mem=27250/30216 (90.2%) time=1210.834µs cost=$632.297
+N4 (5x) Sort: items=22710/100000 (22.7%) mem=22710/36159 (62.8%) time=1056.938µs cost=$213.396
+N5 (4x) Sort: items=18160/100000 (18.2%) mem=18160/24365 (74.5%) time=667.534µs cost=$74.630
+N6 (1x) Sort: items=4540/100000 (4.5%) mem=4540/31456 (14.4%) time=597.783µs cost=$352.333
+N7 (1x) Sort: items=4540/100000 (4.5%) mem=4540/5003 (90.7%) time=604.946µs cost=$178.520
+N0 (10x) Heap Merge: total=100000 time=1598.023µs cost=$1455.480
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          20,534.18 |           2,808.86
+Total Cost ($)            |          20,573.82 |           3,295.30
+Max. Peak Memory Util.(%) |             332.07 |             100.03
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 24/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=100000, Seed=6
+Nodes: 8 | Data: 100000 elements | Sample: [55666, 43985, 12207, 47466, 53732...87300, 59675, 34353, 54046, 80540]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=15841.115µs throughput=0.158411µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=25000/100000 (25.0%) mem=25000/17837 (140.2%) samples=70  time=522.367µs cost=$273.302
+N1 (10x) Sort: items=25000/100000 (25.0%) mem=25000/22725 (110.0%) samples=70  time=482.625µs cost=$228.089
+N2 (8x) Sort: items=20000/100000 (20.0%) mem=20000/6394 (312.8%) samples=56  time=521.660µs cost=$227.339
+N3 (5x) Sort: items=12500/100000 (12.5%) mem=12500/18345 (68.1%) samples=35  time=548.226µs cost=$434.798
+N4 (3x) Sort: items=7500/100000 (7.5%) mem=7500/26621 (28.2%) samples=21  time=639.908µs cost=$484.283
+N5 (2x) Sort: items=5000/100000 (5.0%) mem=5000/22601 (22.1%) samples=14  time=1145.357µs cost=$897.731
+N6 (1x) Sort: items=2500/100000 (2.5%) mem=2500/26679 (9.4%) samples=7   time=1955.617µs cost=$675.470
+N7 (1x) Sort: items=2500/100000 (2.5%) mem=2500/8798 (28.4%) samples=7   time=1120.414µs cost=$920.644
+N0 (10x) Sampling: samples=280/280 pivots=7 time=1022.769µs cost=$535.113 pivots=[11471, 23624, 36527, 48661, 61375, 73214, 85816]
+N3 (5x) Partition: items kept=1480, sent=11020 time=3177.702µs cost=$2520.235
+N1 (10x) Partition: items kept=2984, sent=22016 time=2165.188µs cost=$1023.268
+N6 (1x) Partition: items kept=302, sent=2198 time=14449.467µs cost=$4990.846
+N2 (8x) Partition: items kept=2584, sent=17416 time=2944.093µs cost=$1283.036
+N4 (3x) Partition: items kept=978, sent=6522 time=5600.292µs cost=$4238.301
+N7 (1x) Partition: items kept=341, sent=2159 time=14688.206µs cost=$12069.299
+N5 (2x) Partition: items kept=616, sent=4384 time=9097.000µs cost=$7130.228
+N0 (10x) Partition: items kept=2839, sent=22161 time=1635.540µs cost=$855.715
+N3 (5x) Merge: items=12045/100000 (12.5%) mem=12045/18345 (65.7%) time=970.598µs cost=$769.781
+N1 (10x) Merge: items=12171/100000 (25.0%) mem=12171/22725 (53.6%) time=601.797µs cost=$284.409
+N5 (2x) Merge: items=11769/100000 (5.0%) mem=11769/22601 (52.1%) time=3021.485µs cost=$2368.240
+N6 (1x) Merge: items=12556/100000 (2.5%) mem=12556/26679 (47.1%) time=5373.882µs cost=$1856.139
+N4 (3x) Merge: items=12794/100000 (7.5%) mem=12794/26621 (48.1%) time=2731.449µs cost=$2067.161
+N0 (10x) Merge: items=11440/100000 (25.0%) mem=11440/17837 (64.1%) time=539.577µs cost=$282.307
+N2 (8x) Merge: items=12961/100000 (20.0%) mem=12961/6394 (202.7%) time=1181.671µs cost=$514.972
+N7 (1x) Merge: items=14264/100000 (2.5%) mem=14264/8798 (162.1%) time=5589.872µs cost=$4593.198
+N0 Concat: total=100000 time=179.820µs cost=$94.082
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=155.904µs cost=$81.569 ^makespan=785.244µs ^cost=$2960.305
+N0 (10x) Sort: items=17842/100000 (17.8%) mem=17842/17837 (100.0%) time=334.019µs cost=$174.759
+N1 (10x) Sort: items=22722/100000 (22.7%) mem=22722/22725 (100.0%) time=347.569µs cost=$164.261
+N2 (8x) Sort: items=6391/100000 (6.4%) mem=6391/6394 (100.0%) time=271.923µs cost=$118.504
+N3 (5x) Sort: items=18342/100000 (18.3%) mem=18342/18345 (100.0%) time=1485.865µs cost=$1178.440
+N4 (3x) Sort: items=14871/100000 (14.9%) mem=14871/26621 (55.9%) time=1686.312µs cost=$1276.201
+N5 (2x) Sort: items=9911/100000 (9.9%) mem=9911/22601 (43.9%) time=2963.713µs cost=$2322.958
+N6 (1x) Sort: items=4960/100000 (5.0%) mem=4960/26679 (18.6%) time=1242.617µs cost=$429.200
+N7 (1x) Sort: items=4961/100000 (5.0%) mem=4961/8798 (56.4%) time=1630.245µs cost=$1339.572
+N0 (10x) Heap Merge: total=100000 time=1761.185µs cost=$921.452
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          21,778.97 |           4,724.90
+Total Cost ($)            |          51,617.99 |           7,925.35
+Max. Peak Memory Util.(%) |             312.79 |             100.03
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 25/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=1000000, Seed=4
+Nodes: 8 | Data: 1000000 elements | Sample: [303710, 657431, 909452, 767447, 896163...548599, 269441, 178049, 539315, 783344]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=249968.771µs throughput=0.249969µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (3x) Sort: items=90909/1000000 (9.1%) mem=90909/114997 (79.1%) samples=21  time=6923.508µs cost=$3934.630
+N5 (2x) Sort: items=60606/1000000 (6.1%) mem=60606/416661 (14.5%) samples=14  time=8157.124µs cost=$2939.828
+N3 (4x) Sort: items=121212/1000000 (12.1%) mem=121212/365365 (33.2%) samples=28  time=6809.550µs cost=$802.165
+N6 (2x) Sort: items=60606/1000000 (6.1%) mem=60606/120075 (50.5%) samples=14  time=5422.171µs cost=$2300.085
+N2 (5x) Sort: items=151515/1000000 (15.2%) mem=151515/115644 (131.0%) samples=35  time=7591.258µs cost=$4513.003
+N7 (2x) Sort: items=60607/1000000 (6.1%) mem=60607/72831 (83.2%) samples=14  time=5905.001µs cost=$4734.630
+N1 (7x) Sort: items=212121/1000000 (21.2%) mem=212121/11329 (1872.4%) samples=49  time=6920.028µs cost=$6857.748
+N0 (8x) Sort: items=242424/1000000 (24.2%) mem=242424/283098 (85.6%) samples=56  time=8453.583µs cost=$1293.398
+N0 (8x) Sampling: samples=231/231 pivots=7 time=5686.395µs cost=$870.019 pivots=[106288, 224504, 356329, 468882, 589288, 713861, 836290]
+N3 (4x) Partition: items kept=13713, sent=107499 time=26504.083µs cost=$3122.181
+N7 (2x) Partition: items kept=10033, sent=50574 time=38062.327µs cost=$30518.374
+N2 (5x) Partition: items kept=20034, sent=131481 time=27588.276µs cost=$16401.230
+N4 (3x) Partition: items kept=10977, sent=79932 time=32623.791µs cost=$18540.101
+N5 (2x) Partition: items kept=7514, sent=53092 time=52226.249µs cost=$18822.340
+N6 (2x) Partition: items kept=7328, sent=53278 time=54566.850µs cost=$23147.258
+N1 (7x) Partition: items kept=25170, sent=186951 time=22437.706µs cost=$22235.767
+N0 (8x) Partition: items kept=25896, sent=216528 time=14805.256µs cost=$2265.204
+N3 (4x) Merge: items=112720/1000000 (12.1%) mem=112720/365365 (30.9%) time=10905.794µs cost=$1284.703
+N6 (2x) Merge: items=122050/1000000 (6.1%) mem=122050/120075 (101.6%) time=23687.587µs cost=$10048.275
+N1 (7x) Merge: items=118320/1000000 (21.2%) mem=118320/11329 (1044.4%) time=6648.147µs cost=$6588.314
+N2 (5x) Merge: items=131607/1000000 (15.2%) mem=131607/115644 (113.8%) time=8702.101µs cost=$5173.399
+N4 (3x) Merge: items=120236/1000000 (9.1%) mem=120236/114997 (104.6%) time=17257.890µs cost=$9807.659
+N5 (2x) Merge: items=124708/1000000 (6.1%) mem=124708/416661 (29.9%) time=26986.370µs cost=$9725.888
+N7 (2x) Merge: items=163809/1000000 (6.1%) mem=163809/72831 (224.9%) time=26064.914µs cost=$20898.848
+N0 (8x) Merge: items=106550/1000000 (24.2%) mem=106550/283098 (37.6%) time=3100.350µs cost=$474.354
+N0 Concat: total=1000000 time=2511.567µs cost=$384.270
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=208.466µs cost=$31.895 ^makespan=12564.087µs ^cost=$29273.190
+N1 (7x) Sort: items=11301/1000000 (1.1%) mem=11301/11329 (99.8%) time=221.021µs cost=$219.032
+N2 (5x) Sort: items=115612/1000000 (11.6%) mem=115612/115644 (100.0%) time=5928.602µs cost=$3524.554
+N5 (2x) Sort: items=100510/1000000 (10.1%) mem=100510/416661 (24.1%) time=11585.773µs cost=$4175.512
+N7 (2x) Sort: items=72807/1000000 (7.3%) mem=72807/72831 (100.0%) time=8577.637µs cost=$6877.549
+N4 (3x) Sort: items=115012/1000000 (11.5%) mem=115012/114997 (100.0%) time=12283.199µs cost=$6980.542
+N6 (2x) Sort: items=100510/1000000 (10.1%) mem=100510/120075 (83.7%) time=13784.155µs cost=$5847.239
+N3 (4x) Sort: items=201120/1000000 (20.1%) mem=201120/365365 (55.0%) time=14373.809µs cost=$1693.235
+N0 (8x) Sort: items=283128/1000000 (28.3%) mem=283128/283098 (100.0%) time=9964.716µs cost=$1524.601
+N0 (8x) Heap Merge: total=1000000 time=19796.004µs cost=$3028.789
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          87,369.74 |          34,169.81
+Total Cost ($)            |         227,683.67 |          33,871.05
+Max. Peak Memory Util.(%) |            1872.37 |             100.01
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 26/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=1000000, Seed=5
+Nodes: 8 | Data: 1000000 elements | Sample: [1861, 913734, 5571, 219630, 811171...304002, 167223, 219096, 586323, 812039]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=235251.315µs throughput=0.235251µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N7 (1x) Sort: items=22730/1000000 (2.3%) mem=22730/50001 (45.5%) samples=7   time=4099.533µs cost=$1209.772
+N6 (1x) Sort: items=22727/1000000 (2.3%) mem=22727/314562 (7.2%) samples=7   time=10842.164µs cost=$6390.371
+N5 (4x) Sort: items=90909/1000000 (9.1%) mem=90909/243652 (37.3%) samples=28  time=6335.956µs cost=$708.360
+N0 (10x) Sort: items=227272/1000000 (22.7%) mem=227272/110286 (206.1%) samples=70  time=6280.684µs cost=$5720.447
+N1 (9x) Sort: items=204545/1000000 (20.5%) mem=204545/62981 (324.8%) samples=63  time=5659.411µs cost=$1821.764
+N4 (5x) Sort: items=113636/1000000 (11.4%) mem=113636/361598 (31.4%) samples=35  time=7017.532µs cost=$1416.840
+N3 (6x) Sort: items=136363/1000000 (13.6%) mem=136363/302162 (45.1%) samples=42  time=6775.595µs cost=$3538.216
+N2 (8x) Sort: items=181818/1000000 (18.2%) mem=181818/54758 (332.0%) samples=56  time=6431.360µs cost=$3964.934
+N0 (10x) Sampling: samples=308/308 pivots=7 time=592.921µs cost=$540.032 pivots=[113962, 237676, 356726, 480940, 602297, 725851, 855602]
+N6 (1x) Partition: items kept=3001, sent=19726 time=8768.189µs cost=$5167.971
+N7 (1x) Partition: items kept=3234, sent=19496 time=10814.097µs cost=$3191.240
+N5 (4x) Partition: items kept=11270, sent=79639 time=10360.086µs cost=$1158.258
+N4 (5x) Partition: items kept=13901, sent=99735 time=10843.643µs cost=$2189.332
+N3 (6x) Partition: items kept=16904, sent=119459 time=9293.713µs cost=$4853.177
+N2 (8x) Partition: items kept=21412, sent=160406 time=8985.999µs cost=$5539.868
+N0 (10x) Partition: items kept=25969, sent=201303 time=6757.246µs cost=$6154.500
+N1 (9x) Partition: items kept=25008, sent=179537 time=8773.993µs cost=$2824.348
+N5 (4x) Merge: items=123629/1000000 (9.1%) mem=123629/243652 (50.7%) time=7055.455µs cost=$788.800
+N4 (5x) Merge: items=121445/1000000 (11.4%) mem=121445/361598 (33.6%) time=6247.854µs cost=$1261.442
+N7 (1x) Merge: items=143792/1000000 (2.3%) mem=143792/50001 (287.6%) time=32877.610µs cost=$9702.183
+N3 (6x) Merge: items=124649/1000000 (13.6%) mem=124649/302162 (41.3%) time=6212.404µs cost=$3244.117
+N6 (1x) Merge: items=129684/1000000 (2.3%) mem=129684/314562 (41.2%) time=33039.304µs cost=$19473.366
+N2 (8x) Merge: items=119152/1000000 (18.2%) mem=119152/54758 (217.6%) time=4903.695µs cost=$3023.128
+N1 (9x) Merge: items=123520/1000000 (20.5%) mem=123520/62981 (196.1%) time=3524.327µs cost=$1134.481
+N0 (10x) Merge: items=114129/1000000 (22.7%) mem=114129/110286 (103.5%) time=2280.251µs cost=$2076.852
+N0 Concat: total=1000000 time=1727.621µs cost=$1573.518
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=157.133µs cost=$143.116 ^makespan=10682.831µs ^cost=$22264.450
+N1 (9x) Sort: items=62994/1000000 (6.3%) mem=62994/62981 (100.0%) time=2886.857µs cost=$929.279
+N2 (8x) Sort: items=54795/1000000 (5.5%) mem=54795/54758 (100.1%) time=2867.346µs cost=$1767.719
+N0 (10x) Sort: items=110289/1000000 (11.0%) mem=110289/110286 (100.0%) time=4423.163µs cost=$4028.617
+N6 (1x) Sort: items=45395/1000000 (4.5%) mem=45395/314562 (14.4%) time=14940.351µs cost=$8805.843
+N7 (1x) Sort: items=45395/1000000 (4.5%) mem=45395/50001 (90.8%) time=15641.845µs cost=$4615.908
+N5 (4x) Sort: items=181582/1000000 (18.2%) mem=181582/243652 (74.5%) time=15107.216µs cost=$1688.987
+N4 (5x) Sort: items=227077/1000000 (22.7%) mem=227077/361598 (62.8%) time=14123.336µs cost=$2851.501
+N3 (6x) Sort: items=272473/1000000 (27.2%) mem=272473/302162 (90.2%) time=13990.671µs cost=$7305.928
+N0 (10x) Heap Merge: total=1000000 time=14534.263µs cost=$13237.807
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          52,649.66 |          30,176.11
+Total Cost ($)            |          98,667.32 |          45,231.59
+Max. Peak Memory Util.(%) |             332.04 |             100.07
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 27/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=uniform, Nodes=8, Size=1000000, Seed=6
+Nodes: 8 | Data: 1000000 elements | Sample: [885294, 445329, 351883, 97658, 379731...435077, 258462, 502842, 126741, 829642]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=280796.465µs throughput=0.280796µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (3x) Sort: items=75000/1000000 (7.5%) mem=75000/266211 (28.2%) samples=21  time=5435.344µs cost=$4113.468
+N6 (1x) Sort: items=25000/1000000 (2.5%) mem=25000/266794 (9.4%) samples=7   time=6627.965µs cost=$2289.299
+N5 (2x) Sort: items=50000/1000000 (5.0%) mem=50000/226011 (22.1%) samples=14  time=4545.859µs cost=$3563.045
+N3 (5x) Sort: items=125000/1000000 (12.5%) mem=125000/183451 (68.1%) samples=35  time=6044.311µs cost=$4793.743
+N7 (1x) Sort: items=25000/1000000 (2.5%) mem=25000/87985 (28.4%) samples=7   time=4377.037µs cost=$3596.611
+N2 (8x) Sort: items=200000/1000000 (20.0%) mem=200000/63949 (312.7%) samples=56  time=6169.098µs cost=$2688.493
+N0 (10x) Sort: items=250000/1000000 (25.0%) mem=250000/178378 (140.2%) samples=70  time=6169.037µs cost=$3227.640
+N1 (10x) Sort: items=250000/1000000 (25.0%) mem=250000/227221 (110.0%) samples=70  time=6494.629µs cost=$3069.362
+N0 (10x) Sampling: samples=280/280 pivots=7 time=4335.954µs cost=$2268.571 pivots=[114619, 238102, 359492, 485683, 614431, 733609, 856949]
+N7 (1x) Partition: items kept=3513, sent=21487 time=79715.760µs cost=$65502.440
+N6 (1x) Partition: items kept=3114, sent=21886 time=94693.402µs cost=$32707.101
+N5 (2x) Partition: items kept=6041, sent=43959 time=51850.376µs cost=$40640.325
+N4 (3x) Partition: items kept=9694, sent=65306 time=36938.786µs cost=$27955.273
+N2 (8x) Partition: items kept=24082, sent=175918 time=20817.606µs cost=$9072.313
+N3 (5x) Partition: items kept=15989, sent=109011 time=25478.587µs cost=$20207.068
+N0 (10x) Partition: items kept=28576, sent=221424 time=12907.256µs cost=$6753.077
+N1 (10x) Partition: items kept=31159, sent=218841 time=19081.041µs cost=$9017.700
+N6 (1x) Merge: items=124022/1000000 (2.5%) mem=124022/266794 (46.5%) time=28861.707µs cost=$9968.834
+N5 (2x) Merge: items=119065/1000000 (5.0%) mem=119065/226011 (52.7%) time=15321.439µs cost=$12008.944
+N4 (3x) Merge: items=128748/1000000 (7.5%) mem=128748/266211 (48.4%) time=12891.501µs cost=$9756.288
+N2 (8x) Merge: items=121060/1000000 (20.0%) mem=121060/63949 (189.3%) time=5473.395µs cost=$2385.305
+N3 (5x) Merge: items=126805/1000000 (12.5%) mem=126805/183451 (69.1%) time=7500.559µs cost=$5948.694
+N7 (1x) Merge: items=142825/1000000 (2.5%) mem=142825/87985 (162.3%) time=44513.062µs cost=$36576.383
+N0 (10x) Merge: items=114150/1000000 (25.0%) mem=114150/178378 (64.0%) time=2852.461µs cost=$1492.408
+N1 (10x) Merge: items=123325/1000000 (25.0%) mem=123325/227221 (54.3%) time=3139.793µs cost=$1483.866
+N0 Concat: total=1000000 time=1161.114µs cost=$607.495
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=147.708µs cost=$77.281 ^makespan=13919.522µs ^cost=$52474.897
+N2 (8x) Sort: items=63900/1000000 (6.4%) mem=63900/63949 (99.9%) time=3535.402µs cost=$1540.728
+N6 (1x) Sort: items=49600/1000000 (5.0%) mem=49600/266794 (18.6%) time=20519.531µs cost=$7087.446
+N7 (1x) Sort: items=49600/1000000 (5.0%) mem=49600/87985 (56.4%) time=10885.505µs cost=$8944.619
+N0 (10x) Sort: items=178400/1000000 (17.8%) mem=178400/178378 (100.0%) time=8036.886µs cost=$4204.899
+N5 (2x) Sort: items=99100/1000000 (9.9%) mem=99100/226011 (43.8%) time=16504.143µs cost=$12935.947
+N4 (3x) Sort: items=148700/1000000 (14.9%) mem=148700/266211 (55.9%) time=16529.409µs cost=$12509.456
+N3 (5x) Sort: items=183500/1000000 (18.4%) mem=183500/183451 (100.0%) time=14154.652µs cost=$11226.054
+N1 (10x) Sort: items=227200/1000000 (22.7%) mem=227200/227221 (100.0%) time=10337.078µs cost=$4885.303
+N0 (10x) Heap Merge: total=1000000 time=13952.610µs cost=$7300.005
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |         130,183.07 |          34,472.14
+Total Cost ($)            |         321,693.74 |          70,634.46
+Max. Peak Memory Util.(%) |             312.75 |             100.03
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 28/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=10000, Seed=4
+Nodes: 2 | Data: 10000 elements | Sample: [6573, 3905, 4244, 4065, 4879...5449, 2591, 5877, 6411, 8225]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1082.824µs throughput=0.108282µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (5x) Sort: items=5555/10000 (55.5%) mem=5555/4505 (123.3%) samples=5   time=281.736µs cost=$128.612
+N1 (4x) Sort: items=4445/10000 (44.5%) mem=4445/10495 (42.4%) samples=4   time=760.729µs cost=$146.669
+N0 (5x) Sampling: samples=9/9 pivots=1 time=97.714µs cost=$44.607 pivots=[4576]
+N0 (5x) Partition: items kept=2223, sent=3332 time=116.929µs cost=$53.378
+N1 (4x) Partition: items kept=2626, sent=1819 time=151.517µs cost=$29.213
+N1 (4x) Merge: items=5958/10000 (44.5%) mem=5958/10495 (56.8%) time=264.815µs cost=$51.056
+N0 (5x) Merge: items=4042/10000 (55.5%) mem=4042/4505 (89.7%) time=92.125µs cost=$42.055
+N0 Concat: total=10000 time=20.685µs cost=$9.443
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (5x) Solver: time=295.063µs cost=$134.696 ^makespan=148.753µs ^cost=$73.217
+N0 (5x) Sort: items=4505/10000 (45.1%) mem=4505/4505 (100.0%) time=126.153µs cost=$57.589
+N1 (4x) Sort: items=5495/10000 (54.9%) mem=5495/10495 (52.4%) time=173.104µs cost=$33.374
+N0 (5x) Heap Merge: total=10000 time=197.123µs cost=$89.987
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           1,177.06 |             370.23
+Total Cost ($)            |             505.03 |             180.95
+Max. Peak Memory Util.(%) |             123.31 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 29/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=10000, Seed=5
+Nodes: 2 | Data: 10000 elements | Sample: [5434, 4051, 7236, 5418, 5265...4336, 5947, 6327, 5851, 3273]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1159.194µs throughput=0.115919µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=6666/10000 (66.7%) mem=6666/8402 (79.3%) samples=10  time=158.434µs cost=$121.614
+N1 (5x) Sort: items=3334/10000 (33.3%) mem=3334/6598 (50.5%) samples=5   time=223.590µs cost=$182.382
+N0 (10x) Sampling: samples=15/15 pivots=1 time=122.810µs cost=$94.269 pivots=[4624]
+N1 (5x) Partition: items kept=2001, sent=1333 time=105.458µs cost=$86.022
+N0 (10x) Partition: items kept=2707, sent=3959 time=233.525µs cost=$179.254
+N0 (10x) Merge: items=4040/10000 (66.7%) mem=4040/8402 (48.1%) time=44.714µs cost=$34.323
+N1 (5x) Merge: items=5960/10000 (33.3%) mem=5960/6598 (90.3%) time=208.959µs cost=$170.448
+N0 Concat: total=10000 time=7.430µs cost=$5.704
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=176.908µs cost=$135.795 ^makespan=77.280µs ^cost=$122.357
+N0 (10x) Sort: items=6667/10000 (66.7%) mem=6667/8402 (79.4%) time=135.050µs cost=$103.665
+N1 (5x) Sort: items=3333/10000 (33.3%) mem=3333/6598 (50.5%) time=85.612µs cost=$69.833
+N0 (10x) Heap Merge: total=10000 time=151.575µs cost=$116.349
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |             566.91 |             286.63
+Total Cost ($)            |             874.02 |             289.85
+Max. Peak Memory Util.(%) |              90.33 |              79.35
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 30/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=10000, Seed=6
+Nodes: 2 | Data: 10000 elements | Sample: [5015, 5865, 3897, 3890, 5409...4007, 4227, 4303, 5192, 6400]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1117.810µs throughput=0.111781µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=8333/10000 (83.3%) mem=8333/10 (83330.0%) samples=10  time=176.542µs cost=$94.715
+N1 (2x) Sort: items=1667/10000 (16.7%) mem=1667/14990 (11.1%) samples=2   time=423.302µs cost=$142.018
+N0 (10x) Sampling: samples=12/12 pivots=1 time=41.052µs cost=$22.025 pivots=[4983]
+N1 (2x) Partition: items kept=839, sent=828 time=100.023µs cost=$33.558
+N0 (10x) Partition: items kept=4166, sent=4167 time=118.407µs cost=$63.526
+N0 (10x) Merge: items=4994/10000 (83.3%) mem=4994/10 (49940.0%) time=66.952µs cost=$35.919
+N1 (2x) Merge: items=5006/10000 (16.7%) mem=5006/14990 (33.4%) time=371.660µs cost=$124.692
+N0 Concat: total=10000 time=7.825µs cost=$4.198
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=174.688µs cost=$93.720 ^makespan=558.346µs ^cost=$187.385
+N0 (10x) Sort: items=10/10000 (0.1%) mem=10/10 (100.0%) time=0.261µs cost=$0.140
+N1 (2x) Sort: items=9990/10000 (99.9%) mem=9990/14990 (66.6%) time=728.445µs cost=$244.393
+N0 (10x) Heap Merge: total=10000 time=101.025µs cost=$54.200
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |             894.99 |             829.47
+Total Cost ($)            |             520.65 |             298.73
+Max. Peak Memory Util.(%) |           83330.00 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 31/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=100000, Seed=4
+Nodes: 2 | Data: 100000 elements | Sample: [30794, 40732, 38262, 47117, 55869...40261, 47123, 28418, 41284, 52259]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=18785.612µs throughput=0.187856µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (5x) Sort: items=55555/100000 (55.6%) mem=55555/45047 (123.3%) samples=5   time=2187.020µs cost=$998.374
+N1 (4x) Sort: items=44445/100000 (44.4%) mem=44445/104953 (42.3%) samples=4   time=2359.345µs cost=$454.882
+N0 (5x) Sampling: samples=9/9 pivots=1 time=175.509µs cost=$80.120 pivots=[45812]
+N1 (4x) Partition: items kept=26664, sent=17781 time=1397.805µs cost=$269.497
+N0 (5x) Partition: items kept=22224, sent=33331 time=1705.078µs cost=$778.368
+N0 (5x) Merge: items=40005/100000 (55.6%) mem=40005/45047 (88.8%) time=1351.432µs cost=$616.929
+N1 (4x) Merge: items=59995/100000 (44.4%) mem=59995/104953 (57.2%) time=2074.989µs cost=$400.058
+N0 Concat: total=100000 time=273.968µs cost=$125.066
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (5x) Solver: time=271.996µs cost=$124.166 ^makespan=2580.814µs ^cost=$1270.194
+N0 (5x) Sort: items=45050/100000 (45.1%) mem=45050/45047 (100.0%) time=3075.627µs cost=$1404.024
+N1 (4x) Sort: items=54950/100000 (54.9%) mem=54950/104953 (52.4%) time=3028.949µs cost=$583.981
+N0 (5x) Heap Merge: total=100000 time=1805.209µs cost=$824.078
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           5,832.14 |           4,880.84
+Total Cost ($)            |           3,723.29 |           2,812.08
+Max. Peak Memory Util.(%) |             123.33 |             100.01
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 32/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=100000, Seed=5
+Nodes: 2 | Data: 100000 elements | Sample: [38198, 28216, 53831, 78214, 36178...36315, 35388, 45581, 25287, 49584]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=17499.308µs throughput=0.174993µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (5x) Sort: items=33334/100000 (33.3%) mem=33334/65971 (50.5%) samples=5   time=1175.791µs cost=$959.092
+N0 (10x) Sort: items=66666/100000 (66.7%) mem=66666/84029 (79.3%) samples=10  time=1335.217µs cost=$1024.913
+N0 (10x) Sampling: samples=15/15 pivots=1 time=59.554µs cost=$45.713 pivots=[45870]
+N1 (5x) Partition: items kept=20001, sent=13333 time=880.848µs cost=$718.507
+N0 (10x) Partition: items kept=26760, sent=39906 time=1250.206µs cost=$959.658
+N0 (10x) Merge: items=40093/100000 (66.7%) mem=40093/84029 (47.7%) time=757.337µs cost=$581.332
+N1 (5x) Merge: items=59907/100000 (33.3%) mem=59907/65971 (90.8%) time=1880.511µs cost=$1533.933
+N0 Concat: total=100000 time=108.160µs cost=$83.023
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=176.940µs cost=$135.819 ^makespan=1166.621µs ^cost=$1847.110
+N1 (5x) Sort: items=33330/100000 (33.3%) mem=33330/65971 (50.5%) time=1022.980µs cost=$834.445
+N0 (10x) Sort: items=66670/100000 (66.7%) mem=66670/84029 (79.3%) time=1494.567µs cost=$1147.229
+N0 (10x) Heap Merge: total=100000 time=1189.414µs cost=$912.994
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           3,937.15 |           2,683.98
+Total Cost ($)            |           5,906.17 |           2,894.67
+Max. Peak Memory Util.(%) |              90.81 |              79.34
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 33/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=100000, Seed=6
+Nodes: 2 | Data: 100000 elements | Sample: [47284, 57540, 84072, 25649, 54227...42032, 27184, 43331, 42269, 51172]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=20687.872µs throughput=0.206879µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (2x) Sort: items=16667/100000 (16.7%) mem=16667/149898 (11.1%) samples=2   time=1608.308µs cost=$539.587
+N0 (10x) Sort: items=83333/100000 (83.3%) mem=83333/102 (81699.0%) samples=10  time=1708.022µs cost=$916.354
+N0 (10x) Sampling: samples=12/12 pivots=1 time=47.350µs cost=$25.403 pivots=[49929]
+N1 (2x) Partition: items kept=8524, sent=8143 time=981.968µs cost=$329.450
+N0 (10x) Partition: items kept=41669, sent=41664 time=1496.054µs cost=$802.633
+N1 (2x) Merge: items=50188/100000 (16.7%) mem=50188/149898 (33.5%) time=2642.765µs cost=$886.648
+N0 (10x) Merge: items=49812/100000 (83.3%) mem=49812/102 (48835.3%) time=773.124µs cost=$414.781
+N0 Concat: total=100000 time=170.369µs cost=$91.403
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=162.747µs cost=$87.314 ^makespan=10333.385µs ^cost=$3467.983
+N0 (10x) Sort: items=100/100000 (0.1%) mem=100/102 (98.0%) time=3.399µs cost=$1.824
+N1 (2x) Sort: items=99900/100000 (99.9%) mem=99900/149898 (66.6%) time=12415.134µs cost=$4165.277
+N0 (10x) Heap Merge: total=100000 time=889.812µs cost=$477.384
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           5,233.04 |          13,304.95
+Total Cost ($)            |           4,006.26 |           4,644.49
+Max. Peak Memory Util.(%) |           81699.02 |              98.04
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 34/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=1000000, Seed=4
+Nodes: 2 | Data: 1000000 elements | Sample: [342687, 561010, 531463, 726197, 879358...232723, 821929, 572834, 442060, 480624]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=253801.123µs throughput=0.253801µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (4x) Sort: items=444445/1000000 (44.4%) mem=444445/1049533 (42.3%) samples=4   time=25558.805µs cost=$4927.738
+N0 (5x) Sort: items=555555/1000000 (55.6%) mem=555555/450467 (123.3%) samples=5   time=23627.708µs cost=$10786.049
+N0 (5x) Sampling: samples=9/9 pivots=1 time=74.353µs cost=$33.942 pivots=[457831]
+N1 (4x) Partition: items kept=266131, sent=178314 time=23034.950µs cost=$4441.138
+N0 (5x) Partition: items kept=222223, sent=333332 time=26310.998µs cost=$12010.971
+N0 (5x) Merge: items=400537/1000000 (55.6%) mem=400537/450467 (88.9%) time=17085.865µs cost=$7799.697
+N1 (4x) Merge: items=599463/1000000 (44.4%) mem=599463/1049533 (57.1%) time=26254.653µs cost=$5061.897
+N0 Concat: total=1000000 time=2590.279µs cost=$1182.462
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (5x) Solver: time=531.585µs cost=$242.669 ^makespan=34868.023µs ^cost=$17160.795
+N0 (5x) Sort: items=450500/1000000 (45.1%) mem=450500/450467 (100.0%) time=20418.161µs cost=$9320.890
+N1 (4x) Sort: items=549500/1000000 (54.9%) mem=549500/1049533 (52.4%) time=33871.147µs cost=$6530.357
+N0 (5x) Heap Merge: total=1000000 time=16913.624µs cost=$7721.069
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          74,848.41 |          50,784.77
+Total Cost ($)            |          46,243.89 |          23,572.32
+Max. Peak Memory Util.(%) |             123.33 |             100.01
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 35/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=1000000, Seed=5
+Nodes: 2 | Data: 1000000 elements | Sample: [382726, 528251, 297002, 377349, 364397...685438, 534878, 542791, 422879, 532541]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=244295.344µs throughput=0.244295µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (5x) Sort: items=333334/1000000 (33.3%) mem=333334/659702 (50.5%) samples=5   time=13141.348µs cost=$10719.397
+N0 (10x) Sort: items=666666/1000000 (66.7%) mem=666666/840298 (79.3%) samples=10  time=14864.575µs cost=$11410.048
+N0 (10x) Sampling: samples=15/15 pivots=1 time=33.690µs cost=$25.861 pivots=[457694]
+N1 (5x) Partition: items kept=199916, sent=133418 time=13268.089µs cost=$10822.780
+N0 (10x) Partition: items kept=266665, sent=400001 time=13071.160µs cost=$10033.423
+N0 (10x) Merge: items=400083/1000000 (66.7%) mem=400083/840298 (47.6%) time=6650.652µs cost=$5105.041
+N1 (5x) Merge: items=599917/1000000 (33.3%) mem=599917/659702 (90.9%) time=18739.365µs cost=$15285.700
+N0 Concat: total=1000000 time=1068.884µs cost=$820.475
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=141.072µs cost=$108.287 ^makespan=16286.356µs ^cost=$25786.188
+N1 (5x) Sort: items=333300/1000000 (33.3%) mem=333300/659702 (50.5%) time=13328.653µs cost=$10872.182
+N0 (10x) Sort: items=666700/1000000 (66.7%) mem=666700/840298 (79.3%) time=15521.748µs cost=$11914.494
+N0 (10x) Heap Merge: total=1000000 time=9256.369µs cost=$7105.189
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          45,148.80 |          24,778.12
+Total Cost ($)            |          64,222.72 |          29,891.86
+Max. Peak Memory Util.(%) |              90.94 |              79.34
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 36/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=2, Size=1000000, Seed=6
+Nodes: 2 | Data: 1000000 elements | Sample: [493339, 729166, 606280, 696701, 396358...915850, 442385, 541752, 684378, 323228]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=254332.588µs throughput=0.254333µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (2x) Sort: items=166667/1000000 (16.7%) mem=166667/1498979 (11.1%) samples=2   time=16914.499µs cost=$5674.814
+N0 (10x) Sort: items=833333/1000000 (83.3%) mem=833333/1021 (81619.3%) samples=10  time=18863.065µs cost=$10120.034
+N0 (10x) Sampling: samples=12/12 pivots=1 time=29.393µs cost=$15.769 pivots=[499471]
+N1 (2x) Partition: items kept=83333, sent=83334 time=12983.890µs cost=$4356.095
+N0 (10x) Partition: items kept=415469, sent=417864 time=10657.546µs cost=$5717.773
+N1 (2x) Merge: items=501197/1000000 (16.7%) mem=501197/1498979 (33.4%) time=27457.943µs cost=$9212.140
+N0 (10x) Merge: items=498803/1000000 (83.3%) mem=498803/1021 (48854.4%) time=9282.934µs cost=$4980.294
+N0 Concat: total=1000000 time=1292.939µs cost=$693.662
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=208.528µs cost=$111.876 ^makespan=127036.457µs ^cost=$42634.663
+N0 (10x) Sort: items=1000/1000000 (0.1%) mem=1000/1021 (97.9%) time=16.446µs cost=$8.823
+N1 (2x) Sort: items=999000/1000000 (99.9%) mem=999000/1498979 (66.6%) time=125839.207µs cost=$42219.054
+N0 (10x) Heap Merge: total=1000000 time=8154.914µs cost=$4375.112
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          57,356.33 |         133,994.12
+Total Cost ($)            |          40,770.58 |          46,602.99
+Max. Peak Memory Util.(%) |           81619.29 |              97.94
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 37/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=10000, Seed=4
+Nodes: 5 | Data: 10000 elements | Sample: [3531, 7295, 4260, 3905, 5367...4888, 2157, 5046, 4166, 4336]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1652.175µs throughput=0.165218µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (7x) Sort: items=2692/10000 (26.9%) mem=2692/2103 (128.0%) samples=28  time=147.561µs cost=$136.671
+N0 (8x) Sort: items=3076/10000 (30.8%) mem=3076/1315 (233.9%) samples=32  time=674.116µs cost=$553.045
+N2 (5x) Sort: items=1923/10000 (19.2%) mem=1923/1687 (114.0%) samples=20  time=361.897µs cost=$57.867
+N3 (4x) Sort: items=1538/10000 (15.4%) mem=1538/5816 (26.4%) samples=16  time=261.868µs cost=$62.717
+N4 (2x) Sort: items=771/10000 (7.7%) mem=771/4079 (18.9%) samples=8   time=573.011µs cost=$264.388
+N0 (8x) Sampling: samples=104/104 pivots=4 time=188.743µs cost=$154.845 pivots=[3453, 4416, 5213, 6096]
+N1 (7x) Partition: items kept=486, sent=2206 time=327.288µs cost=$303.135
+N4 (2x) Partition: items kept=186, sent=585 time=775.207µs cost=$357.681
+N0 (8x) Partition: items kept=539, sent=2537 time=155.853µs cost=$127.862
+N1 (7x) Merge: items=1869/10000 (26.9%) mem=1869/2103 (88.9%) time=76.566µs cost=$70.915
+N3 (4x) Partition: items kept=294, sent=1244 time=829.624µs cost=$198.695
+N2 (5x) Partition: items kept=349, sent=1574 time=709.144µs cost=$113.392
+N0 (8x) Merge: items=1806/10000 (30.8%) mem=1806/1315 (137.3%) time=155.525µs cost=$127.593
+N2 (5x) Merge: items=1884/10000 (19.2%) mem=1884/1687 (111.7%) time=141.993µs cost=$22.705
+N3 (4x) Merge: items=1899/10000 (15.4%) mem=1899/5816 (32.7%) time=212.063µs cost=$50.789
+N4 (2x) Merge: items=2542/10000 (7.7%) mem=2542/4079 (62.3%) time=604.305µs cost=$278.826
+N0 Concat: total=10000 time=27.197µs cost=$22.312
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=213.806µs cost=$175.406 ^makespan=134.790µs ^cost=$171.641
+N0 (8x) Sort: items=1315/10000 (13.2%) mem=1315/1315 (100.0%) time=19.825µs cost=$16.265
+N1 (7x) Sort: items=2103/10000 (21.0%) mem=2103/2103 (100.0%) time=35.658µs cost=$33.026
+N2 (5x) Sort: items=1687/10000 (16.9%) mem=1687/1687 (100.0%) time=73.724µs cost=$11.788
+N3 (4x) Sort: items=3263/10000 (32.6%) mem=3263/5816 (56.1%) time=216.070µs cost=$51.749
+N4 (2x) Sort: items=1632/10000 (16.3%) mem=1632/4079 (40.0%) time=110.912µs cost=$51.175
+N0 (8x) Heap Merge: total=10000 time=199.523µs cost=$163.689
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           1,952.52 |             415.59
+Total Cost ($)            |           2,903.44 |             327.69
+Max. Peak Memory Util.(%) |             233.92 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 38/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=10000, Seed=5
+Nodes: 5 | Data: 10000 elements | Sample: [3553, 3184, 2271, 2455, 4323...8016, 3598, 3337, 6473, 4532]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1149.917µs throughput=0.114992µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=3225/10000 (32.2%) mem=3225/2827 (114.1%) samples=40  time=142.442µs cost=$121.973
+N1 (9x) Sort: items=2903/10000 (29.0%) mem=2903/775 (374.6%) samples=36  time=117.453µs cost=$17.230
+N2 (6x) Sort: items=1935/10000 (19.4%) mem=1935/2895 (66.8%) samples=24  time=204.581µs cost=$66.305
+N3 (5x) Sort: items=1612/10000 (16.1%) mem=1612/6604 (24.4%) samples=20  time=194.274µs cost=$155.108
+N4 (1x) Sort: items=325/10000 (3.2%) mem=325/1899 (17.1%) samples=4   time=683.676µs cost=$164.903
+N0 (10x) Sampling: samples=124/124 pivots=4 time=222.874µs cost=$190.847 pivots=[3465, 4450, 5252, 6082]
+N2 (6x) Partition: items kept=384, sent=1551 time=382.352µs cost=$123.920
+N1 (9x) Partition: items kept=535, sent=2368 time=319.092µs cost=$46.811
+N3 (5x) Partition: items kept=311, sent=1301 time=424.127µs cost=$338.623
+N0 (10x) Partition: items kept=580, sent=2645 time=243.926µs cost=$208.874
+N4 (1x) Partition: items kept=81, sent=244 time=3170.310µs cost=$764.679
+N1 (9x) Merge: items=1935/10000 (29.0%) mem=1935/775 (249.7%) time=91.417µs cost=$13.411
+N3 (5x) Merge: items=1863/10000 (16.1%) mem=1863/6604 (28.2%) time=180.140µs cost=$143.824
+N4 (1x) Merge: items=2510/10000 (3.2%) mem=2510/1899 (132.2%) time=845.492µs cost=$203.933
+N0 (10x) Merge: items=1765/10000 (32.2%) mem=1765/2827 (62.4%) time=61.989µs cost=$53.082
+N2 (6x) Merge: items=1927/10000 (19.4%) mem=1927/2895 (66.6%) time=107.204µs cost=$34.745
+N0 Concat: total=10000 time=33.168µs cost=$28.402
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=184.365µs cost=$157.871 ^makespan=67.136µs ^cost=$117.066
+N0 (10x) Sort: items=2827/10000 (28.3%) mem=2827/2827 (100.0%) time=76.902µs cost=$65.851
+N1 (9x) Sort: items=775/10000 (7.8%) mem=775/775 (100.0%) time=11.054µs cost=$1.622
+N2 (6x) Sort: items=2895/10000 (28.9%) mem=2895/2895 (100.0%) time=138.061µs cost=$44.746
+N3 (5x) Sort: items=2919/10000 (29.2%) mem=2919/6604 (44.2%) time=71.443µs cost=$57.040
+N4 (1x) Sort: items=584/10000 (5.8%) mem=584/1899 (30.8%) time=68.251µs cost=$16.462
+N0 (10x) Heap Merge: total=10000 time=167.314µs cost=$143.271
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           4,699.48 |             305.38
+Total Cost ($)            |           2,676.67 |             328.99
+Max. Peak Memory Util.(%) |             374.58 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 39/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=10000, Seed=6
+Nodes: 5 | Data: 10000 elements | Sample: [2838, 3773, 2975, 5123, 6227...5048, 967, 5399, 7705, 4784]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1091.297µs throughput=0.109130µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=3846/10000 (38.5%) mem=3846/3865 (99.5%) samples=40  time=113.520µs cost=$11.397
+N1 (8x) Sort: items=3076/10000 (30.8%) mem=3076/4024 (76.4%) samples=32  time=170.807µs cost=$89.366
+N2 (5x) Sort: items=1923/10000 (19.2%) mem=1923/3663 (52.5%) samples=20  time=249.655µs cost=$195.680
+N3 (2x) Sort: items=769/10000 (7.7%) mem=769/1368 (56.2%) samples=8   time=344.341µs cost=$239.834
+N4 (1x) Sort: items=386/10000 (3.9%) mem=386/2080 (18.6%) samples=4   time=830.764µs cost=$362.047
+N1 (8x) Partition: items kept=573, sent=2503 time=216.582µs cost=$113.316
+N2 (5x) Partition: items kept=375, sent=1548 time=259.939µs cost=$203.740
+N0 (10x) Sampling: samples=104/104 pivots=4 time=306.131µs cost=$30.736 pivots=[3422, 4423, 5252, 6146]
+N0 (10x) Partition: items kept=673, sent=3173 time=126.733µs cost=$12.724
+N3 (2x) Partition: items kept=137, sent=632 time=864.061µs cost=$601.819
+N0 (10x) Merge: items=1783/10000 (38.5%) mem=1783/3865 (46.1%) time=163.863µs cost=$16.452
+N1 (8x) Merge: items=1849/10000 (30.8%) mem=1849/4024 (45.9%) time=81.921µs cost=$42.861
+N4 (1x) Partition: items kept=102, sent=284 time=3504.541µs cost=$1527.279
+N3 (2x) Merge: items=1967/10000 (7.7%) mem=1967/1368 (143.8%) time=179.091µs cost=$124.737
+N4 (1x) Merge: items=2454/10000 (3.9%) mem=2454/2080 (118.0%) time=457.834µs cost=$199.524
+N2 (5x) Merge: items=1947/10000 (19.2%) mem=1947/3663 (53.2%) time=471.064µs cost=$369.220
+N0 Concat: total=10000 time=56.350µs cost=$5.658
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=157.661µs cost=$15.829 ^makespan=41.973µs ^cost=$106.599
+N0 (10x) Sort: items=3846/10000 (38.5%) mem=3846/3865 (99.5%) time=47.573µs cost=$4.776
+N1 (8x) Sort: items=3077/10000 (30.8%) mem=3077/4024 (76.5%) time=46.376µs cost=$24.264
+N2 (5x) Sort: items=1923/10000 (19.2%) mem=1923/3663 (52.5%) time=134.785µs cost=$105.644
+N3 (2x) Sort: items=769/10000 (7.7%) mem=769/1368 (56.2%) time=99.923µs cost=$69.596
+N4 (1x) Sort: items=385/10000 (3.9%) mem=385/2080 (18.5%) time=50.823µs cost=$22.149
+N0 (10x) Heap Merge: total=10000 time=150.509µs cost=$15.111
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           4,793.14 |             285.29
+Total Cost ($)            |           4,146.39 |             241.54
+Max. Peak Memory Util.(%) |             143.79 |              99.51
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 40/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=100000, Seed=4
+Nodes: 5 | Data: 100000 elements | Sample: [80065, 40524, 68352, 29174, 70714...53076, 45401, 49007, 61685, 56058]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=19915.495µs throughput=0.199155µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (8x) Sort: items=30769/100000 (30.8%) mem=30769/13128 (234.4%) samples=32  time=746.460µs cost=$612.396
+N1 (7x) Sort: items=26923/100000 (26.9%) mem=26923/21033 (128.0%) samples=28  time=794.852µs cost=$736.192
+N2 (5x) Sort: items=19230/100000 (19.2%) mem=19230/16871 (114.0%) samples=20  time=763.161µs cost=$122.029
+N3 (4x) Sort: items=15384/100000 (15.4%) mem=15384/58169 (26.4%) samples=16  time=827.661µs cost=$198.225
+N4 (2x) Sort: items=7694/100000 (7.7%) mem=7694/40799 (18.9%) samples=8   time=868.073µs cost=$400.529
+N0 (8x) Sampling: samples=104/104 pivots=4 time=232.564µs cost=$190.796 pivots=[34758, 44648, 52771, 61324]
+N4 (2x) Partition: items kept=1906, sent=5788 time=3013.245µs cost=$1390.311
+N3 (4x) Partition: items kept=2842, sent=12542 time=1702.066µs cost=$407.645
+N2 (5x) Partition: items kept=3656, sent=15574 time=1924.477µs cost=$307.724
+N1 (7x) Partition: items kept=5194, sent=21729 time=1466.181µs cost=$1357.977
+N0 (8x) Partition: items kept=5492, sent=25277 time=1844.311µs cost=$1513.072
+N3 (4x) Merge: items=18531/100000 (15.4%) mem=18531/58169 (31.9%) time=1186.259µs cost=$284.109
+N2 (5x) Merge: items=19154/100000 (19.2%) mem=19154/16871 (113.5%) time=1071.535µs cost=$171.338
+N1 (7x) Merge: items=19388/100000 (26.9%) mem=19388/21033 (92.2%) time=750.232µs cost=$694.864
+N0 (8x) Merge: items=17874/100000 (30.8%) mem=17874/13128 (136.2%) time=1006.013µs cost=$825.333
+N4 (2x) Merge: items=25053/100000 (7.7%) mem=25053/40799 (61.4%) time=4777.543µs cost=$2204.358
+N0 Concat: total=100000 time=242.793µs cost=$199.187
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=202.420µs cost=$166.065 ^makespan=1625.370µs ^cost=$2069.032
+N0 (8x) Sort: items=13130/100000 (13.1%) mem=13130/13128 (100.0%) time=413.314µs cost=$339.083
+N1 (7x) Sort: items=21030/100000 (21.0%) mem=21030/21033 (100.0%) time=777.367µs cost=$719.998
+N2 (5x) Sort: items=16870/100000 (16.9%) mem=16870/16871 (100.0%) time=1404.337µs cost=$224.554
+N3 (4x) Sort: items=32650/100000 (32.6%) mem=32650/58169 (56.1%) time=2767.622µs cost=$662.846
+N4 (2x) Sort: items=16320/100000 (16.3%) mem=16320/40799 (40.0%) time=3455.880µs cost=$1594.543
+N0 (8x) Heap Merge: total=100000 time=2570.834µs cost=$2109.112
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           8,658.86 |           6,026.71
+Total Cost ($)            |          11,616.09 |           5,650.13
+Max. Peak Memory Util.(%) |             234.38 |             100.02
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 41/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=100000, Seed=5
+Nodes: 5 | Data: 100000 elements | Sample: [34717, 22831, 65810, 52386, 52696...50888, 36751, 32678, 52397, 78268]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=16136.734µs throughput=0.161367µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N1 (9x) Sort: items=29032/100000 (29.0%) mem=29032/7755 (374.4%) samples=36  time=565.769µs cost=$82.998
+N2 (6x) Sort: items=19354/100000 (19.4%) mem=19354/28957 (66.8%) samples=24  time=632.327µs cost=$204.937
+N0 (10x) Sort: items=32258/100000 (32.3%) mem=32258/28276 (114.1%) samples=40  time=1548.767µs cost=$1326.209
+N3 (5x) Sort: items=16129/100000 (16.1%) mem=16129/66048 (24.4%) samples=20  time=804.855µs cost=$642.596
+N4 (1x) Sort: items=3227/100000 (3.2%) mem=3227/18964 (17.0%) samples=4   time=1040.868µs cost=$251.057
+N0 (10x) Sampling: samples=124/124 pivots=4 time=291.780µs cost=$249.851 pivots=[34327, 44516, 52116, 61175]
+N2 (6x) Partition: items kept=3460, sent=15894 time=756.062µs cost=$245.040
+N1 (9x) Partition: items kept=5807, sent=23225 time=830.911µs cost=$121.895
+N3 (5x) Partition: items kept=3218, sent=12911 time=1344.221µs cost=$1073.226
+N0 (10x) Partition: items kept=5643, sent=26615 time=914.511µs cost=$783.096
+N4 (1x) Partition: items kept=795, sent=2432 time=2918.434µs cost=$703.926
+N1 (9x) Merge: items=19851/100000 (29.0%) mem=19851/7755 (256.0%) time=588.130µs cost=$86.279
+N3 (5x) Merge: items=19685/100000 (16.1%) mem=19685/66048 (29.8%) time=1213.571µs cost=$968.915
+N0 (10x) Merge: items=17459/100000 (32.3%) mem=17459/28276 (61.7%) time=499.428µs cost=$427.660
+N2 (6x) Merge: items=17945/100000 (19.4%) mem=17945/28957 (62.0%) time=822.076µs cost=$266.435
+N4 (1x) Merge: items=25060/100000 (3.2%) mem=25060/18964 (132.1%) time=6456.696µs cost=$1557.355
+N0 Concat: total=100000 time=210.358µs cost=$180.130
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=154.589µs cost=$132.375 ^makespan=941.632µs ^cost=$1642.438
+N0 (10x) Sort: items=28274/100000 (28.3%) mem=28274/28276 (100.0%) time=472.186µs cost=$404.333
+N1 (9x) Sort: items=7759/100000 (7.8%) mem=7759/7755 (100.1%) time=154.850µs cost=$22.717
+N2 (6x) Sort: items=28954/100000 (29.0%) mem=28954/28957 (100.0%) time=1330.803µs cost=$431.313
+N4 (1x) Sort: items=5839/100000 (5.8%) mem=5839/18964 (30.8%) time=1191.338µs cost=$287.351
+N3 (5x) Sort: items=29174/100000 (29.2%) mem=29174/66048 (44.2%) time=1346.030µs cost=$1074.671
+N0 (10x) Heap Merge: total=100000 time=1498.087µs cost=$1282.812
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          10,416.00 |           2,844.12
+Total Cost ($)            |           9,171.60 |           3,503.20
+Max. Peak Memory Util.(%) |             374.36 |             100.05
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 42/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=100000, Seed=6
+Nodes: 5 | Data: 100000 elements | Sample: [51102, 68198, 54817, 38648, 60776...42345, 50165, 43042, 21202, 40472]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=18202.262µs throughput=0.182023µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=38461/100000 (38.5%) mem=38461/38654 (99.5%) samples=40  time=642.221µs cost=$64.479
+N1 (8x) Sort: items=30769/100000 (30.8%) mem=30769/40248 (76.4%) samples=32  time=841.086µs cost=$440.056
+N2 (5x) Sort: items=19230/100000 (19.2%) mem=19230/36630 (52.5%) samples=20  time=1228.440µs cost=$962.851
+N3 (2x) Sort: items=7692/100000 (7.7%) mem=7692/13686 (56.2%) samples=8   time=973.958µs cost=$678.361
+N4 (1x) Sort: items=3848/100000 (3.8%) mem=3848/20782 (18.5%) samples=4   time=1605.043µs cost=$699.478
+N0 (10x) Sampling: samples=104/104 pivots=4 time=232.761µs cost=$23.369 pivots=[34406, 44482, 52125, 61265]
+N3 (2x) Partition: items kept=1539, sent=6153 time=2939.126µs cost=$2047.102
+N4 (1x) Partition: items kept=1037, sent=2811 time=5686.114µs cost=$2478.008
+N2 (5x) Partition: items kept=3535, sent=15695 time=1687.636µs cost=$1322.769
+N1 (8x) Partition: items kept=6241, sent=24528 time=1690.918µs cost=$884.688
+N0 (10x) Partition: items kept=6729, sent=31732 time=1386.484µs cost=$139.203
+N3 (2x) Merge: items=19573/100000 (7.7%) mem=19573/13686 (143.0%) time=2977.063µs cost=$2073.524
+N0 (10x) Merge: items=17371/100000 (38.5%) mem=17371/38654 (44.9%) time=521.258µs cost=$52.334
+N2 (5x) Merge: items=18095/100000 (19.2%) mem=18095/36630 (49.4%) time=1467.618µs cost=$1150.319
+N1 (8x) Merge: items=19823/100000 (30.8%) mem=19823/40248 (49.3%) time=1036.963µs cost=$542.539
+N4 (1x) Merge: items=25138/100000 (3.8%) mem=25138/20782 (121.0%) time=9760.445µs cost=$4253.602
+N0 Concat: total=100000 time=227.187µs cost=$22.810
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=151.607µs cost=$15.221 ^makespan=700.087µs ^cost=$1778.011
+N0 (10x) Sort: items=38460/100000 (38.5%) mem=38460/38654 (99.5%) time=816.034µs cost=$81.930
+N1 (8x) Sort: items=30770/100000 (30.8%) mem=30770/40248 (76.5%) time=1309.786µs cost=$685.280
+N2 (5x) Sort: items=19230/100000 (19.2%) mem=19230/36630 (52.5%) time=1155.056µs cost=$905.333
+N3 (2x) Sort: items=7690/100000 (7.7%) mem=7690/13686 (56.2%) time=1649.069µs cost=$1148.577
+N4 (1x) Sort: items=3850/100000 (3.9%) mem=3850/20782 (18.5%) time=862.719µs cost=$375.973
+N0 (10x) Heap Merge: total=100000 time=1650.158µs cost=$165.676
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          17,051.60 |           3,299.23
+Total Cost ($)            |          17,835.49 |           3,362.77
+Max. Peak Memory Util.(%) |             143.01 |              99.50
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 43/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=1000000, Seed=4
+Nodes: 5 | Data: 1000000 elements | Sample: [267074, 766532, 859925, 709607, 491562...443177, 780370, 0, 501501, 327274]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=245249.415µs throughput=0.245249µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (2x) Sort: items=76925/1000000 (7.7%) mem=76925/407993 (18.9%) samples=8   time=6910.643µs cost=$3188.571
+N3 (4x) Sort: items=153846/1000000 (15.4%) mem=153846/581690 (26.4%) samples=16  time=7763.611µs cost=$1859.385
+N2 (5x) Sort: items=192307/1000000 (19.2%) mem=192307/168713 (114.0%) samples=20  time=8688.229µs cost=$1389.248
+N1 (7x) Sort: items=269230/1000000 (26.9%) mem=269230/210339 (128.0%) samples=28  time=9322.739µs cost=$8634.721
+N0 (8x) Sort: items=307692/1000000 (30.8%) mem=307692/131265 (234.4%) samples=32  time=9604.875µs cost=$7879.840
+N0 (8x) Sampling: samples=104/104 pivots=4 time=247.998µs cost=$203.457 pivots=[347146, 446578, 525914, 612284]
+N4 (2x) Partition: items kept=19345, sent=57580 time=13269.978µs cost=$6122.768
+N2 (5x) Partition: items kept=36085, sent=156222 time=9723.713µs cost=$1554.822
+N3 (4x) Partition: items kept=28982, sent=124864 time=12447.842µs cost=$2981.258
+N1 (7x) Partition: items kept=52586, sent=216644 time=9943.363µs cost=$9209.543
+N0 (8x) Partition: items kept=55187, sent=252505 time=9034.179µs cost=$7411.641
+N3 (4x) Merge: items=187993/1000000 (15.4%) mem=187993/581690 (32.3%) time=10417.014µs cost=$2494.875
+N2 (5x) Merge: items=187971/1000000 (19.2%) mem=187971/168713 (111.4%) time=8467.646µs cost=$1353.977
+N1 (7x) Merge: items=194872/1000000 (26.9%) mem=194872/210339 (92.6%) time=6516.914µs cost=$6035.966
+N4 (2x) Merge: items=249924/1000000 (7.7%) mem=249924/407993 (61.3%) time=25084.273µs cost=$11573.884
+N0 (8x) Merge: items=179240/1000000 (30.8%) mem=179240/131265 (136.5%) time=4620.511µs cost=$3790.667
+N0 Concat: total=1000000 time=1782.773µs cost=$1462.587
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=424.742µs cost=$348.459 ^makespan=20015.745µs ^cost=$25479.123
+N0 (8x) Sort: items=131300/1000000 (13.1%) mem=131300/131265 (100.0%) time=5902.253µs cost=$4842.208
+N2 (5x) Sort: items=168700/1000000 (16.9%) mem=168700/168713 (100.0%) time=8789.176µs cost=$1405.389
+N4 (2x) Sort: items=163200/1000000 (16.3%) mem=163200/407993 (40.0%) time=17722.198µs cost=$8177.022
+N1 (7x) Sort: items=210300/1000000 (21.0%) mem=210300/210339 (100.0%) time=9317.177µs cost=$8629.569
+N3 (4x) Sort: items=326500/1000000 (32.6%) mem=326500/581690 (56.1%) time=19248.264µs cost=$4609.959
+N0 (8x) Heap Merge: total=1000000 time=16650.259µs cost=$13659.873
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          45,264.89 |          35,898.52
+Total Cost ($)            |          77,147.21 |          41,324.02
+Max. Peak Memory Util.(%) |             234.41 |             100.03
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 44/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=1000000, Seed=5
+Nodes: 5 | Data: 1000000 elements | Sample: [467510, 515890, 595185, 841319, 280461...29565, 556758, 226349, 428234, 374421]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=234518.185µs throughput=0.234518µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (1x) Sort: items=32260/1000000 (3.2%) mem=32260/189627 (17.0%) samples=4   time=8361.507µs cost=$2016.795
+N3 (5x) Sort: items=161290/1000000 (16.1%) mem=161290/660481 (24.4%) samples=20  time=6566.601µs cost=$5242.774
+N2 (6x) Sort: items=193548/1000000 (19.4%) mem=193548/289578 (66.8%) samples=24  time=6959.264µs cost=$2255.497
+N1 (9x) Sort: items=290322/1000000 (29.0%) mem=290322/77554 (374.3%) samples=36  time=6664.665µs cost=$977.706
+N0 (10x) Sort: items=322580/1000000 (32.3%) mem=322580/282760 (114.1%) samples=40  time=7085.072µs cost=$6066.947
+N0 (10x) Sampling: samples=124/124 pivots=4 time=255.806µs cost=$219.047 pivots=[343707, 445822, 523698, 612699]
+N4 (1x) Partition: items kept=8087, sent=24173 time=14785.938µs cost=$3566.368
+N3 (5x) Partition: items kept=31149, sent=130141 time=9810.972µs cost=$7833.080
+N2 (6x) Partition: items kept=35364, sent=158184 time=9602.856µs cost=$3112.286
+N0 (10x) Partition: items kept=56449, sent=266131 time=8249.699µs cost=$7064.217
+N1 (9x) Partition: items kept=57185, sent=233137 time=9655.706µs cost=$1416.492
+N3 (5x) Merge: items=193256/1000000 (16.1%) mem=193256/660481 (29.3%) time=12476.302µs cost=$9961.080
+N2 (6x) Merge: items=183214/1000000 (19.4%) mem=183214/289578 (63.3%) time=9165.574µs cost=$2970.562
+N4 (1x) Merge: items=249632/1000000 (3.2%) mem=249632/189627 (131.6%) time=68751.896µs cost=$16582.957
+N1 (9x) Merge: items=198626/1000000 (29.0%) mem=198626/77554 (256.1%) time=6835.564µs cost=$1002.777
+N0 (10x) Merge: items=175272/1000000 (32.3%) mem=175272/282760 (62.0%) time=4717.806µs cost=$4039.857
+N0 Concat: total=1000000 time=1186.887µs cost=$1016.332
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=198.173µs cost=$169.696 ^makespan=13684.449µs ^cost=$23869.484
+N1 (9x) Sort: items=77585/1000000 (7.8%) mem=77585/77554 (100.0%) time=2880.427µs cost=$422.559
+N4 (1x) Sort: items=58388/1000000 (5.8%) mem=58388/189627 (30.8%) time=13376.597µs cost=$3226.435
+N0 (10x) Sort: items=282743/1000000 (28.3%) mem=282743/282760 (100.0%) time=7938.085µs cost=$6797.382
+N2 (6x) Sort: items=289542/1000000 (29.0%) mem=289542/289578 (100.0%) time=11127.865µs cost=$3606.541
+N3 (5x) Sort: items=291742/1000000 (29.2%) mem=291742/660481 (44.2%) time=13189.875µs cost=$10530.796
+N0 (10x) Heap Merge: total=1000000 time=12955.978µs cost=$11094.204
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          91,899.34 |          26,332.57
+Total Cost ($)            |          75,344.78 |          35,677.92
+Max. Peak Memory Util.(%) |             374.35 |             100.04
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 45/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=5, Size=1000000, Seed=6
+Nodes: 5 | Data: 1000000 elements | Sample: [629813, 685512, 584920, 517366, 242790...494463, 483700, 615355, 593294, 321738]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=239263.566µs throughput=0.239264µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (1x) Sort: items=38463/1000000 (3.8%) mem=38463/207796 (18.5%) samples=4   time=6875.574µs cost=$2996.375
+N3 (2x) Sort: items=76923/1000000 (7.7%) mem=76923/136869 (56.2%) samples=8   time=7122.020µs cost=$4960.487
+N2 (5x) Sort: items=192307/1000000 (19.2%) mem=192307/366306 (52.5%) samples=20  time=8302.099µs cost=$6507.185
+N1 (8x) Sort: items=307692/1000000 (30.8%) mem=307692/402489 (76.4%) samples=32  time=9569.193µs cost=$5006.602
+N0 (10x) Sort: items=384615/1000000 (38.5%) mem=384615/386540 (99.5%) samples=40  time=8927.899µs cost=$896.361
+N0 (10x) Sampling: samples=104/104 pivots=4 time=4063.248µs cost=$407.950 pivots=[344640, 446523, 521106, 613354]
+N4 (1x) Partition: items kept=9623, sent=28840 time=54676.057µs cost=$23827.826
+N2 (5x) Partition: items kept=33919, sent=158388 time=19766.624µs cost=$15493.080
+N3 (2x) Partition: items kept=15242, sent=61681 time=44441.483µs cost=$30953.493
+N1 (8x) Partition: items kept=61105, sent=246587 time=10424.284µs cost=$5453.985
+N0 (10x) Partition: items kept=67306, sent=317309 time=13107.213µs cost=$1315.964
+N3 (2x) Merge: items=201170/1000000 (7.7%) mem=201170/136869 (147.0%) time=27112.982µs cost=$18884.192
+N4 (1x) Merge: items=248921/1000000 (3.8%) mem=248921/207796 (119.8%) time=54778.535µs cost=$23872.486
+N2 (5x) Merge: items=175739/1000000 (19.2%) mem=175739/366306 (48.0%) time=9903.702µs cost=$7762.522
+N1 (8x) Merge: items=198662/1000000 (30.8%) mem=198662/402489 (49.4%) time=7926.262µs cost=$4147.020
+N0 (10x) Merge: items=175508/1000000 (38.5%) mem=175508/386540 (45.4%) time=3867.128µs cost=$388.260
+N0 Concat: total=1000000 time=2069.795µs cost=$207.807
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=200.862µs cost=$20.167 ^makespan=9202.445µs ^cost=$23371.449
+N4 (1x) Sort: items=38500/1000000 (3.9%) mem=38500/207796 (18.5%) time=12674.056µs cost=$5523.354
+N3 (2x) Sort: items=76900/1000000 (7.7%) mem=76900/136869 (56.2%) time=12512.724µs cost=$8715.112
+N2 (5x) Sort: items=192300/1000000 (19.2%) mem=192300/366306 (52.5%) time=12087.269µs cost=$9474.002
+N1 (8x) Sort: items=307700/1000000 (30.8%) mem=307700/402489 (76.4%) time=12372.480µs cost=$6473.282
+N0 (10x) Sort: items=384600/1000000 (38.5%) mem=384600/386540 (99.5%) time=11986.299µs cost=$1203.424
+N0 (10x) Heap Merge: total=1000000 time=13611.665µs cost=$1366.611
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |         116,330.17 |          26,285.72
+Total Cost ($)            |         153,081.59 |          32,755.78
+Max. Peak Memory Util.(%) |             146.98 |              99.50
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 46/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=10000, Seed=4
+Nodes: 8 | Data: 10000 elements | Sample: [6503, 6285, 7295, 4500, 5138...3049, 5258, 3986, 7434, 7150]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1097.149µs throughput=0.109715µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (8x) Sort: items=2424/10000 (24.2%) mem=2424/2830 (85.7%) samples=56  time=146.525µs cost=$22.418
+N1 (7x) Sort: items=2121/10000 (21.2%) mem=2121/113 (1877.0%) samples=49  time=151.935µs cost=$150.568
+N2 (5x) Sort: items=1515/10000 (15.2%) mem=1515/1156 (131.1%) samples=35  time=230.467µs cost=$137.013
+N3 (4x) Sort: items=1212/10000 (12.1%) mem=1212/3653 (33.2%) samples=28  time=240.371µs cost=$28.316
+N4 (3x) Sort: items=909/10000 (9.1%) mem=909/1149 (79.1%) samples=21  time=337.208µs cost=$191.635
+N5 (2x) Sort: items=606/10000 (6.1%) mem=606/4166 (14.5%) samples=14  time=355.886µs cost=$128.261
+N6 (2x) Sort: items=606/10000 (6.1%) mem=606/1200 (50.5%) samples=14  time=767.166µs cost=$325.432
+N7 (2x) Sort: items=607/10000 (6.1%) mem=607/733 (82.8%) samples=14  time=606.663µs cost=$486.422
+N0 (8x) Sampling: samples=231/231 pivots=7 time=411.744µs cost=$62.997 pivots=[2941, 3744, 4349, 4851, 5350, 5916, 6575]
+N0 (8x) Partition: items kept=252, sent=2172 time=148.799µs cost=$22.766
+N3 (4x) Partition: items kept=146, sent=1066 time=1163.859µs cost=$137.103
+N2 (5x) Partition: items kept=196, sent=1319 time=1063.690µs cost=$632.363
+N1 (7x) Partition: items kept=261, sent=1860 time=822.442µs cost=$815.040
+N4 (3x) Partition: items kept=108, sent=801 time=1682.647µs cost=$956.248
+N0 (8x) Merge: items=1063/10000 (24.2%) mem=1063/2830 (37.6%) time=88.611µs cost=$13.557
+N2 (5x) Merge: items=1208/10000 (15.2%) mem=1208/1156 (104.5%) time=189.398µs cost=$112.597
+N6 (2x) Partition: items kept=71, sent=535 time=2823.785µs cost=$1197.849
+N5 (2x) Partition: items kept=69, sent=537 time=3217.226µs cost=$1159.488
+N4 (3x) Merge: items=1228/10000 (9.1%) mem=1228/1149 (106.9%) time=319.729µs cost=$181.702
+N3 (4x) Merge: items=1186/10000 (12.1%) mem=1186/3653 (32.5%) time=355.492µs cost=$41.877
+N7 (2x) Partition: items kept=103, sent=504 time=3512.075µs cost=$2815.982
+N1 (7x) Merge: items=1195/10000 (21.2%) mem=1195/113 (1057.5%) time=372.601µs cost=$369.248
+N5 (2x) Merge: items=1244/10000 (6.1%) mem=1244/4166 (29.9%) time=244.182µs cost=$88.003
+N6 (2x) Merge: items=1193/10000 (6.1%) mem=1193/1200 (99.4%) time=168.573µs cost=$71.508
+N7 (2x) Merge: items=1683/10000 (6.1%) mem=1683/733 (229.6%) time=450.890µs cost=$361.524
+N0 Concat: total=10000 time=130.809µs cost=$20.014
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=263.140µs cost=$40.260 ^makespan=55.118µs ^cost=$128.633
+N0 (8x) Sort: items=2830/10000 (28.3%) mem=2830/2830 (100.0%) time=46.184µs cost=$7.066
+N1 (7x) Sort: items=113/10000 (1.1%) mem=113/113 (100.0%) time=4.812µs cost=$4.769
+N2 (5x) Sort: items=1156/10000 (11.6%) mem=1156/1156 (100.0%) time=26.297µs cost=$15.634
+N3 (4x) Sort: items=2009/10000 (20.1%) mem=2009/3653 (55.0%) time=85.921µs cost=$10.122
+N4 (3x) Sort: items=1149/10000 (11.5%) mem=1149/1149 (100.0%) time=57.486µs cost=$32.669
+N5 (2x) Sort: items=1005/10000 (10.1%) mem=1005/4166 (24.1%) time=88.563µs cost=$31.918
+N6 (2x) Sort: items=1005/10000 (10.1%) mem=1005/1200 (83.8%) time=58.505µs cost=$24.818
+N7 (2x) Sort: items=733/10000 (7.3%) mem=733/733 (100.0%) time=47.190µs cost=$37.837
+N0 (8x) Heap Merge: total=10000 time=239.390µs cost=$36.627
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           4,569.63 |             327.95
+Total Cost ($)            |          10,529.93 |             201.46
+Max. Peak Memory Util.(%) |            1876.99 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 47/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=10000, Seed=5
+Nodes: 8 | Data: 10000 elements | Sample: [4655, 2873, 6399, 4683, 6991...3843, 8203, 2852, 5519, 3006]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1095.025µs throughput=0.109502µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=2272/10000 (22.7%) mem=2272/1102 (206.2%) samples=70  time=91.657µs cost=$83.481
+N1 (9x) Sort: items=2045/10000 (20.4%) mem=2045/629 (325.1%) samples=63  time=103.028µs cost=$33.165
+N2 (8x) Sort: items=1818/10000 (18.2%) mem=1818/547 (332.4%) samples=56  time=110.260µs cost=$67.976
+N3 (6x) Sort: items=1363/10000 (13.6%) mem=1363/3021 (45.1%) samples=42  time=745.598µs cost=$389.351
+N4 (5x) Sort: items=1136/10000 (11.4%) mem=1136/3615 (31.4%) samples=35  time=188.664µs cost=$38.091
+N5 (4x) Sort: items=909/10000 (9.1%) mem=909/2436 (37.3%) samples=28  time=189.115µs cost=$21.143
+N6 (1x) Sort: items=227/10000 (2.3%) mem=227/3145 (7.2%) samples=7   time=1086.483µs cost=$640.373
+N7 (1x) Sort: items=230/10000 (2.3%) mem=230/505 (45.5%) samples=7   time=739.663µs cost=$218.275
+N1 (9x) Partition: items kept=241, sent=1804 time=628.225µs cost=$202.226
+N3 (6x) Partition: items kept=175, sent=1188 time=1039.294µs cost=$542.719
+N0 (10x) Sampling: samples=308/308 pivots=7 time=740.374µs cost=$674.333 pivots=[2979, 3769, 4352, 4846, 5387, 5917, 6634]
+N0 (10x) Partition: items kept=280, sent=1992 time=162.570µs cost=$148.068
+N4 (5x) Partition: items kept=144, sent=992 time=1884.584µs cost=$380.498
+N2 (8x) Partition: items kept=197, sent=1621 time=1553.883µs cost=$957.969
+N5 (4x) Partition: items kept=98, sent=811 time=2427.934µs cost=$271.443
+N0 (10x) Merge: items=1125/10000 (22.7%) mem=1125/1102 (102.1%) time=196.806µs cost=$179.251
+N6 (1x) Partition: items kept=34, sent=193 time=10471.981µs cost=$6172.186
+N1 (9x) Merge: items=1206/10000 (20.4%) mem=1206/629 (191.7%) time=85.973µs cost=$27.675
+N2 (8x) Merge: items=1219/10000 (18.2%) mem=1219/547 (222.9%) time=153.260µs cost=$94.485
+N3 (6x) Merge: items=1163/10000 (13.6%) mem=1163/3021 (38.5%) time=224.006µs cost=$116.976
+N4 (5x) Merge: items=1271/10000 (11.4%) mem=1271/3615 (35.2%) time=172.071µs cost=$34.741
+N7 (1x) Partition: items kept=35, sent=195 time=8583.850µs cost=$2533.094
+N5 (4x) Merge: items=1167/10000 (9.1%) mem=1167/2436 (47.9%) time=324.264µs cost=$36.253
+N6 (1x) Merge: items=1252/10000 (2.3%) mem=1252/3145 (39.8%) time=1393.521µs cost=$821.341
+N7 (1x) Merge: items=1597/10000 (2.3%) mem=1597/505 (316.2%) time=856.860µs cost=$252.859
+N0 Concat: total=10000 time=60.421µs cost=$55.032
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=225.233µs cost=$205.142 ^makespan=49.740µs ^cost=$103.643
+N0 (10x) Sort: items=1102/10000 (11.0%) mem=1102/1102 (100.0%) time=12.515µs cost=$11.398
+N1 (9x) Sort: items=629/10000 (6.3%) mem=629/629 (100.0%) time=18.207µs cost=$5.861
+N2 (8x) Sort: items=547/10000 (5.5%) mem=547/547 (100.0%) time=9.689µs cost=$5.973
+N3 (6x) Sort: items=2726/10000 (27.3%) mem=2726/3021 (90.2%) time=118.539µs cost=$61.901
+N4 (5x) Sort: items=2271/10000 (22.7%) mem=2271/3615 (62.8%) time=146.111µs cost=$29.500
+N5 (4x) Sort: items=1817/10000 (18.2%) mem=1817/2436 (74.6%) time=61.102µs cost=$6.831
+N6 (1x) Sort: items=454/10000 (4.5%) mem=454/3145 (14.4%) time=129.546µs cost=$76.354
+N7 (1x) Sort: items=454/10000 (4.5%) mem=454/505 (89.9%) time=102.359µs cost=$30.206
+N0 (10x) Heap Merge: total=10000 time=180.696µs cost=$164.578
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          12,951.99 |             326.81
+Total Cost ($)            |          14,993.00 |             392.60
+Max. Peak Memory Util.(%) |             332.36 |             100.00
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 48/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=10000, Seed=6
+Nodes: 8 | Data: 10000 elements | Sample: [4313, 3744, 2195, 7380, 7407...5420, 4557, 4772, 5307, 6743]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=1167.074µs throughput=0.116707µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=2500/10000 (25.0%) mem=2500/1783 (140.2%) samples=70  time=139.034µs cost=$72.743
+N1 (10x) Sort: items=2500/10000 (25.0%) mem=2500/2276 (109.8%) samples=70  time=95.219µs cost=$45.000
+N2 (8x) Sort: items=2000/10000 (20.0%) mem=2000/639 (313.0%) samples=56  time=145.378µs cost=$63.356
+N3 (5x) Sort: items=1250/10000 (12.5%) mem=1250/1834 (68.2%) samples=35  time=172.751µs cost=$137.009
+N4 (3x) Sort: items=750/10000 (7.5%) mem=750/2662 (28.2%) samples=21  time=285.150µs cost=$215.802
+N5 (2x) Sort: items=500/10000 (5.0%) mem=500/2260 (22.1%) samples=14  time=407.496µs cost=$319.396
+N6 (1x) Sort: items=250/10000 (2.5%) mem=250/2667 (9.4%) samples=7   time=941.796µs cost=$325.296
+N7 (1x) Sort: items=250/10000 (2.5%) mem=250/879 (28.4%) samples=7   time=673.097µs cost=$553.084
+N0 (10x) Sampling: samples=280/280 pivots=7 time=357.793µs cost=$187.198 pivots=[2927, 3782, 4382, 4890, 5426, 6000, 6706]
+N1 (10x) Partition: items kept=315, sent=2185 time=421.743µs cost=$199.316
+N3 (5x) Partition: items kept=125, sent=1125 time=1041.451µs cost=$825.975
+N0 (10x) Partition: items kept=263, sent=2237 time=243.957µs cost=$127.638
+N2 (8x) Partition: items kept=248, sent=1752 time=846.128µs cost=$368.743
+N6 (1x) Partition: items kept=27, sent=223 time=5442.535µs cost=$1879.852
+N7 (1x) Partition: items kept=45, sent=205 time=5441.356µs cost=$4471.162
+N5 (2x) Partition: items kept=55, sent=445 time=2174.302µs cost=$1704.218
+N0 (10x) Merge: items=1086/10000 (25.0%) mem=1086/1783 (60.9%) time=31.260µs cost=$16.355
+N1 (10x) Merge: items=1270/10000 (25.0%) mem=1270/2276 (55.8%) time=31.589µs cost=$14.929
+N2 (8x) Merge: items=1206/10000 (20.0%) mem=1206/639 (188.7%) time=41.155µs cost=$17.935
+N3 (5x) Merge: items=1156/10000 (12.5%) mem=1156/1834 (63.0%) time=147.491µs cost=$116.975
+N5 (2x) Merge: items=1234/10000 (5.0%) mem=1234/2260 (54.6%) time=263.115µs cost=$206.230
+N6 (1x) Merge: items=1216/10000 (2.5%) mem=1216/2667 (45.6%) time=476.709µs cost=$164.655
+N4 (3x) Partition: items kept=93, sent=657 time=2259.761µs cost=$1710.187
+N4 (3x) Merge: items=1269/10000 (7.5%) mem=1269/2662 (47.7%) time=280.627µs cost=$212.379
+N7 (1x) Merge: items=1563/10000 (2.5%) mem=1563/879 (177.8%) time=1351.085µs cost=$1110.187
+N0 Concat: total=10000 time=55.382µs cost=$28.976
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=172.005µs cost=$89.993 ^makespan=57.820µs ^cost=$218.014
+N0 (10x) Sort: items=1783/10000 (17.8%) mem=1783/1783 (100.0%) time=20.485µs cost=$10.718
+N1 (10x) Sort: items=2277/10000 (22.8%) mem=2277/2276 (100.0%) time=42.348µs cost=$20.014
+N2 (8x) Sort: items=639/10000 (6.4%) mem=639/639 (100.0%) time=20.963µs cost=$9.136
+N3 (5x) Sort: items=1834/10000 (18.3%) mem=1834/1834 (100.0%) time=72.353µs cost=$57.383
+N4 (3x) Sort: items=1486/10000 (14.9%) mem=1486/2662 (55.8%) time=134.901µs cost=$102.093
+N5 (2x) Sort: items=991/10000 (9.9%) mem=991/2260 (43.8%) time=121.651µs cost=$95.350
+N6 (1x) Sort: items=495/10000 (5.0%) mem=495/2667 (18.6%) time=107.200µs cost=$37.027
+N7 (1x) Sort: items=495/10000 (5.0%) mem=495/879 (56.3%) time=71.777µs cost=$58.979
+N0 (10x) Heap Merge: total=10000 time=171.764µs cost=$89.867
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |           7,465.54 |             306.66
+Total Cost ($)            |          15,094.59 |             480.57
+Max. Peak Memory Util.(%) |             312.99 |             100.04
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 49/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=100000, Seed=4
+Nodes: 8 | Data: 100000 elements | Sample: [60869, 66030, 39780, 57731, 47284...44975, 56961, 35940, 27090, 47903]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=20607.977µs throughput=0.206080µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (8x) Sort: items=24242/100000 (24.2%) mem=24242/28309 (85.6%) samples=56  time=597.267µs cost=$91.382
+N1 (7x) Sort: items=21212/100000 (21.2%) mem=21212/1132 (1873.9%) samples=49  time=852.470µs cost=$844.798
+N2 (5x) Sort: items=15151/100000 (15.2%) mem=15151/11564 (131.0%) samples=35  time=1094.106µs cost=$650.446
+N3 (4x) Sort: items=12121/100000 (12.1%) mem=12121/36536 (33.2%) samples=28  time=659.395µs cost=$77.677
+N4 (3x) Sort: items=9090/100000 (9.1%) mem=9090/11499 (79.1%) samples=21  time=1008.608µs cost=$573.192
+N5 (2x) Sort: items=6060/100000 (6.1%) mem=6060/41666 (14.5%) samples=14  time=1096.436µs cost=$395.155
+N6 (2x) Sort: items=6060/100000 (6.1%) mem=6060/12007 (50.5%) samples=14  time=793.087µs cost=$336.428
+N7 (2x) Sort: items=6064/100000 (6.1%) mem=6064/7287 (83.2%) samples=14  time=779.910µs cost=$625.331
+N0 (8x) Sampling: samples=231/231 pivots=7 time=1335.968µs cost=$204.403 pivots=[29494, 37553, 43497, 48754, 53827, 59388, 66321]
+N3 (4x) Partition: items kept=1479, sent=10642 time=5017.056µs cost=$591.009
+N1 (7x) Partition: items kept=2454, sent=18758 time=3376.811µs cost=$3346.420
+N2 (5x) Partition: items kept=1848, sent=13303 time=4718.182µs cost=$2804.959
+N5 (2x) Partition: items kept=755, sent=5305 time=7792.772µs cost=$2808.515
+N4 (3x) Partition: items kept=1109, sent=7981 time=6562.293µs cost=$3729.351
+N6 (2x) Partition: items kept=691, sent=5369 time=9684.940µs cost=$4108.351
+N0 (8x) Partition: items kept=2593, sent=21649 time=2444.677µs cost=$374.036
+N7 (2x) Partition: items kept=973, sent=5091 time=9057.834µs cost=$7262.572
+N1 (7x) Merge: items=11937/100000 (21.2%) mem=11937/1132 (1054.5%) time=840.092µs cost=$832.531
+N4 (3x) Merge: items=12088/100000 (9.1%) mem=12088/11499 (105.1%) time=1842.889µs cost=$1047.314
+N2 (5x) Merge: items=12065/100000 (15.2%) mem=12065/11564 (104.3%) time=936.487µs cost=$556.741
+N3 (4x) Merge: items=12188/100000 (12.1%) mem=12188/36536 (33.4%) time=1578.782µs cost=$185.981
+N0 (8x) Merge: items=10781/100000 (24.2%) mem=10781/28309 (38.1%) time=771.135µs cost=$117.984
+N7 (2x) Merge: items=16630/100000 (6.1%) mem=16630/7287 (228.2%) time=4948.963µs cost=$3968.079
+N6 (2x) Merge: items=12143/100000 (6.1%) mem=12143/12007 (101.1%) time=2863.145µs cost=$1214.546
+N5 (2x) Merge: items=12168/100000 (6.1%) mem=12168/41666 (29.2%) time=2853.010µs cost=$1028.225
+N0 Concat: total=100000 time=687.465µs cost=$105.182
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=189.886µs cost=$29.053 ^makespan=1035.783µs ^cost=$2413.576
+N1 (7x) Sort: items=1130/100000 (1.1%) mem=1130/1132 (99.8%) time=19.499µs cost=$19.323
+N0 (8x) Sort: items=28313/100000 (28.3%) mem=28313/28309 (100.0%) time=561.540µs cost=$85.916
+N2 (5x) Sort: items=11561/100000 (11.6%) mem=11561/11564 (100.0%) time=480.717µs cost=$285.786
+N3 (4x) Sort: items=20102/100000 (20.1%) mem=20102/36536 (55.0%) time=1092.702µs cost=$128.720
+N4 (3x) Sort: items=11501/100000 (11.5%) mem=11501/11499 (100.0%) time=951.939µs cost=$540.987
+N5 (2x) Sort: items=10051/100000 (10.1%) mem=10051/41666 (24.1%) time=740.516µs cost=$266.882
+N6 (2x) Sort: items=10051/100000 (10.1%) mem=10051/12007 (83.7%) time=709.511µs cost=$300.974
+N7 (2x) Sort: items=7291/100000 (7.3%) mem=7291/7287 (100.1%) time=645.572µs cost=$517.619
+N0 (8x) Heap Merge: total=100000 time=1937.740µs cost=$296.474
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          14,786.71 |           3,030.44
+Total Cost ($)            |          37,880.61 |           2,442.68
+Max. Peak Memory Util.(%) |            1873.85 |             100.05
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 50/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=100000, Seed=5
+Nodes: 8 | Data: 100000 elements | Sample: [66936, 61067, 29597, 43534, 48811...46757, 60536, 47116, 39293, 32821]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=17234.341µs throughput=0.172343µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=22727/100000 (22.7%) mem=22727/11028 (206.1%) samples=70  time=432.068µs cost=$393.528
+N1 (9x) Sort: items=20454/100000 (20.5%) mem=20454/6298 (324.8%) samples=63  time=440.148µs cost=$141.684
+N2 (8x) Sort: items=18181/100000 (18.2%) mem=18181/5475 (332.1%) samples=56  time=564.860µs cost=$348.236
+N3 (6x) Sort: items=13636/100000 (13.6%) mem=13636/30216 (45.1%) samples=42  time=878.384µs cost=$458.692
+N4 (5x) Sort: items=11363/100000 (11.4%) mem=11363/36159 (31.4%) samples=35  time=518.909µs cost=$104.768
+N5 (4x) Sort: items=9090/100000 (9.1%) mem=9090/24365 (37.3%) samples=28  time=1133.234µs cost=$126.696
+N6 (1x) Sort: items=2272/100000 (2.3%) mem=2272/31456 (7.2%) samples=7   time=2248.043µs cost=$1324.997
+N7 (1x) Sort: items=2277/100000 (2.3%) mem=2277/5003 (45.5%) samples=7   time=1732.889µs cost=$511.376
+N0 (10x) Sampling: samples=308/308 pivots=7 time=471.149µs cost=$429.122 pivots=[29852, 37966, 43933, 49128, 54361, 59887, 67702]
+N6 (1x) Partition: items kept=309, sent=1963 time=8439.249µs cost=$4974.093
+N4 (5x) Partition: items kept=1370, sent=9993 time=2398.449µs cost=$484.247
+N1 (9x) Partition: items kept=2446, sent=18008 time=1614.782µs cost=$519.798
+N5 (4x) Partition: items kept=1113, sent=7977 time=3949.919µs cost=$441.601
+N2 (8x) Partition: items kept=2254, sent=15927 time=2207.266µs cost=$1360.779
+N0 (10x) Partition: items kept=2593, sent=20134 time=1685.623µs cost=$1535.265
+N7 (1x) Partition: items kept=329, sent=1948 time=10439.562µs cost=$3080.715
+N3 (6x) Partition: items kept=1690, sent=11946 time=3456.952µs cost=$1805.220
+N3 (6x) Merge: items=12071/100000 (13.6%) mem=12071/30216 (39.9%) time=799.910µs cost=$417.713
+N2 (8x) Merge: items=12441/100000 (18.2%) mem=12441/5475 (227.2%) time=796.154µs cost=$490.829
+N5 (4x) Merge: items=12230/100000 (9.1%) mem=12230/24365 (50.2%) time=1222.577µs cost=$136.684
+N1 (9x) Merge: items=11929/100000 (20.5%) mem=11929/6298 (189.4%) time=496.198µs cost=$159.726
+N4 (5x) Merge: items=12374/100000 (11.4%) mem=12374/36159 (34.2%) time=1401.995µs cost=$283.063
+N0 (10x) Merge: items=11456/100000 (22.7%) mem=11456/11028 (103.9%) time=650.677µs cost=$592.637
+N7 (1x) Merge: items=14468/100000 (2.3%) mem=14468/5003 (289.2%) time=7423.308µs cost=$2190.618
+N6 (1x) Merge: items=13031/100000 (2.3%) mem=13031/31456 (41.4%) time=6068.899µs cost=$3577.009
+N0 Concat: total=100000 time=454.998µs cost=$414.412
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=162.515µs cost=$148.018 ^makespan=782.632µs ^cost=$1631.083
+N0 (10x) Sort: items=11030/100000 (11.0%) mem=11030/11028 (100.0%) time=146.607µs cost=$133.530
+N1 (9x) Sort: items=6300/100000 (6.3%) mem=6300/6298 (100.0%) time=98.324µs cost=$31.651
+N2 (8x) Sort: items=5470/100000 (5.5%) mem=5470/5475 (99.9%) time=320.198µs cost=$197.402
+N3 (6x) Sort: items=27250/100000 (27.3%) mem=27250/30216 (90.2%) time=1366.358µs cost=$713.512
+N4 (5x) Sort: items=22710/100000 (22.7%) mem=22710/36159 (62.8%) time=728.985µs cost=$147.182
+N5 (4x) Sort: items=18160/100000 (18.2%) mem=18160/24365 (74.5%) time=841.122µs cost=$94.037
+N6 (1x) Sort: items=4540/100000 (4.5%) mem=4540/31456 (14.4%) time=570.966µs cost=$336.527
+N7 (1x) Sort: items=4540/100000 (4.5%) mem=4540/5003 (90.7%) time=1881.647µs cost=$555.274
+N0 (10x) Heap Merge: total=100000 time=1662.682µs cost=$1514.371
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          19,595.76 |           3,544.33
+Total Cost ($)            |          26,303.51 |           3,723.49
+Max. Peak Memory Util.(%) |             332.07 |             100.03
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 51/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=100000, Seed=6
+Nodes: 8 | Data: 100000 elements | Sample: [40569, 22384, 55958, 40013, 70432...37677, 29136, 39927, 34684, 21868]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=17781.341µs throughput=0.177813µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N0 (10x) Sort: items=25000/100000 (25.0%) mem=25000/17837 (140.2%) samples=70  time=469.141µs cost=$245.454
+N1 (10x) Sort: items=25000/100000 (25.0%) mem=25000/22725 (110.0%) samples=70  time=523.820µs cost=$247.557
+N2 (8x) Sort: items=20000/100000 (20.0%) mem=20000/6394 (312.8%) samples=56  time=553.870µs cost=$241.376
+N3 (5x) Sort: items=12500/100000 (12.5%) mem=12500/18345 (68.1%) samples=35  time=530.876µs cost=$421.038
+N4 (3x) Sort: items=7500/100000 (7.5%) mem=7500/26621 (28.2%) samples=21  time=589.219µs cost=$445.921
+N5 (2x) Sort: items=5000/100000 (5.0%) mem=5000/22601 (22.1%) samples=14  time=765.329µs cost=$599.865
+N6 (1x) Sort: items=2500/100000 (2.5%) mem=2500/26679 (9.4%) samples=7   time=1817.230µs cost=$627.671
+N7 (1x) Sort: items=2500/100000 (2.5%) mem=2500/8798 (28.4%) samples=7   time=934.285µs cost=$767.702
+N0 (10x) Sampling: samples=280/280 pivots=7 time=513.747µs cost=$268.792 pivots=[29777, 38224, 44143, 49432, 54768, 60574, 68032]
+N6 (1x) Partition: items kept=313, sent=2187 time=6703.187µs cost=$2315.281
+N5 (2x) Partition: items kept=646, sent=4354 time=2838.631µs cost=$2224.919
+N3 (5x) Partition: items kept=1545, sent=10955 time=1788.402µs cost=$1418.381
+N4 (3x) Partition: items kept=982, sent=6518 time=3811.924µs cost=$2884.864
+N7 (1x) Partition: items kept=324, sent=2176 time=8451.269µs cost=$6944.408
+N2 (8x) Partition: items kept=2401, sent=17599 time=1769.829µs cost=$771.292
+N0 (10x) Partition: items kept=2857, sent=22143 time=1422.684µs cost=$744.348
+N1 (10x) Partition: items kept=3176, sent=21824 time=2172.245µs cost=$1026.603
+N4 (3x) Merge: items=12438/100000 (7.5%) mem=12438/26621 (46.7%) time=1508.303µs cost=$1141.483
+N2 (8x) Merge: items=12278/100000 (20.0%) mem=12278/6394 (192.0%) time=634.094µs cost=$276.338
+N3 (5x) Merge: items=12283/100000 (12.5%) mem=12283/18345 (67.0%) time=1138.859µs cost=$903.229
+N5 (2x) Merge: items=12494/100000 (5.0%) mem=12494/22601 (55.3%) time=3615.634µs cost=$2833.934
+N7 (1x) Merge: items=14142/100000 (2.5%) mem=14142/8798 (160.7%) time=6148.223µs cost=$5051.995
+N6 (1x) Merge: items=12245/100000 (2.5%) mem=12245/26679 (45.9%) time=7784.307µs cost=$2688.700
+N0 (10x) Merge: items=11510/100000 (25.0%) mem=11510/17837 (64.5%) time=790.008µs cost=$413.332
+N1 (10x) Merge: items=12610/100000 (25.0%) mem=12610/22725 (55.5%) time=797.782µs cost=$377.032
+N0 Concat: total=100000 time=300.323µs cost=$157.129
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=200.821µs cost=$105.069 ^makespan=881.421µs ^cost=$3322.885
+N0 (10x) Sort: items=17840/100000 (17.8%) mem=17840/17837 (100.0%) time=249.922µs cost=$130.759
+N1 (10x) Sort: items=22730/100000 (22.7%) mem=22730/22725 (100.0%) time=380.062µs cost=$179.617
+N2 (8x) Sort: items=6390/100000 (6.4%) mem=6390/6394 (99.9%) time=216.804µs cost=$94.483
+N3 (5x) Sort: items=18340/100000 (18.3%) mem=18340/18345 (100.0%) time=810.713µs cost=$642.976
+N4 (3x) Sort: items=14870/100000 (14.9%) mem=14870/26621 (55.9%) time=1795.051µs cost=$1358.495
+N5 (2x) Sort: items=9910/100000 (9.9%) mem=9910/22601 (43.8%) time=1632.564µs cost=$1279.604
+N6 (1x) Sort: items=4960/100000 (5.0%) mem=4960/26679 (18.6%) time=1453.174µs cost=$501.926
+N7 (1x) Sort: items=4960/100000 (5.0%) mem=4960/8798 (56.4%) time=1690.214µs cost=$1388.849
+N0 (10x) Heap Merge: total=100000 time=1548.082µs cost=$809.956
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          16,304.72 |           3,343.13
+Total Cost ($)            |          36,038.65 |           6,386.67
+Max. Peak Memory Util.(%) |             312.79 |             100.02
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 52/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=1000000, Seed=4
+Nodes: 8 | Data: 1000000 elements | Sample: [749490, 339133, 466614, 218788, 406321...205476, 570136, 716603, 226580, 416864]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=251476.301µs throughput=0.251476µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N5 (2x) Sort: items=60606/1000000 (6.1%) mem=60606/416661 (14.5%) samples=14  time=5883.684µs cost=$2120.480
+N3 (4x) Sort: items=121212/1000000 (12.1%) mem=121212/365365 (33.2%) samples=28  time=6289.234µs cost=$740.872
+N4 (3x) Sort: items=90909/1000000 (9.1%) mem=90909/114997 (79.1%) samples=21  time=6752.875µs cost=$3837.659
+N6 (2x) Sort: items=60606/1000000 (6.1%) mem=60606/120075 (50.5%) samples=14  time=5429.582µs cost=$2303.229
+N2 (5x) Sort: items=151515/1000000 (15.2%) mem=151515/115644 (131.0%) samples=35  time=7185.825µs cost=$4271.973
+N7 (2x) Sort: items=60607/1000000 (6.1%) mem=60607/72831 (83.2%) samples=14  time=5887.025µs cost=$4720.217
+N1 (7x) Sort: items=212121/1000000 (21.2%) mem=212121/11329 (1872.4%) samples=49  time=7618.250µs cost=$7549.686
+N0 (8x) Sort: items=242424/1000000 (24.2%) mem=242424/283098 (85.6%) samples=56  time=7691.440µs cost=$1176.790
+N0 (8x) Sampling: samples=231/231 pivots=7 time=5518.019µs cost=$844.257 pivots=[292649, 374118, 438735, 487004, 537204, 594510, 663260]
+N1 (7x) Partition: items kept=25072, sent=187049 time=16732.831µs cost=$16582.235
+N6 (2x) Partition: items kept=7552, sent=53054 time=41560.581µs cost=$17629.998
+N2 (5x) Partition: items kept=19953, sent=131562 time=26992.858µs cost=$16047.254
+N4 (3x) Partition: items kept=10799, sent=80110 time=33858.488µs cost=$19241.779
+N7 (2x) Partition: items kept=9931, sent=50676 time=50118.988µs cost=$40185.405
+N5 (2x) Partition: items kept=7673, sent=52933 time=50153.480µs cost=$18075.314
+N0 (8x) Partition: items kept=25975, sent=216449 time=13759.223µs cost=$2105.161
+N3 (4x) Partition: items kept=13723, sent=107489 time=32971.151µs cost=$3884.002
+N5 (2x) Merge: items=126216/1000000 (6.1%) mem=126216/416661 (30.3%) time=18969.560µs cost=$6836.629
+N2 (5x) Merge: items=131730/1000000 (15.2%) mem=131730/115644 (113.9%) time=9759.938µs cost=$5802.283
+N4 (3x) Merge: items=119842/1000000 (9.1%) mem=119842/114997 (104.2%) time=13274.714µs cost=$7544.020
+N6 (2x) Merge: items=121880/1000000 (6.1%) mem=121880/120075 (101.5%) time=23973.111µs cost=$10169.393
+N1 (7x) Merge: items=117895/1000000 (21.2%) mem=117895/11329 (1040.6%) time=7045.137µs cost=$6981.731
+N7 (2x) Merge: items=163613/1000000 (6.1%) mem=163613/72831 (224.6%) time=25861.148µs cost=$20735.468
+N0 (8x) Merge: items=106516/1000000 (24.2%) mem=106516/283098 (37.6%) time=3393.149µs cost=$519.152
+N3 (4x) Merge: items=112308/1000000 (12.1%) mem=112308/365365 (30.7%) time=5239.195µs cost=$617.177
+N0 Concat: total=1000000 time=1665.435µs cost=$254.812
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (8x) Solver: time=191.965µs cost=$29.371 ^makespan=12639.859µs ^cost=$29449.733
+N1 (7x) Sort: items=11301/1000000 (1.1%) mem=11301/11329 (99.8%) time=296.203µs cost=$293.537
+N2 (5x) Sort: items=115612/1000000 (11.6%) mem=115612/115644 (100.0%) time=8923.234µs cost=$5304.862
+N5 (2x) Sort: items=100510/1000000 (10.1%) mem=100510/416661 (24.1%) time=13809.427µs cost=$4976.917
+N7 (2x) Sort: items=72807/1000000 (7.3%) mem=72807/72831 (100.0%) time=8633.513µs cost=$6922.351
+N4 (3x) Sort: items=115012/1000000 (11.5%) mem=115012/114997 (100.0%) time=13589.368µs cost=$7722.838
+N6 (2x) Sort: items=100510/1000000 (10.1%) mem=100510/120075 (83.7%) time=13313.683µs cost=$5647.664
+N3 (4x) Sort: items=201120/1000000 (20.1%) mem=201120/365365 (55.0%) time=15071.494µs cost=$1775.422
+N0 (8x) Sort: items=283128/1000000 (28.3%) mem=283128/283098 (100.0%) time=12018.330µs cost=$1838.804
+N0 (8x) Heap Merge: total=1000000 time=18744.013µs cost=$2867.834
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          81,867.16 |          33,815.51
+Total Cost ($)            |         220,776.98 |          37,350.23
+Max. Peak Memory Util.(%) |            1872.37 |             100.01
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 53/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=1000000, Seed=5
+Nodes: 8 | Data: 1000000 elements | Sample: [665623, 452032, 556987, 615604, 743561...624602, 469185, 355628, 450581, 374347]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=238988.911µs throughput=0.238989µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N6 (1x) Sort: items=22727/1000000 (2.3%) mem=22727/314562 (7.2%) samples=7   time=4875.534µs cost=$2873.640
+N4 (5x) Sort: items=113636/1000000 (11.4%) mem=113636/361598 (31.4%) samples=35  time=4471.986µs cost=$902.894
+N7 (1x) Sort: items=22730/1000000 (2.3%) mem=22730/50001 (45.5%) samples=7   time=3764.707µs cost=$1110.965
+N0 (10x) Sort: items=227272/1000000 (22.7%) mem=227272/110286 (206.1%) samples=70  time=5237.823µs cost=$4770.609
+N5 (4x) Sort: items=90909/1000000 (9.1%) mem=90909/243652 (37.3%) samples=28  time=5471.975µs cost=$611.767
+N3 (6x) Sort: items=136363/1000000 (13.6%) mem=136363/302162 (45.1%) samples=42  time=6023.914µs cost=$3145.688
+N1 (9x) Sort: items=204545/1000000 (20.5%) mem=204545/62981 (324.8%) samples=63  time=5867.201µs cost=$1888.652
+N2 (8x) Sort: items=181818/1000000 (18.2%) mem=181818/54758 (332.0%) samples=56  time=5630.493µs cost=$3471.199
+N0 (10x) Sampling: samples=308/308 pivots=7 time=454.228µs cost=$413.710 pivots=[298721, 381585, 439203, 491842, 543663, 601399, 677341]
+N6 (1x) Partition: items kept=2891, sent=19836 time=13771.669µs cost=$8117.022
+N7 (1x) Partition: items kept=3269, sent=19461 time=15138.359µs cost=$4467.330
+N5 (4x) Partition: items kept=11289, sent=79620 time=9676.823µs cost=$1081.869
+N4 (5x) Partition: items kept=13796, sent=99840 time=8774.915µs cost=$1771.655
+N3 (6x) Partition: items kept=16840, sent=119523 time=8600.810µs cost=$4491.343
+N0 (10x) Partition: items kept=25722, sent=201550 time=6464.363µs cost=$5887.742
+N2 (8x) Partition: items kept=21888, sent=159930 time=8915.525µs cost=$5496.421
+N1 (9x) Partition: items kept=25624, sent=178921 time=8398.966µs cost=$2703.627
+N6 (1x) Merge: items=127724/1000000 (2.3%) mem=127724/314562 (40.6%) time=29418.422µs cost=$17339.218
+N5 (4x) Merge: items=124742/1000000 (9.1%) mem=124742/243652 (51.2%) time=7596.136µs cost=$849.248
+N3 (6x) Merge: items=122958/1000000 (13.6%) mem=122958/302162 (40.7%) time=6552.337µs cost=$3421.630
+N4 (5x) Merge: items=123025/1000000 (11.4%) mem=123025/361598 (34.0%) time=7499.606µs cost=$1514.170
+N7 (1x) Merge: items=143682/1000000 (2.3%) mem=143682/50001 (287.4%) time=34072.295µs cost=$10054.734
+N2 (8x) Merge: items=119369/1000000 (18.2%) mem=119369/54758 (218.0%) time=4026.758µs cost=$2482.496
+N1 (9x) Merge: items=125365/1000000 (20.5%) mem=125365/62981 (199.1%) time=2990.783µs cost=$962.733
+N0 (10x) Merge: items=113135/1000000 (22.7%) mem=113135/110286 (102.6%) time=2299.233µs cost=$2094.142
+N0 Concat: total=1000000 time=1085.395µs cost=$988.578
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=258.429µs cost=$235.377 ^makespan=10852.557µs ^cost=$22618.180
+N1 (9x) Sort: items=62994/1000000 (6.3%) mem=62994/62981 (100.0%) time=3488.526µs cost=$1122.957
+N2 (8x) Sort: items=54795/1000000 (5.5%) mem=54795/54758 (100.1%) time=3054.359µs cost=$1883.012
+N0 (10x) Sort: items=110289/1000000 (11.0%) mem=110289/110286 (100.0%) time=5063.093µs cost=$4611.465
+N6 (1x) Sort: items=45395/1000000 (4.5%) mem=45395/314562 (14.4%) time=16798.313µs cost=$9900.926
+N7 (1x) Sort: items=45395/1000000 (4.5%) mem=45395/50001 (90.8%) time=12157.016µs cost=$3587.535
+N5 (4x) Sort: items=181582/1000000 (18.2%) mem=181582/243652 (74.5%) time=14761.872µs cost=$1650.377
+N4 (5x) Sort: items=227077/1000000 (22.7%) mem=227077/361598 (62.8%) time=16077.852µs cost=$3246.118
+N3 (6x) Sort: items=272473/1000000 (27.2%) mem=272473/302162 (90.2%) time=15421.594µs cost=$8053.156
+N0 (10x) Heap Merge: total=1000000 time=14842.171µs cost=$13518.249
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |          52,975.36 |          31,640.48
+Total Cost ($)            |          92,913.08 |          47,573.80
+Max. Peak Memory Util.(%) |             332.04 |             100.07
+-----------------------------------------------
+
+
+==========================
+--- Starting Run 54/54 ---
+==========================
+#----------------------------------- Cluster Configuration ----------------------------------#
+Config: Dist=gaussian, Nodes=8, Size=1000000, Seed=6
+Nodes: 8 | Data: 1000000 elements | Sample: [213376, 512148, 124227, 481746, 575293...370165, 477833, 504422, 451647, 404080]
+
+# ---------------------------- Sequential Baseline --------------------------- #
+Sequential: time=247496.856µs throughput=0.247497µs/element
+
+# ------------------------- H-PSRS (Regular Sampling) ------------------------ #
+N4 (3x) Sort: items=75000/1000000 (7.5%) mem=75000/266211 (28.2%) samples=21  time=5940.536µs cost=$4495.798
+N5 (2x) Sort: items=50000/1000000 (5.0%) mem=50000/226011 (22.1%) samples=14  time=8604.351µs cost=$6744.090
+N6 (1x) Sort: items=25000/1000000 (2.5%) mem=25000/266794 (9.4%) samples=7   time=6361.724µs cost=$2197.339
+N7 (1x) Sort: items=25000/1000000 (2.5%) mem=25000/87985 (28.4%) samples=7   time=5906.374µs cost=$4853.268
+N2 (8x) Sort: items=200000/1000000 (20.0%) mem=200000/63949 (312.7%) samples=56  time=6187.321µs cost=$2696.434
+N3 (5x) Sort: items=125000/1000000 (12.5%) mem=125000/183451 (68.1%) samples=35  time=8015.206µs cost=$6356.860
+N1 (10x) Sort: items=250000/1000000 (25.0%) mem=250000/227221 (110.0%) samples=70  time=6059.617µs cost=$2863.775
+N0 (10x) Sort: items=250000/1000000 (25.0%) mem=250000/178378 (140.2%) samples=70  time=6746.536µs cost=$3529.788
+N0 (10x) Sampling: samples=280/280 pivots=7 time=4295.717µs cost=$2247.519 pivots=[298738, 380108, 439815, 493949, 547497, 602789, 678841]
+N3 (5x) Partition: items kept=15788, sent=109212 time=18221.816µs cost=$14451.722
+N5 (2x) Partition: items kept=5939, sent=44061 time=38210.878µs cost=$29949.686
+N6 (1x) Partition: items kept=3212, sent=21788 time=77355.562µs cost=$26718.611
+N7 (1x) Partition: items kept=3619, sent=21381 time=74641.665µs cost=$61333.056
+N2 (8x) Partition: items kept=24663, sent=175337 time=16290.566µs cost=$7099.429
+N4 (3x) Partition: items kept=9278, sent=65722 time=32687.481µs cost=$24737.886
+N0 (10x) Partition: items kept=28569, sent=221431 time=10080.181µs cost=$5273.951
+N1 (10x) Partition: items kept=30366, sent=219634 time=17159.616µs cost=$8109.634
+N0 (10x) Merge: items=113497/1000000 (25.0%) mem=113497/178378 (63.6%) time=3041.321µs cost=$1591.219
+N2 (8x) Merge: items=123404/1000000 (20.0%) mem=123404/63949 (193.0%) time=4443.998µs cost=$1936.694
+N5 (2x) Merge: items=119153/1000000 (5.0%) mem=119153/226011 (52.7%) time=20011.403µs cost=$15684.938
+N4 (3x) Merge: items=126957/1000000 (7.5%) mem=126957/266211 (47.7%) time=12886.143µs cost=$9752.233
+N3 (5x) Merge: items=126639/1000000 (12.5%) mem=126639/183451 (69.0%) time=6317.972µs cost=$5010.784
+N6 (1x) Merge: items=126858/1000000 (2.5%) mem=126858/266794 (47.5%) time=40793.064µs cost=$14089.924
+N7 (1x) Merge: items=141312/1000000 (2.5%) mem=141312/87985 (160.6%) time=48238.399µs cost=$39637.492
+N1 (10x) Merge: items=122180/1000000 (25.0%) mem=122180/227221 (53.8%) time=3691.150µs cost=$1744.437
+N0 Concat: total=1000000 time=1325.712µs cost=$693.613
+
+# ------------------------- H-PSLP (Static Optimized) ------------------------ #
+N0 (10x) Solver: time=267.779µs cost=$140.102 ^makespan=12268.808µs ^cost=$46251.907
+N2 (8x) Sort: items=63900/1000000 (6.4%) mem=63900/63949 (99.9%) time=3067.318µs cost=$1336.737
+N6 (1x) Sort: items=49600/1000000 (5.0%) mem=49600/266794 (18.6%) time=12251.410µs cost=$4231.637
+N0 (10x) Sort: items=178400/1000000 (17.8%) mem=178400/178378 (100.0%) time=7653.946µs cost=$4004.545
+N5 (2x) Sort: items=99100/1000000 (9.9%) mem=99100/226011 (43.8%) time=13658.006µs cost=$10705.145
+N4 (3x) Sort: items=148700/1000000 (14.9%) mem=148700/266211 (55.9%) time=14972.544µs cost=$11331.222
+N7 (1x) Sort: items=49600/1000000 (5.0%) mem=49600/87985 (56.4%) time=11176.119µs cost=$9183.417
+N1 (10x) Sort: items=227200/1000000 (22.7%) mem=227200/227221 (100.0%) time=9088.482µs cost=$4295.217
+N3 (5x) Sort: items=183500/1000000 (18.4%) mem=183500/183451 (100.0%) time=14165.875µs cost=$11234.956
+N0 (10x) Heap Merge: total=1000000 time=15217.595µs cost=$7961.845
+
+--- Aggregated Metrics Summary for this Run ---
+-----------------------------------------------
+Metric                    |             H-PSRS |             H-PSLP
+-----------------------------------------------
+Makespan (µs)             |         128,786.44 |          30,190.14
+Total Cost ($)            |         303,800.18 |          64,284.72
+Max. Peak Memory Util.(%) |             312.75 |             100.03
+-----------------------------------------------
+
+
+
+========================================
+All Simulations Complete. Saving results...
+========================================
+Results saved to results.json
+Generating plots from results...
+Process finished.
